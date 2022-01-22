@@ -37,7 +37,7 @@ public class Shooter {
     private static double currentShooterSpeed = 0;
 
 
-    public Shooter() {
+    public static void init() {
         // shooterMotor.set(shooterMotor1.follower, Wiring.SHOOTER_MOTOR_ID);
         // shooterMotor1.follow(shooterMotor);
         shooterMotor.configFactoryDefault(10);
@@ -83,12 +83,6 @@ public class Shooter {
         closeGate();
 
         // feederMotor.setNeutralMode(NeutralMode.Brake);
-    }
-
-    public static Shooter getInstance() {
-        if (instance == null)
-            instance = new Shooter();
-        return instance;
     }
 
     public static void tick() {
@@ -153,7 +147,6 @@ public class Shooter {
     public static void StopShooter() {
         isEnabled = false;
         closeGate();
-        ShooterPivoter.resetPivoter();
         oneShot = false;
         continuousShooting = false;
         resetTimer();

@@ -12,9 +12,9 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Point;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;   
 
@@ -43,7 +43,7 @@ public class VisionBall
     private static final float CENTER_BALL_HEIGHT = 3.5f;
 
     //Member Variables
-    private static UsbCamera mBallTrackingCamera;
+    private static edu.wpi.first.cscore.UsbCamera mBallTrackingCamera;
 
     private static CvSink mCameraFrameGrabber;
 
@@ -65,12 +65,12 @@ public class VisionBall
     public static void SetUpBallVision()
     {
         //Start Camera Server and bind it to usb port 0
-        mBallTrackingCamera = CameraServer.getInstance().startAutomaticCapture(0);
+        mBallTrackingCamera = CameraServer.startAutomaticCapture(0);
         //Set resolution of camera
         mBallTrackingCamera.setResolution(CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
 
         //Set up CV Sink to grab frames
-        mCameraFrameGrabber = CameraServer.getInstance().getVideo();
+        mCameraFrameGrabber = CameraServer.getVideo();
         mCameraFrameGrabber.setSource(mBallTrackingCamera);
 
         //Sets Camera FPS to 30
@@ -78,8 +78,8 @@ public class VisionBall
 
         //Setup Publishing Streams
         // mRawImageStream = CameraServer.getInstance().putVideo("Raw Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
-        mBinaryStream = CameraServer.getInstance().putVideo("Binary Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
-        mProcessedStream = CameraServer.getInstance().putVideo("Processed Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
+        mBinaryStream = CameraServer.putVideo("Binary Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
+        mProcessedStream = CameraServer.putVideo("Processed Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
 
         //Report Back Succesful Init
         System.out.println("Ball Tracking Vision Init Successful");

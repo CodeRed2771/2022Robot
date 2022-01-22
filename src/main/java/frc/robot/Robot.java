@@ -46,25 +46,19 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		gamepad = new KeyMap();
 
-		Shooter.getInstance();
-		Shooter.StopShooter();
-		ShooterPivoter.getInstance();
-		Intake.getInstance();
+		Intake.init();
 		RobotGyro.getInstance();
-		// DistanceSensor.getInstance();
 		Calibration.loadSwerveCalibration();
+
 		DriveTrain.getInstance();
 		DriveAuto.getInstance();
-		// Climber.getInstance();
-		ColorSensorAndTraverser.getInstance();
+
 		Vision.getInstance();
 		VisionBall.SetUpBallVision();
-		DistanceSensor.getInstance();
 		setupAutoChoices();
 		mAutoProgram = new AutoDoNothing();
 
 		RobotGyro.reset();
-		Shooter.closeGate();
 
 		DriveTrain.allowTurnEncoderReset();
 		DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
@@ -76,12 +70,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		mAutoProgram.stop();
-		ShooterPivoter.resetPivoter();
-		Intake.stopIntake();
 		DriveTrain.stopDriveAndTurnMotors();
 		DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
-		Shooter.StopShooter();
-		Shooter.closeGate();
 	}
 
 	@Override
@@ -93,109 +83,37 @@ public class Robot extends TimedRobot {
 			mAutoProgram.start(false);
 		}
 		if (gamepad.startIntake()) {
-			Intake.runIntakeForwards();
-			Intake.moveQueuerDown();
+
 		}
 		if (gamepad.stopIntake()) {
-			Intake.stopIntake();
+
 		}
 
 		if (gamepad.intakeUpPosition()) {
 			if (!intakeKeyAlreadyPressed) {
 				if (isIntakeUpPosition) {
-					Intake.moveIntakeDown();
-					isIntakeUpPosition = false;
+
 				} else if (!isIntakeUpPosition) {
-					Intake.moveIntakeUp();
-					isIntakeUpPosition = true;
+
 				}
 				intakeKeyAlreadyPressed = true;
 			}
 		} else
 			intakeKeyAlreadyPressed = false;
 
-		// if (gamepad.spinWheel()) {
-		// 	ColorSensorAndTraverser.start3To5TimesSpinning();
-		// }
-		// if (gamepad.matchColor()) {
-		// 	ColorSensorAndTraverser.startMatchColorSpinning();
-		// }
+
 		if (gamepad.stopShooter() || gamepad.stopShooting()) {
 			Shooter.StopShooter();
 		}
-		// if (gamepad.lowClimberHeight() && gamepad.stopIntake()) {
-		// 	Climber.extendHook();
-		// }
-		// if (gamepad.colorWheelClimberHeight()) {
-		// 	Climber.setColorWheelClimberPosition();
-		// }
-		// if (gamepad.climber() && gamepad.getRobotCentricModifier()) {
-		// 	Climber.setHighClimberPosition();
-		// }
-		if (gamepad.closeShooterPosition()) {
-			ShooterPivoter.shootClosePosition();
-		}
-		if (gamepad.midTrenchPosition()) {
-			ShooterPivoter.shootFromFrontOfTrench();
-		}
-		if (gamepad.backTrenchPosition()) {
-			ShooterPivoter.shootFromBackOfTrench();
-		}
+		
 		if (gamepad.startShooter()) {
 			Shooter.StartShooter();
-			Intake.moveIntakeDown();
-			Intake.moveQueruerUp();
 		}
-		// if (gamepad.levelScale()) {
-		// 	ColorSensorAndTraverser.runTrue(true);
-		// }
-		// if (gamepad.turboTurning()) {
-		// 	// ADD TURBO TURN
-		// }
-		// if (gamepad.dropBellyPan()) {
-		// 	Climber.dropBellyPan(true);
-		// }
-		// if (gamepad.pickUpbellyPanContinueClimb()) {
-		// 	Climber.pickUpBellyPanAndContinueClimbing(true);
-		// }
-		if (gamepad.oneShotShooter()) {
-			Shooter.oneShot();
-		}
-		if (gamepad.continualShooter()) {
-			Shooter.continuousShooting();
-		}
-		// if (gamepad.getRobotCentricModifier() && gamepad.oneShotShooter()) {
-		// 	Climber.setIdealClimberPositionToDropBellyPan();
-		// }
-		if (Math.abs(gamepad.shooterPivoterAdjuster()) > 0.1) {
-			ShooterPivoter.manualMove(-gamepad.shooterPivoterAdjuster());	 // THIS FUNCTIONS NEED TO BE IMPROVISED
-																				// BASED ON WHAT WE ARE GIVEN
-		}
-		// TEMP FOR TESTING
-		//ShooterPivoter.manualMove(gamepad.shooterPivoterAdjuster());	 // THIS FUNCTIONS NEED TO BE IMPROVISED
-			
-		// if (Math.abs(gamepad.manualClimberAdjuster()) > 0.1) {
-		// 	Climber.adjustExtendedHook(gamepad.manualClimberAdjuster());
-		// }
-		// if (gamepad.oneShotShooter() && gamepad.continualShooter()) {
-		// 	Climber.liftRobot(gamepad.liftSpeed());
-		// }
+		
 		if (gamepad.turn180Degrees()) {
 			DriveAuto.turnDegrees(180, 1);
 		}
-		// // if (gamepad.turnToZeroDegrees()) {
-		// 	DriveAuto.turnToHeading(0, 1);
-		// }
-		if (gamepad.runIntakeBackWards()) {
-			Intake.runIntakeBackwards();
-		}
 
-		// Shooter.setAdjustmentFactor(gamepad.getShooterAdjustment());
-
-		ColorSensorAndTraverser.matchColor();
-		ColorSensorAndTraverser.levelScale();
-
-		// DistanceSensor.tick();
 		// --------------------------------------------------
 		// RESET - allow manual reset of systems by pressing Start
 		// --------------------------------------------------
@@ -245,20 +163,15 @@ public class Robot extends TimedRobot {
 		SmartDashboard.updateValues();
 
 		Shooter.tick();
-		ShooterPivoter.tick();
 		DriveAuto.tick();
-		// Climber.tick();
-		ColorSensorAndTraverser.tick();
 
 		SmartDashboard.putNumber("Gyro", RobotGyro.getAngle());
-		SmartDashboard.putNumber("US Distance", DistanceSensor.GetInches());
-		SmartDashboard.putNumber("ShootPivot pos", ShooterPivoter.getShaftEncoderPosition());
 
 		 // Sets the PID values based on input from the SmartDashboard
         // This is only needed during tuning
         // if (SmartDashboard.getBoolean("Tune Drive-Turn PIDs", false)) {
        
-					DriveTrain.setDrivePIDValues(SmartDashboard.getNumber("AUTO DRIVE P", Calibration.AUTO_DRIVE_P),
+			DriveTrain.setDrivePIDValues(SmartDashboard.getNumber("AUTO DRIVE P", Calibration.AUTO_DRIVE_P),
                     SmartDashboard.getNumber("AUTO DRIVE I", Calibration.AUTO_DRIVE_I),
                     SmartDashboard.getNumber("AUTO DRIVE D", Calibration.AUTO_DRIVE_D),
                     SmartDashboard.getNumber("AUTO DRIVE F", Calibration.AUTO_DRIVE_F));
