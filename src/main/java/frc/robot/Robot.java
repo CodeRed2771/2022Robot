@@ -25,20 +25,12 @@ public class Robot extends TimedRobot {
 	KeyMap gamepad;
 
 	AutoBaseClass mAutoProgram;
-	final String bluepathAutonSkillstwo = "skill two a";
-	final String skillsOne = "Skill One";
-	final String AutoSlalom = "Slalom"; 
-	final String autoBarrelRace = "BarrelRace";
-	final String AutoBouncePath = "BouncePath";
-	final String threeBasicBalls = "3 Basic Balls";
-	final String sixBallRight = "6 Balls Right";
-	final String fiveBallsMiddle = "5 Balls Middle";
-	final String sixBallsLeft = "6 Balls Left";
+
 	final String autoCalibrator = "Auto Calibrator";
 	final String autoWheelAlign = "Auto Wheel Align";
 	final String autoAlign = "Auto Align";
 	final String ballPickUp = "Auto Ball Pick Up";
-	final String AutoAtHomeBallPickUp = "AT HOME Ball Challenge";
+
 	private boolean isIntakeUpPosition = true;
 	private boolean intakeKeyAlreadyPressed = false;
 
@@ -186,8 +178,6 @@ public class Robot extends TimedRobot {
             DriveTrain.setDriveMMVelocity(
                     (int) SmartDashboard.getNumber("DRIVE MM VELOCITY", Calibration.DT_MM_VELOCITY));
         // }
-
-
 	}
 
 	@Override
@@ -208,38 +198,6 @@ public class Robot extends TimedRobot {
 		mAutoProgram.start();
 
 		switch (autoSelected) {
-		case skillsOne:
-			mAutoProgram = new AutonSkillsOne();
-			mAutoProgram.start();
-			break;
-		case AutoSlalom:
-			mAutoProgram = new AutoSlalom();
-			mAutoProgram.start();
-			break;
-		case autoBarrelRace:
-			mAutoProgram = new AutoBarrelRace();
-			mAutoProgram.start();
-			break;
-		case AutoBouncePath:
-			mAutoProgram = new AutoBouncePath();
-			mAutoProgram.start();
-			break;	
-		case threeBasicBalls:
-			mAutoProgram = new AutonBasic3BallOffLine();
-			mAutoProgram.start(robotPosition);
-			break;
-		case sixBallRight:
-			mAutoProgram = new AutonAllTheWayRight6Ball();
-			mAutoProgram.start(robotPosition);
-			break;
-		case fiveBallsMiddle:
-			mAutoProgram = new AutonMiddle5Balls();
-			mAutoProgram.start(robotPosition);
-			break;
-		case sixBallsLeft:
-			mAutoProgram = new AutonLeft6Balls();
-			mAutoProgram.start(robotPosition);
-			break;
 		case autoCalibrator:
 			mAutoProgram = new AutoCalibrator();
 			mAutoProgram.start(robotPosition);
@@ -256,10 +214,6 @@ public class Robot extends TimedRobot {
 			mAutoProgram = new AutoBallPickUp();
 			mAutoProgram.start();
 			break;
-		case AutoAtHomeBallPickUp:
-			mAutoProgram = new AutoBallAtHomeChallenge();
-			mAutoProgram.start();
-			break;
 		}
 	}
 
@@ -272,18 +226,11 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Position", positionChooser);
 
 		autoChooser = new SendableChooser<String>();
-		autoChooser.setDefaultOption(skillsOne, skillsOne);
-		autoChooser.addOption(AutoSlalom, AutoSlalom);
-		autoChooser.addOption(threeBasicBalls, threeBasicBalls);
-		autoChooser.addOption(sixBallRight, sixBallRight);
-		autoChooser.addOption(fiveBallsMiddle, fiveBallsMiddle);
-		autoChooser.addOption(sixBallsLeft, sixBallsLeft);
 		autoChooser.addOption(autoCalibrator, autoCalibrator);
 		autoChooser.addOption(autoWheelAlign, autoWheelAlign);
 		autoChooser.addOption(autoAlign, autoAlign);
 		autoChooser.addOption(ballPickUp, ballPickUp);
-		autoChooser.addOption(AutoBouncePath, AutoBouncePath);
-		autoChooser.addOption(AutoAtHomeBallPickUp, AutoAtHomeBallPickUp);
+
 		SmartDashboard.putData("Auto Chose:", autoChooser);
 	}
 
@@ -321,8 +268,6 @@ public class Robot extends TimedRobot {
 		Calibration.checkIfShouldResetCalibration();
 
 		VisionBall.GetBallLocations();
-
-		
 	}
 
 	/**

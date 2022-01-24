@@ -1,10 +1,10 @@
 package frc.robot.libs;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.PowerDistribution;
 
 public class CurrentBreaker {
 
-	PowerDistributionPanel pdp;
+	PowerDistribution pdp;
 	int portnum;
 	double currentThreshold;
 	boolean tripped = false;
@@ -12,7 +12,7 @@ public class CurrentBreaker {
 	long trippedTime = -1;
 
 	public CurrentBreaker(int portnum, double currentThreshold, int maxToleratedDuration) {
-		pdp = new PowerDistributionPanel();
+		pdp = new PowerDistribution();
 		this.portnum = portnum;
 		this.currentThreshold = currentThreshold;
 		this.maxToleratedDuration = maxToleratedDuration;

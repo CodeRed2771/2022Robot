@@ -59,13 +59,13 @@ public class AutoBallPickUp extends AutoBaseClass {
             case 0:
                 //get ball list
                 ballCollected = false;
-                Intake.moveQueuerDown();
-                if (!Intake.isIntakeDown()) {
-                    Intake.moveIntakeDown();
-                    setTimerAndAdvanceStep(2000);
-                } else {
-                    setStep(2);
-                }
+                // Intake.moveQueuerDown();
+                // if (!Intake.isIntakeDown()) {
+                //     Intake.moveIntakeDown();
+                //     setTimerAndAdvanceStep(2000);
+                // } else {
+                //     setStep(2);
+                // }
                 break;
             case 1:
                 break;
@@ -105,7 +105,7 @@ public class AutoBallPickUp extends AutoBaseClass {
                 }
                 break;
             case 5:
-                Intake.runIntakeForwards();
+                // Intake.runIntakeForwards();
                 driveInches(BallLocations.get(0).y + 3, 0, 1);
                 distanceFromBall = BallLocations.get(0).y;
                 setTimerAndAdvanceStep(2000);

@@ -42,8 +42,7 @@ public class AutoAlign extends AutoBaseClass {
             case 0:
                 Vision.setVisionTrackingMode();
                 Vision.setTargetForShooting();
-                Intake.moveIntakeDown();
-                ShooterPivoter.setDesiredShootPosition(Vision.getShooterPivoterDesiredPosition());
+                // Intake.moveIntakeDown();
                 advanceStep();
                 break;
             case 1:

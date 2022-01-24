@@ -3,7 +3,7 @@ package frc.robot;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.libs.CurrentBreaker;
 

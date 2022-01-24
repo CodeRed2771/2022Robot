@@ -1,6 +1,8 @@
 package frc.robot.libs;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Relay;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,9 +55,8 @@ public class RobotLEDs implements Runnable {
 
     public void activateTeleop() {
         if (!locked) {
-            DriverStation ds = DriverStation.getInstance();
-            color = DriverStation.Alliance.Blue == ds.getAlliance() ? Color.BLUE
-                    : DriverStation.Alliance.Red == ds.getAlliance() ? Color.RED : Color.MAGENTA;
+            color = DriverStation.Alliance.Blue == DriverStation.getAlliance() ? Color.BLUE
+                    : DriverStation.Alliance.Red == DriverStation.getAlliance() ? Color.RED : Color.MAGENTA;
             update();
         }
     }
@@ -205,9 +206,10 @@ public class RobotLEDs implements Runnable {
                 || color == Color.CYAN) && on;
         boolean b = (color == Color.WHITE || color == Color.BLUE || color == Color.MAGENTA
                 || color == Color.CYAN) && on;
-        greenandred.setForward(!g);
-        greenandred.setReverse(r);
-        blue.setReverse(b);
+        // greenandred.setForward(!g);
+
+        // greenandred.setReverse(r);
+        // blue.setReverse(b);
 
 //        greenandred.setDirection(r && g ? Relay.Direction.kBoth
 //                : r ? Relay.Direction.kForward : Relay.Direction.kReverse);
