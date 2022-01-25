@@ -8,27 +8,9 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class DriveTrain {
 
-    private static DriveTrain instance;
     public static SwerveModule moduleA, moduleB, moduleC, moduleD;
 
-    public static DriveTrain getInstance() {
-        if (instance == null) {
-            try {
-                instance = new DriveTrain();
-            } catch (Exception ex) {
-                System.out.println("Drive train could not be initialized due to the following error: ");
-                System.out.println(ex.getMessage());
-                System.out.println(ex.getStackTrace());
-                return null;
-            }
-        }
-        return instance;
-    }
-
-    // define robot dimensions. L=wheel base W=track width
-    private static final double l = 29, w = 18, r = Math.sqrt((l * l) + (w * w));
-
-    private DriveTrain() {
+    public static void init() {
        
         moduleA = new SwerveModule(Calibration.DT_A_DRIVE_SPARK_ID, Calibration.DT_A_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
         Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
@@ -43,21 +25,6 @@ public class DriveTrain {
         Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
         Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_D_ABS_ZERO(),'D'); // Front left
 
-/*
- * LAMPREY ENCODER VERSION
- *      moduleA = new Module(Calibration.DT_A_DRIVE_SPARK_ID, Calibration.DT_A_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
- *               Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
- *               Calibration.TURN_I, Calibration.TURN_D, Calibration.TURN_I_ZONE, Calibration.TURN_F, Calibration.GET_DT_A_ABS_ZERO(), 'A'); // Front left
- *       moduleB = new Module(Calibration.DT_B_DRIVE_SPARK_ID, Calibration.DT_B_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
- *               Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
- *               Calibration.TURN_I, Calibration.TURN_D, Calibration.TURN_I_ZONE, Calibration.TURN_F, Calibration.GET_DT_B_ABS_ZERO(), 'B'); // Back right
- *       moduleC = new Module(Calibration.DT_C_DRIVE_SPARK_ID, Calibration.DT_C_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
- *               Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
- *               Calibration.TURN_I, Calibration.TURN_D, Calibration.TURN_I_ZONE, Calibration.TURN_F, Calibration.GET_DT_C_ABS_ZERO(), 'C'); // Back left
- *       moduleD = new Module(Calibration.DT_D_DRIVE_SPARK_ID, Calibration.DT_D_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
- *               Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
- *               Calibration.TURN_I, Calibration.TURN_D, Calibration.TURN_I_ZONE, Calibration.TURN_F, Calibration.GET_DT_D_ABS_ZERO(), 'D'); // Front right
-*/
         SmartDashboard.putNumber("TURN P", Calibration.TURN_P);
         SmartDashboard.putNumber("TURN I", Calibration.TURN_I);
         SmartDashboard.putNumber("TURN D", Calibration.TURN_D);
@@ -65,10 +32,10 @@ public class DriveTrain {
      //   SmartDashboard.putNumber("TURN F", Calibration.TURN_F);
     }
 
-    public static void setDrivePower(double modAPower, double modBPower, double modCPower, double modDPower) {
-        if (getInstance() == null)
-            return;
+    // define robot dimensions. L=wheel base W=track width
+    private static final double l = 29, w = 18, r = Math.sqrt((l * l) + (w * w));
 
+    public static void setDrivePower(double modAPower, double modBPower, double modCPower, double modDPower) {
         moduleA.setDrivePower(modAPower);
         moduleB.setDrivePower(modBPower);
         moduleC.setDrivePower(modCPower);
@@ -99,9 +66,6 @@ public class DriveTrain {
     }
 
     public static void setTurnPower(double modAPower, double modBPower, double modCPower, double modDPower) {
-        if (getInstance() == null)
-            return;
-
         moduleA.setTurnPower(modAPower);
         moduleB.setTurnPower(modBPower);
         moduleC.setTurnPower(modCPower);
@@ -115,8 +79,6 @@ public class DriveTrain {
 
     public static void setTurnOrientation(double modAPosition, double modBPosition, double modCPosition,
             double modDPosition, boolean optimizeTurn) {
-        if (getInstance() == null)
-            return;
 
         // position is a value from 0 to 1 that indicates
         // where in the rotation of the module the wheel should be set.
@@ -134,8 +96,6 @@ public class DriveTrain {
     }
 
     public static void setAllTurnOrientation(double position) {
-        if (getInstance() == null)
-            return;
         setTurnOrientation(position, position, position, position, true);
     }
 
@@ -144,33 +104,22 @@ public class DriveTrain {
      * @param optimizeTurn - allow turn optimization
      */
     public static void setAllTurnOrientation(double position, boolean optimizeTurn) {
-        if (getInstance() == null)
-            return;
         setTurnOrientation(position, position, position, position, optimizeTurn);
     }
 
     public static void setAllDrivePosition(int position) {
-        if (getInstance() == null)
-            return;
         setDrivePosition(position, position, position, position);
     }
 
     public static void setDrivePosition(double modAPosition, double modBPosition, double modCPosition,
             double modDPosition) {
-        if (getInstance() == null)
-            return;
-
         moduleA.setDrivePIDToSetPoint(modAPosition);
         moduleB.setDrivePIDToSetPoint(modBPosition);
         moduleC.setDrivePIDToSetPoint(modCPosition);
         moduleD.setDrivePIDToSetPoint(modDPosition);
-
     }
 
     public static void addToAllDrivePositions(double ticks) {
-        if (getInstance() == null)
-            return;
-
         setDrivePosition(moduleA.getDriveEnc() + ((moduleA.modulesReversed() ? -1 : 1) * ticks),
                 moduleB.getDriveEnc() + ((moduleB.modulesReversed() ? -1 : 1) * ticks),
                 moduleC.getDriveEnc() + ((moduleC.modulesReversed() ? -1 : 1) * ticks),
@@ -178,57 +127,38 @@ public class DriveTrain {
     }
 
     public static double getDriveEnc() {
-        if (getInstance() == null)
-            return 0;
         return (moduleA.getDriveEnc() + moduleB.getDriveEnc() + moduleC.getDriveEnc() + moduleD.getDriveEnc()) / 4;
     }
 
     public static void autoSetRot(double rot) {
-        if (getInstance() == null)
-            return;
         swerveDrive(0, 0, rot);
     }
 
     public static void setAllTurnPower(double power) {
-        if (getInstance() == null)
-            return;
         setTurnPower(power, power, power, power);
     }
 
     public static void setAllDrivePower(double power) {
-        if (getInstance() == null)
-            return;
         setDrivePower(power, power, power, power);
     }
 
     public static boolean isModuleATurnEncConnected() {
-        if (getInstance() == null)
-            return false;
         return moduleA.isTurnEncConnected();
     }
 
     public static boolean isModuleBTurnEncConnected() {
-        if (getInstance() == null)
-            return false;
         return moduleB.isTurnEncConnected();
     }
 
     public static boolean isModuleCTurnEncConnected() {
-        if (getInstance() == null)
-            return false;
         return moduleC.isTurnEncConnected();
     }
 
     public static boolean isModuleDTurnEncConnected() {
-        if (getInstance() == null)
-            return false;
         return moduleD.isTurnEncConnected();
     }
 
     public static void resetDriveEncoders() {
-        if (getInstance() == null)
-            return;
-
         moduleA.resetDriveEnc();
         moduleB.resetDriveEnc();
         moduleC.resetDriveEnc();
@@ -236,9 +166,6 @@ public class DriveTrain {
     }
 
     public static void stopDriveAndTurnMotors() {
-        if (getInstance() == null)
-            return;
-
         moduleA.stopDriveAndTurnMotors();
         moduleB.stopDriveAndTurnMotors();
         moduleC.stopDriveAndTurnMotors();
@@ -246,9 +173,6 @@ public class DriveTrain {
     }
 
     public static void stopDrive() {
-        if (getInstance() == null)
-            return;
-
         moduleA.stopDrive();
         moduleB.stopDrive();
         moduleC.stopDrive();
@@ -271,9 +195,6 @@ public class DriveTrain {
 
     // OLD
     public static void resetTurnEncoders() {
-        if (getInstance() == null)
-            return;
-
         if (allowTurnEncoderReset) {
             double modAOff = 0, modBOff = 0, modCOff = 0, modDOff = 0;
 
@@ -318,9 +239,6 @@ public class DriveTrain {
     }
 
     public static void setDriveBrakeMode(boolean b) {
-        if (getInstance() == null)
-            return;
-
         moduleA.setBrakeMode(b);
         moduleB.setBrakeMode(b);
         moduleC.setBrakeMode(b);
@@ -328,9 +246,6 @@ public class DriveTrain {
     }
 
     public static double getAverageTurnError() {
-        if (getInstance() == null)
-            return 0.0;
-
         return (Math.abs(moduleA.getTurnError()) + Math.abs(moduleB.getTurnError()) + Math.abs(moduleC.getTurnError())
                 + Math.abs(moduleD.getTurnError())) / 4d;
     }
@@ -340,9 +255,6 @@ public class DriveTrain {
      * Drive methods
      */
     public static void swerveDrive(double fwd, double strafe, double rot) {
-        if (getInstance() == null)
-            return;
-
         double a = strafe - (rot * (l / r));
         double b = strafe + (rot * (l / r));
         double c = fwd - (rot * (w / r));
@@ -417,9 +329,6 @@ public class DriveTrain {
     }
 
     public static void humanDrive(double fwd, double str, double rot) {
-        if (getInstance() == null)
-            return;
-
         if (Math.abs(rot) < 0.01)
             rot = 0;
 
@@ -433,9 +342,6 @@ public class DriveTrain {
     }
 
     public static void fieldCentricDrive(double fwd, double strafe, double rot) {
-        if (getInstance() == null)
-            return;
-
         double temp = (fwd * Math.cos(RobotGyro.getGyroAngleInRad()))
                 + (strafe * Math.sin(RobotGyro.getGyroAngleInRad()));
         strafe = (-fwd * Math.sin(RobotGyro.getGyroAngleInRad()))
@@ -446,23 +352,16 @@ public class DriveTrain {
     }
 
     public static void tankDrive(double left, double right) {
-        if (getInstance() == null)
-            return;
         setAllTurnOrientation(0);
         setDrivePower(right, left, right, left);
     }
 
     public static double[] getAllAbsoluteTurnOrientations() {
-        if (getInstance() == null)
-            return new double[4];
         return new double[] { moduleA.getTurnAbsolutePosition(), moduleB.getTurnAbsolutePosition(),
                 moduleC.getTurnAbsolutePosition(), moduleD.getTurnAbsolutePosition() };
     }
 
     public static void setDrivePIDValues(double p, double i, double d, double f) {
-        if (getInstance() == null)
-            return;
-
         moduleA.setDrivePIDValues(p, i, d, f);
         moduleB.setDrivePIDValues(p, i, d, f);
         moduleC.setDrivePIDValues(p, i, d, f);
@@ -470,9 +369,6 @@ public class DriveTrain {
     }
 
     public static void setTurnPIDValues(double p, double i, double d, double iZone, double f) {
-        if (getInstance() == null)
-            return;
-
         moduleA.setTurnPIDValues(p, i, d, iZone, f);
         moduleB.setTurnPIDValues(p, i, d, iZone, f);
         moduleC.setTurnPIDValues(p, i, d, iZone, f);

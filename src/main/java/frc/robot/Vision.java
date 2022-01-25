@@ -4,7 +4,6 @@ import java.lang.Math;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.*;
 
 public class Vision {
 
@@ -16,15 +15,8 @@ public class Vision {
     private static double ty = 0;
     private static double degreesTargetOffGround = 0;
     private static double distance = 0;
-    public static Vision instance;
 
-    public static Vision getInstance() {
-        if (instance == null)
-            instance = new Vision();
-        return instance;
-    }
-
-    public Vision() {
+    public static void init() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         SmartDashboard.putNumber("Adjust Val:", 1);
         SmartDashboard.putNumber("ShooterPivoterAdjust", 0.5);

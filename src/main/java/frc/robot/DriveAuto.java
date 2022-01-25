@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.libs.CurrentBreaker;
 
 public class DriveAuto {
-    private static DriveAuto instance;
     private static PIDController rotDrivePID;
 
     private static boolean isDriving = false;
@@ -25,15 +24,8 @@ public class DriveAuto {
         VERY_LOW_SPEED, LOW_SPEED, MED_SPEED, HIGH_SPEED
     };
 
-    public static DriveAuto getInstance() {
-        if (instance == null)
-            instance = new DriveAuto();
-        return instance;
-    }
-
-    private DriveAuto() {
-        System.out.println("START OF DRIVEAUTO CONSTRUCTOR");
-        DriveTrain.getInstance();
+    public static void init() {
+        System.out.println("START OF DRIVEAUTO INIT");
 
         rotDrivePID = new PIDController(Calibration.AUTO_ROT_P, Calibration.AUTO_ROT_I, Calibration.AUTO_ROT_D,
                 Calibration.AUTO_ROT_F);
@@ -42,13 +34,7 @@ public class DriveAuto {
         DriveTrain.setDriveMMAccel(Calibration.DT_MM_ACCEL);
         DriveTrain.setDriveMMVelocity(Calibration.DT_MM_VELOCITY);
 
-        driveCurrentBreaker = new CurrentBreaker(Wiring.DRIVE_PDP_PORT, 55, 400); // Changed from 35 on 4/26/2019 by CS
-                                                                                  // and
-                                                                                  // AR
-        // changed amps back to 35 on 4/27/19 because Mr. Scott said to :( ~CM
-        // changed amps back to 55 on 4/27/19 at 9:20 because Mr. Scott decided that it
-        // was fine XD ~CS
-        // Yay ~CM
+        driveCurrentBreaker = new CurrentBreaker(Wiring.DRIVE_PDP_PORT, 55, 400); 
         driveCurrentBreaker.reset();
 
         SmartDashboard.putNumber("AUTO DRIVE P", Calibration.AUTO_DRIVE_P);
@@ -61,7 +47,7 @@ public class DriveAuto {
 
         SmartDashboard.updateValues();
 
-        System.out.println("END OF DRIVEAUTO CONSTRUCTOR");
+        System.out.println("END OF DRIVEAUTO INIT");
 
 	}
 	
@@ -70,7 +56,6 @@ public class DriveAuto {
 	}
 
     public static void driveInches(double inches, double angle, double speedFactor, boolean followTarget, boolean fieldCentric) {
-
 
         followingTarget = followTarget;
 

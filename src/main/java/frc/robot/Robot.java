@@ -10,10 +10,8 @@ package frc.robot;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import jdk.dynalink.support.SimpleRelinkableCallSite;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class Robot extends TimedRobot {
@@ -39,14 +37,15 @@ public class Robot extends TimedRobot {
 		gamepad = new KeyMap();
 
 		Intake.init();
-		RobotGyro.getInstance();
+		RobotGyro.init();
 		Calibration.loadSwerveCalibration();
 
-		DriveTrain.getInstance();
-		DriveAuto.getInstance();
+		DriveTrain.init();
+		DriveAuto.init();
 
-		Vision.getInstance();
-		VisionBall2021.SetUpBallVision();
+		Vision.init();
+		// VisionBall2021.SetUpBallVision();
+		
 		setupAutoChoices();
 		mAutoProgram = new AutoDoNothing();
 
@@ -74,9 +73,11 @@ public class Robot extends TimedRobot {
 			mAutoProgram = new AutoAlign();
 			mAutoProgram.start(false);
 		}
+		
 		if (gamepad.startIntake()) {
 
 		}
+
 		if (gamepad.stopIntake()) {
 
 		}
