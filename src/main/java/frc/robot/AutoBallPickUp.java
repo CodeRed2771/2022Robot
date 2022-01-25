@@ -71,7 +71,7 @@ public class AutoBallPickUp extends AutoBaseClass {
                 break;
             case 2:
                 BallLocations.clear();
-                BallLocations = VisionBall.GetBallLocations();
+                BallLocations = VisionBall2021.GetBallLocations();
                 advanceStep();
                 break;
             case 3:

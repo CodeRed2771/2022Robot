@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 		DriveAuto.getInstance();
 
 		Vision.getInstance();
-		VisionBall.SetUpBallVision();
+		VisionBall2021.SetUpBallVision();
 		setupAutoChoices();
 		mAutoProgram = new AutoDoNothing();
 
@@ -267,7 +267,7 @@ public class Robot extends TimedRobot {
 
 		Calibration.checkIfShouldResetCalibration();
 
-		VisionBall.GetBallLocations();
+		VisionBall2021.GetBallLocations();
 	}
 
 	/**

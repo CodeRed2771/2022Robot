@@ -9,7 +9,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public class Module {
+public class SwerveModule {
     public CANSparkMax drive;
     public WPI_TalonSRX turn;
     private final CANPIDController drivePID;
@@ -36,7 +36,7 @@ public class Module {
 	 * @param tIZone       I might not need to know the I Zone value for the turning
 	 *                     PID
 	 */
-	public Module(int driveMotorID, int turnTalonID, double dP, double dI, double dD, int dIZone, double tP, double tI,
+	public SwerveModule(int driveMotorID, int turnTalonID, double dP, double dI, double dD, int dIZone, double tP, double tI,
 			double tD, int tIZone, double tZeroPos, char moduleID) {
 
         drive = new CANSparkMax(driveMotorID, MotorType.kBrushless);
