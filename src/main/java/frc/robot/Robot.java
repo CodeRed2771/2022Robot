@@ -10,8 +10,10 @@ package frc.robot;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.libs.HID.Gamepad;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class Robot extends TimedRobot {
@@ -74,11 +76,12 @@ public class Robot extends TimedRobot {
 			mAutoProgram.start(false);
 		}
 		
+
 		if (gamepad.startIntake()) {
 
 		}
 
-		if (gamepad.stopIntake()) {
+		if ( gamepad.stopIntake()) {
 
 		}
 

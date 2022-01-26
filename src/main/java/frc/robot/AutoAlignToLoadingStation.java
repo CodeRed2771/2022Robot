@@ -23,7 +23,6 @@ public class AutoAlignToLoadingStation extends AutoBaseClass {
 
     public void start() {
         super.start();
-        Vision.getInstance();
         Vision.setVisionTrackingMode();
         Vision.setTargetForShooting();
     }
