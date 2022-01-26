@@ -76,13 +76,10 @@ public class Robot extends TimedRobot {
 			mAutoProgram.start(false);
 		}
 		
-
 		if (gamepad.startIntake()) {
-
 		}
 
 		if ( gamepad.stopIntake()) {
-
 		}
 
 		if (gamepad.intakeUpPosition()) {
