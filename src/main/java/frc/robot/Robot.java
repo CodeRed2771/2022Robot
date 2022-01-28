@@ -10,11 +10,14 @@ package frc.robot;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.libs.HID.Gamepad;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 
 public class Robot extends TimedRobot {
 
@@ -22,7 +25,9 @@ public class Robot extends TimedRobot {
 	SendableChooser<String> positionChooser;
 	SendableChooser<String> driveChooser;
 	String autoSelected;
-	KeyMap gamepad;
+	XboxController gamepad1;
+	XboxController gamepad2;
+	
 
 	AutoBaseClass mAutoProgram;
 
@@ -36,7 +41,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
-		gamepad = new KeyMap();
+		gamepad1 = new XboxController(0);
+		gamepad2 = new XboxController(1);
 
 		Intake.init();
 		RobotGyro.init();
@@ -71,18 +77,16 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		SmartDashboard.putNumber("DIST", Vision.getDistanceFromTarget());
 
-		if (gamepad.startVision()) {
+		if (gamepad1.getRightBumper()) {
 			mAutoProgram = new AutoAlign();
 			mAutoProgram.start(false);
 		}
 		
-		if (gamepad.startIntake()) {
+
+		if (gamepad2.getLeftBumper()) {
 		}
 
-		if ( gamepad.stopIntake()) {
-		}
-
-		if (gamepad.intakeUpPosition()) {
+		if (gamepad2.getXButton()) {
 			if (!intakeKeyAlreadyPressed) {
 				if (isIntakeUpPosition) {
 
@@ -94,23 +98,18 @@ public class Robot extends TimedRobot {
 		} else
 			intakeKeyAlreadyPressed = false;
 
-
-		if (gamepad.stopShooter() || gamepad.stopShooting()) {
+		if (gamepad2.getRightBumper() || gamepad1.getRightBumper()) {
 			Shooter.StopShooter();
 		}
 		
-		if (gamepad.startShooter()) {
-			Shooter.StartShooter();
-		}
-		
-		if (gamepad.turn180Degrees()) {
+		if (gamepad1.getBButton()) {
 			DriveAuto.turnDegrees(180, 1);
 		}
 
 		// --------------------------------------------------
 		// RESET - allow manual reset of systems by pressing Start
 		// --------------------------------------------------
-		if (gamepad.getZeroGyro()) {
+		if (gamepad1.getStartButton()) {
 			RobotGyro.reset();
 			DriveTrain.allowTurnEncoderReset();
 			DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
@@ -125,9 +124,9 @@ public class Robot extends TimedRobot {
 		// DRIVER CONTROL MODE
 		// Issue the drive command using the parameters from
 		// above that have been tweaked as needed
-		double driveRotAmount = -gamepad.getSwerveRotAxis();
-		double driveFWDAmount = gamepad.getSwerveYAxis();
-		double driveStrafeAmount = -gamepad.getSwerveXAxis();
+		double driveRotAmount = -gamepad1.getRightX();
+		double driveFWDAmount = gamepad1.getRightY();
+		double driveStrafeAmount = -gamepad1.getLeftX();
 
 		// SmartDashboard.putNumber("SWERVE ROT AXIS", driveRotAmount);
 		driveRotAmount = rotationalAdjust(driveRotAmount);
@@ -141,7 +140,7 @@ public class Robot extends TimedRobot {
 		}
 
 		if (!mAutoProgram.isRunning()) {
-			if (gamepad.getRobotCentricModifier()) {
+			if (gamepad1.getBackButton()) {
 				DriveTrain.humanDrive(driveFWDAmount, driveStrafeAmount, driveRotAmount);
 			} else {
 				DriveTrain.fieldCentricDrive(driveFWDAmount, driveStrafeAmount, driveRotAmount);
