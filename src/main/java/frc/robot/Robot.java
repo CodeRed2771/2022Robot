@@ -74,8 +74,8 @@ public class Robot extends TimedRobot {
 		DriveTrain.stopDriveAndTurnMotors();
 		DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
 		
-		// VisionBall.init(SmartDashboard.getString("Alliance R or B", "R")); // Ball vision tracking setup
-	//	VisionBall.start(); // Start the vision thread
+		VisionBall.init(SmartDashboard.getString("Alliance R or B", "R")); // Ball vision tracking setup
+		VisionBall.start(); // Start the vision thread
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class Robot extends TimedRobot {
 		double driveFWDAmount = -gamepad1.getLeftY();
 		double driveStrafeAmount = -gamepad1.getLeftX();
 
-		//double ballLaneAssist = VisionBall.getBallXOffset();
+		double ballLaneAssist = VisionBall.getBallXOffset();
 
 		// SmartDashboard.putNumber("SWERVE ROT AXIS", driveRotAmount);
 		driveRotAmount = rotationalAdjust(driveRotAmount);
@@ -142,10 +142,13 @@ public class Robot extends TimedRobot {
 		driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
 
 		// if (Intake.isRunning()) {
-		// 	if (ballLaneAssist > 0) 
-		// 		driveStrafeAmount += .3;
-		// 	else if (ballLaneAssist < 0) 
-		// 		driveStrafeAmount -= .3;
+			if (gamepad1.getLeftBumper()) {
+				if (ballLaneAssist > 0) 
+				driveStrafeAmount += .2;
+			else if (ballLaneAssist < 0) 
+				driveStrafeAmount -= .2;
+			}
+			
 		// }
 
 		if (Math.abs(driveFWDAmount) > .5) {
@@ -171,7 +174,7 @@ public class Robot extends TimedRobot {
 		Shooter.tick();
 		//DriveAuto.tick();
 
-	//	SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
+		SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
 		SmartDashboard.putNumber("Distance to Target", Vision.getDistanceFromTarget());
 
 		SmartDashboard.putNumber("Gyro", RobotGyro.getAngle());
