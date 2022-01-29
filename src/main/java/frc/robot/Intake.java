@@ -18,4 +18,8 @@ public class Intake {
         intakeMotor.setSmartCurrentLimit(20);
     }
 
+    public static boolean isRunning() {
+        return true;
+    }
+
 }

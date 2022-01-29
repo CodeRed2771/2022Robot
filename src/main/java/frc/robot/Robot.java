@@ -10,6 +10,7 @@ package frc.robot;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -52,8 +53,7 @@ public class Robot extends TimedRobot {
 		//DriveAuto.init();
 
 		Vision.init(); // Limelight shooter vision tracking
-	//	VisionBall.init(); // Ball vision tracking setup
-	//	VisionBall.start(); // Start the vision thread
+
 
 		setupAutoChoices();
 		mAutoProgram = new AutoDoNothing();
@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
 
 		SmartDashboard.putBoolean("Show Encoders", true);
 		SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
+		SmartDashboard.putString("Alliance R or B", "R");
 	}
 
 	@Override
@@ -72,6 +73,9 @@ public class Robot extends TimedRobot {
 		mAutoProgram.stop();
 		DriveTrain.stopDriveAndTurnMotors();
 		DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
+		
+		VisionBall.init(SmartDashboard.getString("Alliance R or B", "R")); // Ball vision tracking setup
+		VisionBall.start(); // Start the vision thread
 	}
 
 	@Override
@@ -129,11 +133,20 @@ public class Robot extends TimedRobot {
 		double driveFWDAmount = gamepad1.getLeftY();
 		double driveStrafeAmount = -gamepad1.getLeftX();
 
+		double ballLaneAssist = VisionBall.getBallXOffset();
+
 		// SmartDashboard.putNumber("SWERVE ROT AXIS", driveRotAmount);
 		driveRotAmount = rotationalAdjust(driveRotAmount);
 		// SmartDashboard.putNumber("ADJUSTED SWERVE ROT AMOUNT", driveRotAmount);
 		driveFWDAmount = forwardAdjust(driveFWDAmount, true);
 		driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
+
+		if (Intake.isRunning()) {
+			if (ballLaneAssist > 0) 
+				driveStrafeAmount += .3;
+			else if (ballLaneAssist < 0) 
+				driveStrafeAmount -= .3;
+		}
 
 		if (Math.abs(driveFWDAmount) > .5) {
 			if (mAutoProgram.isRunning())
@@ -156,9 +169,9 @@ public class Robot extends TimedRobot {
 		SmartDashboard.updateValues();
 
 		Shooter.tick();
-		DriveAuto.tick();
+		//DriveAuto.tick();
 
-		// SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
+		SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
 		SmartDashboard.putNumber("Distance to Target", Vision.getDistanceFromTarget());
 
 		SmartDashboard.putNumber("Gyro", RobotGyro.getAngle());

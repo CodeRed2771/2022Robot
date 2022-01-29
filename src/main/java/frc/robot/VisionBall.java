@@ -9,7 +9,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.*;
 
-public class VisionBall implements VisionRunner.Listener<VisionBallPipeline>
+public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
 {
     private static UsbCamera  camera;
     private static int IMG_WIDTH = 640;
@@ -19,20 +19,34 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipeline>
     private static double centerX = 0.0;
     private static AtomicBoolean running = new AtomicBoolean(false);
 
-    public static void init() {
+    public static void init(String allianceColor) {
         camera = CameraServer.startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 
-        visionThread = new VisionThread(camera, new VisionBallPipeline(), pipeline -> {
-            if (!pipeline.filterContoursOutput().isEmpty()) {
-                Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-                synchronized (imgLock) {
-                    centerX = r.x + (r.width / 2);
+        if (allianceColor == "R") {
+            visionThread = new VisionThread(camera, new VisionBallPipelineRed(), pipeline -> {
+                if (!pipeline.filterContoursOutput().isEmpty()) {
+                    Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+                    synchronized (imgLock) {
+                        centerX = r.x + (r.width / 2);
+                    }
+                } else {
+                    centerX = IMG_WIDTH / 2; // default to being centered
                 }
-            } else {
-                centerX = IMG_WIDTH / 2; // default to being centered
-            }
-        });
+            });
+        } else {
+            visionThread = new VisionThread(camera, new VisionBallPipelineBlue(), pipeline -> {
+                if (!pipeline.filterContoursOutput().isEmpty()) {
+                    Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+                    synchronized (imgLock) {
+                        centerX = r.x + (r.width / 2);
+                    }
+                } else {
+                    centerX = IMG_WIDTH / 2; // default to being centered
+                }
+            });
+        }
+       
     }
 
     public static void start() {
@@ -48,7 +62,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipeline>
     }
 
     @Override
-    public void copyPipelineOutputs(VisionBallPipeline pipeline) {
+    public void copyPipelineOutputs(VisionBallPipelineRed pipeline) {
         // TODO Auto-generated method stub
         
     }
