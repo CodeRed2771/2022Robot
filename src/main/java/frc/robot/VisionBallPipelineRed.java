@@ -15,7 +15,7 @@ import org.opencv.imgproc.*;
 *
 * @author GRIP
 */
-public class VisionBallPipeline implements VisionPipeline {
+public class VisionBallPipelineRed implements VisionPipeline {
 
 	//Outputs
 	private Mat hslThresholdOutput = new Mat();
