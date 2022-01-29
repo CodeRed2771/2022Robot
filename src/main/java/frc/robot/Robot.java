@@ -126,7 +126,7 @@ public class Robot extends TimedRobot {
 		// Issue the drive command using the parameters from
 		// above that have been tweaked as needed
 		double driveRotAmount = -gamepad1.getRightX();
-		double driveFWDAmount = gamepad1.getRightY();
+		double driveFWDAmount = gamepad1.getLeftY();
 		double driveStrafeAmount = -gamepad1.getLeftX();
 
 		// SmartDashboard.putNumber("SWERVE ROT AXIS", driveRotAmount);
