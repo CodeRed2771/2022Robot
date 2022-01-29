@@ -37,6 +37,12 @@ public class Calibration {
     private final static double DT_C_ABS_ZERO_INITIAL = .434; // .042;
     private final static double DT_D_ABS_ZERO_INITIAL = .858; // .924;
 
+    public static final double SHOOTER_P = 0.7;
+    public static final double SHOOTER_I = 0.0; // not used
+    public static final double SHOOTER_D = 0;
+    public static final double SHOOTER_F = 0.0425;
+    public static final int SHOOTER_DEFAULT_SPEED = 13000;
+
     public final static double VISION_FWD_P = 0.05;
     public final static double VISION_FWD_I = 0;
     public final static double VISION_FWD_D = 0.15;
@@ -49,16 +55,6 @@ public class Calibration {
     public final static double VISION_ROT_I = 0;
     public final static double VISION_ROT_D = 0;
 
-    /*
-     * LAMPREY VERSION
-     public final static double TURN_P = 14.6;
-    public final static double TURN_I = 0.007;
-    public final static int TURN_I_ZONE = 40;
-    public final static double TURN_D = 550;
-
-    public final static double TURN_F = 0;
-    */
-   
     public final static double TURN_P = 8; //was 10 3.10.19
 	public final static double TURN_I = 0.01; // was .01
 	public final static double TURN_D = 400; // was 400
@@ -128,19 +124,6 @@ public class Calibration {
     public static final int AUTO_DRIVE_IZONE = 50;
 
     public static final double INTAKE_MAX_CURRENT = 14;
-
-    public static final double SHOOTER_P = 0.7;
-    public static final double SHOOTER_I = 0.0;
-    public static final double SHOOTER_D = 0;
-    public static final double SHOOTER_F = 0.0425;
-    public static final int SHOOTER_DEFAULT_SPEED = 13000;
-
-    public static final double LINKAGE_P = 5; // was 3.2
-    public static final double LINKAGE_I = 0.0;
-    public static final double LINKAGE_D = 0.0;
-    public static final double LINKAGE_F = 1.0;
-    public static final int LINKAGE_ACCEL = 500;
-    public static final int LINKAGE_VELOCITY = 1000;
 
     public static final DigitalInput botIndicator = new DigitalInput(9);
 
