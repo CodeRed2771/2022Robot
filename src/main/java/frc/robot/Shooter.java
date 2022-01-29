@@ -70,16 +70,16 @@ public class Shooter {
 
     public static void tick() {
 
-        if (SmartDashboard.getBoolean("Shooter TUNE", true)) {
-			shooterPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
-			shooterPID.setP(SmartDashboard.getNumber("Shoot P", 0));
-            shooterPID.setD(SmartDashboard.getNumber("Shoot D", 0));
+        // if (SmartDashboard.getBoolean("Shooter TUNE", true)) {
+		// 	shooterPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
+		// 	shooterPID.setP(SmartDashboard.getNumber("Shoot P", 0));
+        //     shooterPID.setD(SmartDashboard.getNumber("Shoot D", 0));
             
-            feederPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
-            feederPID.setP(SmartDashboard.getNumber("Shoot P", 0));
-            feederPID.setD(SmartDashboard.getNumber("Shoot D", 0));
+        //     feederPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
+        //     feederPID.setP(SmartDashboard.getNumber("Shoot P", 0));
+        //     feederPID.setD(SmartDashboard.getNumber("Shoot D", 0));
 
-        }
+        // }
 
             if (isEnabled) {
                 shooterPID.setReference(SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED), ControlType.kSmartVelocity);
