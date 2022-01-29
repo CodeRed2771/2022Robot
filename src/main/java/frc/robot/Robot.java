@@ -51,9 +51,10 @@ public class Robot extends TimedRobot {
 		DriveTrain.init();
 		DriveAuto.init();
 
-		Vision.init();
-		// VisionBall2021.SetUpBallVision();
-		
+		Vision.init(); // Limelight shooter vision tracking
+		VisionBall.init(); // Ball vision tracking setup
+		VisionBall.start(); // Start the vision thread
+
 		setupAutoChoices();
 		mAutoProgram = new AutoDoNothing();
 
@@ -156,6 +157,9 @@ public class Robot extends TimedRobot {
 
 		Shooter.tick();
 		DriveAuto.tick();
+
+		SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
+		SmartDashboard.putNumber("Distance to Target", Vision.getDistanceFromTarget());
 
 		SmartDashboard.putNumber("Gyro", RobotGyro.getAngle());
 

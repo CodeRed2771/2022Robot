@@ -19,7 +19,6 @@ public class Vision {
     public static void init() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         SmartDashboard.putNumber("Adjust Val:", 1);
-        SmartDashboard.putNumber("ShooterPivoterAdjust", 0.5);
     }
 
     public static double getAngleOffset() {
@@ -54,50 +53,11 @@ public class Vision {
         } else {
             finalAdjustedFactor = VisionCalibration.turnAdjustmentArray[(int)distance];
         }
-        // adjustFactorOne = VisionCalibration.turnAdjustmentArray[(int) distance];
-        // adjustFactorTwo = VisionCalibration.turnAdjustmentArray[(int) upperVal];
-        // averageAdjustFactorPerInch = (adjustFactorTwo - adjustFactorOne) / 12;
-        // finalAdjustedFactor = (averageAdjustFactorPerInch * (originalDistance - (distance * 12))) + adjustFactorOne;
+
         SmartDashboard.putNumber("FINAL ADJUSTED FACTOR", finalAdjustedFactor);
         SmartDashboard.putNumber("VISION Angle Offset", getAngleOffset());
         
         return finalAdjustedFactor * getAngleOffset();
-    }
-
-    public static double getShooterPivoterDesiredPosition () {
-        // return SmartDashboard.getNumber("ShooterPivoterAdjust", 0.5);
-
-        double distance = getAdjustedDistanceFromTarget();
-        SmartDashboard.putNumber("Adjusted Distance", getAdjustedDistanceFromTarget());
-        double originalDistance = distance;                                                                                                                        
-        double upperVal = 0;
-        double desiredShaftPositionOne = 1;                                                    
-        double desiredShaftPositionTwo = 1;                                                    
-        double averageDesiredShaftPositionPerInch = 0;
-        double finalShaftPosition = 1;
-
-        distance = Math.floor(distance/12);
-        upperVal = (float) distance + 1;
-
-        if (distance > ShooterCalibration.shooterPivoterArray.length - 1) {
-            upperVal = ShooterCalibration.shooterPivoterArray.length - 1;
-            distance = upperVal;
-        }
-
-        if (distance != upperVal) {
-            desiredShaftPositionOne = ShooterCalibration.shooterPivoterArray[(int)distance];
-            desiredShaftPositionTwo = ShooterCalibration.shooterPivoterArray[(int)upperVal];
-            averageDesiredShaftPositionPerInch = (desiredShaftPositionTwo - desiredShaftPositionOne) / 12;
-            finalShaftPosition = (averageDesiredShaftPositionPerInch * (originalDistance - ((float) distance * 12))) + desiredShaftPositionOne;
-        } else {
-            finalShaftPosition = ShooterCalibration.shooterPivoterArray[(int)distance];
-        }
-
-        // desiredShaftPositionOne = ShooterCalibration.shooterPivoterArray[(int)distance];
-        // desiredShaftPositionTwo = ShooterCalibration.shooterPivoterArray[(int)upperVal];
-        // averageDesiredShaftPositionPerInch = (desiredShaftPositionTwo - desiredShaftPositionOne) / 12;
-        // finalShaftPosition = (averageDesiredShaftPositionPerInch * (originalDistance - ((float) distance * 12))) + desiredShaftPositionOne;
-        return finalShaftPosition;
     }
 
     public static boolean seesTarget() {
