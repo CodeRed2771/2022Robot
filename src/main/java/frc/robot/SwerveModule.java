@@ -2,18 +2,19 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class SwerveModule {
     public CANSparkMax drive;
     public WPI_TalonSRX turn;
-    private final CANPIDController drivePID;
-    private final CANEncoder driveEncoder;
+    private final SparkMaxPIDController drivePID;
+    private final RelativeEncoder driveEncoder;
 	private char mModuleID;
 	private final int FULL_ROTATION = 4096;
 	private double TURN_P, TURN_I, TURN_D, DRIVE_P, DRIVE_I, DRIVE_D;
