@@ -42,6 +42,7 @@ public class Calibration {
     public static final double SHOOTER_D = 0;
     public static final double SHOOTER_F = 0.0425;
     public static final int SHOOTER_DEFAULT_SPEED = 13000;
+    public static final int FEEDER_DEFAULT_SPEED = 13000;
 
     public final static double VISION_FWD_P = 0.05;
     public final static double VISION_FWD_I = 0;

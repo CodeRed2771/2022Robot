@@ -64,25 +64,28 @@ public class Shooter {
 		SmartDashboard.putNumber("Shoot D", Calibration.SHOOTER_D);
         SmartDashboard.putNumber("Shoot F", Calibration.SHOOTER_F);
         SmartDashboard.putNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
+        SmartDashboard.putNumber("Feeder Setpoint", Calibration.FEEDER_DEFAULT_SPEED);
+        SmartDashboard.putBoolean("Shooter TUNE", true);
 
         closeGate();
     }
 
     public static void tick() {
 
-        // if (SmartDashboard.getBoolean("Shooter TUNE", true)) {
-		// 	shooterPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
-		// 	shooterPID.setP(SmartDashboard.getNumber("Shoot P", 0));
-        //     shooterPID.setD(SmartDashboard.getNumber("Shoot D", 0));
-            
-        //     feederPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
-        //     feederPID.setP(SmartDashboard.getNumber("Shoot P", 0));
-        //     feederPID.setD(SmartDashboard.getNumber("Shoot D", 0));
-
-        // }
-
             if (isEnabled) {
                 shooterPID.setReference(SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED), ControlType.kSmartVelocity);
+              //  feederPID.setReference(SmartDashboard.getNumber("Feeder Setpoint", Calibration.FEEDER_DEFAULT_SPEED), ControlType.kSmartVelocity);
+
+                if (SmartDashboard.getBoolean("Shooter TUNE", true)) {
+                    shooterPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
+                    shooterPID.setP(SmartDashboard.getNumber("Shoot P", 0));
+                    shooterPID.setD(SmartDashboard.getNumber("Shoot D", 0));
+                   
+                    feederPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
+                    feederPID.setP(SmartDashboard.getNumber("Shoot P", 0));
+                    feederPID.setD(SmartDashboard.getNumber("Shoot D", 0));
+               }
+
                 SmartDashboard.putNumber("SHOOTER VELOCITY", shooterMotor.getEncoder().getVelocity());
 
                 System.out.println(timer);

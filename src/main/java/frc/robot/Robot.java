@@ -48,10 +48,10 @@ public class Robot extends TimedRobot {
 		Intake.init();
 		RobotGyro.init();
 		Calibration.loadSwerveCalibration();
-
 		DriveTrain.init();
 		//DriveAuto.init();
 
+		Shooter.init();
 		Vision.init(); // Limelight shooter vision tracking
 
 
@@ -82,12 +82,18 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		SmartDashboard.putNumber("DIST", Vision.getDistanceFromTarget());
 
+		if (gamepad1.getAButton()) {
+			Shooter.StartShooter();
+		}
+		if (gamepad1.getBButton()) {
+			Shooter.StopShooter();
+		}
+
 		if (gamepad1.getRightBumper()) {
 			mAutoProgram = new AutoAlign();
 			mAutoProgram.start(false);
 		}
 		
-
 		if (gamepad2.getLeftBumper()) {
 		}
 
@@ -107,10 +113,6 @@ public class Robot extends TimedRobot {
 			Shooter.StopShooter();
 		}
 		
-		if (gamepad1.getBButton()) {
-			DriveAuto.turnDegrees(180, 1);
-		}
-
 		// --------------------------------------------------
 		// RESET - allow manual reset of systems by pressing Start
 		// --------------------------------------------------
@@ -144,9 +146,9 @@ public class Robot extends TimedRobot {
 		// if (Intake.isRunning()) {
 			if (gamepad1.getLeftBumper()) {
 				if (ballLaneAssist > 0) 
-				driveStrafeAmount += .2;
-			else if (ballLaneAssist < 0) 
-				driveStrafeAmount -= .2;
+					driveStrafeAmount += .2;
+				else if (ballLaneAssist < 0) 
+					driveStrafeAmount -= .2;
 			}
 			
 		// }
