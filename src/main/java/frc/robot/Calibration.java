@@ -37,12 +37,12 @@ public class Calibration {
     private final static double DT_C_ABS_ZERO_INITIAL = .431; // .042;
     private final static double DT_D_ABS_ZERO_INITIAL = .075; // .924;
     
-    public static final double SHOOTER_P = 0.7;
+    public static final double SHOOTER_P = 0.00063;
     public static final double SHOOTER_I = 0.0; // not used
     public static final double SHOOTER_D = 0;
-    public static final double SHOOTER_F = 0.0425;
-    public static final int SHOOTER_DEFAULT_SPEED = 13000;
-    public static final int FEEDER_DEFAULT_SPEED = 13000;
+    public static final double SHOOTER_F = 0.00022;
+    public static final int SHOOTER_DEFAULT_SPEED = 2000;
+    public static final int FEEDER_DEFAULT_SPEED = 2000;
 
     public final static double VISION_FWD_P = 0.05;
     public final static double VISION_FWD_I = 0;
