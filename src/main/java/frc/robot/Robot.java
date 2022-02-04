@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
         DriveTrain.allowTurnEncoderReset();
         DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
 
-        SmartDashboard.putBoolean("Show Encoders", true);
+        SmartDashboard.putBoolean("Show Encoders", false);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
         SmartDashboard.putString("Alliance R or B", "R");
     }
@@ -277,6 +277,8 @@ public class Robot extends TimedRobot {
         DriveTrain.resetDriveEncoders();
         DriveTrain.resetTurnEncoders();
 
+        Shooter.StopShooter();
+        
         Calibration.initializeSmartDashboard();
 
         Vision.setLED(false);

@@ -36,29 +36,31 @@ public class Shooter {
         shooterMotor.setOpenLoopRampRate(.1);
         shooterMotor.setSmartCurrentLimit(40);
         shooterMotor.setIdleMode(IdleMode.kCoast);
+        shooterMotor.setInverted(true);
         
         shooterPID = shooterMotor.getPIDController();
         shooterPID.setP(Calibration.SHOOTER_P);
         shooterPID.setI(0);
         shooterPID.setD(Calibration.SHOOTER_D);
         shooterPID.setFF(Calibration.SHOOTER_F);
-        shooterPID.setOutputRange(-1, 1);
+        shooterPID.setOutputRange(0, 1);
 
-        shooterPID.setReference(0, ControlType.kSmartVelocity);  // set to 0 speed
+        shooterPID.setReference(0, ControlType.kVelocity);  // set to 0 speed
 
         feederMotor.restoreFactoryDefaults();
         feederMotor.setOpenLoopRampRate(.1);
         feederMotor.setSmartCurrentLimit(40);
         feederMotor.setIdleMode(IdleMode.kCoast);
-        
-        feederPID = shooterMotor.getPIDController();
+        feederMotor.setInverted(true);
+
+        feederPID = feederMotor.getPIDController();
         feederPID.setP(Calibration.SHOOTER_P);
         feederPID.setI(0);
         feederPID.setD(Calibration.SHOOTER_D);
         feederPID.setFF(Calibration.SHOOTER_F);
-        feederPID.setOutputRange(-1, 1);
+        feederPID.setOutputRange(0, 1);
 
-        feederPID.setReference(0, ControlType.kSmartVelocity);  // set to 0 speed
+        feederPID.setReference(0, ControlType.kVelocity);  // set to 0 speed
 		 	
 		SmartDashboard.putNumber("Shoot P", Calibration.SHOOTER_P);
 		SmartDashboard.putNumber("Shoot D", Calibration.SHOOTER_D);
@@ -71,10 +73,13 @@ public class Shooter {
     }
 
     public static void tick() {
+        double shooterVelocityTarget = 0;
+
+        shooterVelocityTarget = SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
 
             if (isEnabled) {
-                shooterPID.setReference(SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED), ControlType.kSmartVelocity);
-              //  feederPID.setReference(SmartDashboard.getNumber("Feeder Setpoint", Calibration.FEEDER_DEFAULT_SPEED), ControlType.kSmartVelocity);
+                shooterPID.setReference(shooterVelocityTarget, ControlType.kVelocity);
+                feederPID.setReference(SmartDashboard.getNumber("Feeder Setpoint", Calibration.FEEDER_DEFAULT_SPEED), ControlType.kVelocity);
 
                 if (SmartDashboard.getBoolean("Shooter TUNE", true)) {
                     shooterPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
@@ -87,7 +92,8 @@ public class Shooter {
                }
 
                 SmartDashboard.putNumber("SHOOTER VELOCITY", shooterMotor.getEncoder().getVelocity());
-
+                SmartDashboard.putNumber("SHOOTER ERROR", shooterVelocityTarget - shooterMotor.getEncoder().getVelocity());
+                
                 System.out.println(timer);
 
                 if (oneShot) {
@@ -131,7 +137,8 @@ public class Shooter {
         oneShot = false;
         continuousShooting = false;
         resetTimer();
-        shooterPID.setReference(0, ControlType.kSmartVelocity);  // set to 0 speed
+        shooterPID.setReference(0, ControlType.kVelocity);  // set to 0 speed
+        feederPID.setReference(0, ControlType.kVelocity);
     }
 
     public static void setAdjustmentFactor (double adjustmentFactor) {
