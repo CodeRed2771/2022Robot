@@ -18,6 +18,9 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     private static final Object imgLock = new Object();
     private static double centerX = 0.0;
     private static AtomicBoolean running = new AtomicBoolean(false);
+    private static double distance;
+    private double degrees;
+    private static double centerY = 0.0;
 
     public static void init(String allianceColor) {
         camera = CameraServer.startAutomaticCapture();
@@ -65,6 +68,21 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     public void copyPipelineOutputs(VisionBallPipelineRed pipeline) {
         // TODO Auto-generated method stub
         
+    }
+    
+    public void findClosestBall() {
+        
+    }
+    public double degreesToBall() {
+        if (centerY/centerX > 0) {
+            degrees = Math.tanh(centerY/centerX);
+        } else {
+            degrees = Math.abs(Math.tanh(centerY/centerX)) + 180;
+        }
+        return degrees;
+    }
+    public double distnaceToBall() {
+        return Math.sqrt(Math.pow(centerX, 2)+Math.pow(centerY,2));
     }
 }
 
