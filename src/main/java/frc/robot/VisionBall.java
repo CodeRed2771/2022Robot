@@ -1,7 +1,10 @@
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 
@@ -21,6 +24,11 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     private static double distance;
     private double degrees;
     private static double centerY = 0.0;
+    private static AtomicBoolean foundBall = new AtomicBoolean(false);
+
+    public static Mat findClosestBall(ArrayList<MatOfPoint> ballsFound) {
+        return ballsFound.get(0);
+    }
 
     public static void init(String allianceColor) {
         camera = CameraServer.startAutomaticCapture();
@@ -29,23 +37,30 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
         if (allianceColor == "R") {
             visionThread = new VisionThread(camera, new VisionBallPipelineRed(), pipeline -> {
                 if (!pipeline.filterContoursOutput().isEmpty()) {
-                    Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+
+                    Rect r = Imgproc.boundingRect(VisionBall.findClosestBall(pipeline.filterContoursOutput()));
                     synchronized (imgLock) {
                         centerX = r.x + (r.width / 2);
+                        centerY = r.y + (r.height/2);
                     }
+                    foundBall.set(true);
                 } else {
                     centerX = IMG_WIDTH / 2; // default to being centered
+                    foundBall.set(false);
                 }
             });
         } else {
             visionThread = new VisionThread(camera, new VisionBallPipelineBlue(), pipeline -> {
                 if (!pipeline.filterContoursOutput().isEmpty()) {
-                    Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+                    Rect r = Imgproc.boundingRect(VisionBall.findClosestBall(pipeline.filterContoursOutput()));
                     synchronized (imgLock) {
                         centerX = r.x + (r.width / 2);
+                        centerY = r.y + (r.height/2);
                     }
+                    foundBall.set(true);
                 } else {
                     centerX = IMG_WIDTH / 2; // default to being centered
+                    foundBall.set(false);
                 }
             });
         }
@@ -69,20 +84,24 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
         // TODO Auto-generated method stub
         
     }
-    
-    public void findClosestBall() {
-        
+    public static double distance(double xPosition, double yPosition) {
+        return Math.sqrt(Math.pow(xPosition, 2)+Math.pow(yPosition,2));
     }
+
+    public static boolean ballInView() {
+        return foundBall.compareAndSet(true, true);
+    }
+
     public double degreesToBall() {
         if (centerY/centerX > 0) {
-            degrees = Math.tanh(centerY/centerX);
+            degrees = Math.atan(centerY/centerX);
         } else {
-            degrees = Math.abs(Math.tanh(centerY/centerX)) + 180;
+            degrees = Math.abs(Math.atan(centerY/centerX)) + 180;
         }
         return degrees;
     }
+
     public double distnaceToBall() {
-        return Math.sqrt(Math.pow(centerX, 2)+Math.pow(centerY,2));
+        return distance(centerX, centerY);
     }
 }
-
