@@ -26,31 +26,31 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     private static int closestBall = 0;
     private static int ballAmount = 0;
     private static double bestScore = 0;
+    private static double currentScore = 0;
+
     
 
     public static double distance(double xPosition, double yPosition) {
         return Math.sqrt(Math.pow(xPosition, 2)+Math.pow(yPosition,2));
     }
+    
+    public static double algorithim(Rect re) {
+        double cenX, cenY, dis, width;
+        cenX = re.x + (re.width / 2);
+        cenY = re.y + (re.height/2);
+        width = re.width;
+        dis = distance(cenX, cenY);
+        currentScore = (width+cenY)/2-dis;
+        return currentScore;
+    }
 
     public static Mat findClosestBall(ArrayList<MatOfPoint> ballsFound) {
-        double currentScore = 0;
-        double[] cenX, cenY, dis, width;
-    
-        cenX = new double[ballsFound.size()];
-        cenY = new double[ballsFound.size()];
-        dis = new double[ballsFound.size()];
-        width = new double[ballsFound.size()];
-
             if (ballsFound.size() <= 1) {
                 closestBall = 0;
+                algorithim(Imgproc.boundingRect(ballsFound.get(0)));
             } else {
                 for (int i = 0; ballsFound.size() > i; i ++) {
-                    Rect re = Imgproc.boundingRect(ballsFound.get(i));
-                    cenX[i] = re.x + (re.width / 2);
-                    cenY[i] = re.y + (re.height/2);
-                    width[i] = re.width;
-                    dis[i] = distance(cenX[i], cenY[i]);
-                    currentScore = (width[i]+cenY[i])/2-dis[i]; // Determining Closest Ball; Change as needed
+                    algorithim(Imgproc.boundingRect(ballsFound.get(i))); // Determining Closest Ball; Change as needed
                     if (bestScore < currentScore) {
                         bestScore = currentScore;
                         closestBall = i;
