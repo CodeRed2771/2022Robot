@@ -52,7 +52,6 @@ public class Robot extends TimedRobot {
 
         Shooter.init();
         Vision.init(); // Limelight shooter vision tracking
-
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
 
@@ -79,7 +78,10 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         SmartDashboard.putNumber("DIST", Vision.getDistanceFromTarget());
-
+        SmartDashboard.putNumber("Ball Found" , VisionBall.getBallIndex());
+        SmartDashboard.putNumber("Y Offset", VisionBall.getBallYOffset());
+        SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
+        SmartDashboard.putNumber("Score", VisionBall.getBallScore());
         if (gamepad1.getAButton()) {
             Shooter.StartShooter();
         }
