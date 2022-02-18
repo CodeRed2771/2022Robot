@@ -32,9 +32,9 @@ public class VisionBallPipelineBlue implements VisionPipeline {
 	@Override	public void process(Mat source0) {
 		// Step HSL_Threshold0:
 		Mat hslThresholdInput = source0;
-		double[] hslThresholdHue = {0.0, 26.416382252559732};
-		double[] hslThresholdSaturation = {89.43345323741006, 255.0};
-		double[] hslThresholdLuminance = {25.22482014388489, 255.0};
+		double[] hslThresholdHue = {105.0, 145.0};
+		double[] hslThresholdSaturation = {69.0, 255.0};
+		double[] hslThresholdLuminance = {21.0, 255.0};
 		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
 
 		// Step Find_Contours0:
@@ -50,7 +50,7 @@ public class VisionBallPipelineBlue implements VisionPipeline {
 		double filterContoursMaxWidth = 1000.0;
 		double filterContoursMinHeight = 70.0;
 		double filterContoursMaxHeight = 1000.0;
-		double[] filterContoursSolidity = {26.978417266187048, 100};
+		double[] filterContoursSolidity = {27, 100};
 		double filterContoursMaxVertices = 1000000.0;
 		double filterContoursMinVertices = 0.0;
 		double filterContoursMinRatio = 1.0;
