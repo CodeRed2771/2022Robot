@@ -51,6 +51,7 @@ public class AutoTarmacShoot1 extends AutoBaseClass {
                     break;
                 case 5://segment 4
                     Shooter.StopShooter();
+                    advanceStep();
                     break;
                 case 6://stop
                     stop();
