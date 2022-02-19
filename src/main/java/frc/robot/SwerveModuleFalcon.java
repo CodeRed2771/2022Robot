@@ -4,10 +4,13 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModuleFalcon implements SwerveModule {
     public TalonFX drive;
@@ -15,7 +18,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	private final SparkMaxPIDController turnPID;
 	private final RelativeEncoder turnEncoder;
 	private char mModuleID;
-	private final int FULL_ROTATION = 4096;
+	private final int FULL_ROTATION = 1;
 	private double TURN_P, TURN_I, TURN_D, DRIVE_P, DRIVE_I, DRIVE_D;
 	private final int TURN_IZONE, DRIVE_IZONE;
 	private double turnZeroPos = 0;
@@ -75,16 +78,18 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turn.restoreFactoryDefaults();
         turn.setOpenLoopRampRate(.5);
         turn.setSmartCurrentLimit(30);
-		
 
         turn.setIdleMode(IdleMode.kBrake);
 		turn.setInverted(true);
 
-		turnZeroPos = tZeroPos;
-
 		turnEncoder = turn.getAlternateEncoder(8192);
+		turnEncoder.setInverted(true);
 		turnPID = turn.getPIDController();
 		turnPID.setFeedbackDevice(turnEncoder);
+
+		turnZeroPos = tZeroPos;
+		// turnZeroPos = 0;
+		// turnEncoder.setPosition(0);
 
 		TURN_P = tP;
 		TURN_I = tI;
@@ -96,7 +101,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turnPID.setD(TURN_D);
 		turnPID.setIZone(TURN_IZONE);
 		turnPID.setFF(0);
-        turnPID.setOutputRange(-.2, .2);
+        turnPID.setOutputRange(-1, 1);
 		
 		turn.burnFlash(); // save settings for power off
 	}
@@ -197,6 +202,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public void resetTurnEnc() {
+		turnEncoder.setPosition(0);
 		//this.turn.getSensorCollection().setQuadraturePosition(0, 10);
 	}
 
@@ -224,19 +230,11 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public int getTurnRotations() {
-		return (int) ((turnEncoder.getPosition()) / FULL_ROTATION);
+		return (int) turnEncoder.getPosition();
 	}
 
 	public double getTurnOrientation() {
-		return (turnEncoder.getPosition() % FULL_ROTATION) / FULL_ROTATION;
-
-		// SmartDashboard.putNumber("module-a-" + this.hashCode(),
-		// turn.getSelectedSensorPosition(0));
-		// SmartDashboard.putNumber("module-b-" + this.hashCode(),
-		// turn.getSelectedSensorPosition(0) % FULL_ROTATION);
-		// SmartDashboard.putNumber("module-c-" + this.hashCode(),
-		// (turn.getSelectedSensorPosition(0) % FULL_ROTATION) / FULL_ROTATION);
-
+		return turnEncoder.getPosition() - (int) turnEncoder.getPosition();
 	}
 
     public double getCurrentDriveSetpoint() {
@@ -271,13 +269,14 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @param reqPosition orientation to set to
 	 */
 	public void setTurnOrientation(double reqPosition, boolean optimize) {
-		int base = getTurnRotations() * FULL_ROTATION;
+		int base = getTurnRotations();
 		double currentTurnPosition = getTurnPosition();
 		double reverseTurnPosition = (reqPosition + 0.5) % 1.0;
 		double distanceToNormalPosition;
 		double distanceToReversePosition;
 		double closestTurnPosition = 0; // closest to currentTurnPosition
 		double turnRelativePosition = getTurnRelativePosition();
+		double turnPos = 0;
 		// double distanceToNormalPosition = Math.abs(currentTurnPosition - position);
 		// double distanceToReversePosition = Math.abs(currentTurnPosition -
 		// reverseTurnPosition);
@@ -324,7 +323,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 				base -= FULL_ROTATION;
 			}
 			
-			turn.set((((closestTurnPosition * FULL_ROTATION) + (base))));
+			turnPos = ((((closestTurnPosition * FULL_ROTATION) + (base))));
 		} else {
 			if ((base - ((1 - closestTurnPosition) * FULL_ROTATION)) - turnRelativePosition < -FULL_ROTATION / 2) {
 				base += FULL_ROTATION;
@@ -333,8 +332,12 @@ public class SwerveModuleFalcon implements SwerveModule {
 				base -= FULL_ROTATION;
 			}
 			
-			turn.set((base - (((1 - closestTurnPosition) * FULL_ROTATION))));
+			turnPos = ((base - (((1 - closestTurnPosition) * FULL_ROTATION))));
+		
 		}
+		SmartDashboard.putNumber("TURN CALL " + mModuleID, turnPos);
+		turnPID.setReference(turnPos, ControlType.kPosition );
+		
 	}
 
 	// private void showDetailsOnDash(int base, int turnRelative, double

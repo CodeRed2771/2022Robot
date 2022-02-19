@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import javax.lang.model.util.ElementScanner6;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class DriveTrain {
@@ -232,10 +233,10 @@ public class DriveTrain {
             // to tell the encoder what the current relative position is
             // (relative to the
             // zero pos)
-			moduleA.setEncPos((int) (calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO())));
-			moduleB.setEncPos((int) (calculatePositionDifference(modBOff, Calibration.GET_DT_B_ABS_ZERO())));
-			moduleC.setEncPos((int) (calculatePositionDifference(modCOff, Calibration.GET_DT_C_ABS_ZERO())));
-			moduleD.setEncPos((int) (calculatePositionDifference(modDOff, Calibration.GET_DT_D_ABS_ZERO())));
+			moduleA.setEncPos((calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO())));
+			moduleB.setEncPos( (calculatePositionDifference(modBOff, Calibration.GET_DT_B_ABS_ZERO())));
+			moduleC.setEncPos( (calculatePositionDifference(modCOff, Calibration.GET_DT_C_ABS_ZERO())));
+			moduleD.setEncPos( (calculatePositionDifference(modDOff, Calibration.GET_DT_D_ABS_ZERO())));
 
             // Lamprey version
             // moduleA.setEncPos((int) (calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO()) * 1024d));
