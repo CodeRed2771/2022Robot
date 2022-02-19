@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
     final String autoWheelAlign = "Auto Wheel Align";
     final String autoAlign = "Auto Align";
     final String ballPickUp = "Auto Ball Pick Up";
+    final String AutoTarmacShoot1 = "Auto Tarmac Shoot 1";
 
     private boolean isIntakeUpPosition = true;
     private boolean intakeKeyAlreadyPressed = false;
@@ -243,6 +244,9 @@ public class Robot extends TimedRobot {
             mAutoProgram = new AutoBallPickUp();
             mAutoProgram.start();
             break;
+        case AutoTarmacShoot1:
+            mAutoProgram = new AutoTarmacShoot1();
+            mAutoProgram.start();
         }
     }
 
@@ -259,6 +263,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(autoWheelAlign, autoWheelAlign);
         autoChooser.addOption(autoAlign, autoAlign);
         autoChooser.addOption(ballPickUp, ballPickUp);
+        autoChooser.addOption(AutoTarmacShoot1, AutoTarmacShoot1);
 
         SmartDashboard.putData("Auto Chose:", autoChooser);
     }
@@ -290,7 +295,6 @@ public class Robot extends TimedRobot {
         showDashboardInfo();
         SmartDashboard.putNumber("DIST", Vision.getDistanceFromTarget());
         SmartDashboard.putBoolean("COMP BOT", !Calibration.isPracticeBot());
-
         if (Calibration.shouldCalibrateSwerve()) {
             double[] pos = DriveTrain.getAllAbsoluteTurnOrientations();
             Calibration.saveSwerveCalibration(pos[0], pos[1], pos[2], pos[3]);
