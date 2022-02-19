@@ -2,6 +2,8 @@ package frc.robot;
 
 public interface SwerveModule {
 
+	// override with motor specific class
+	
 	void setDrivePower(double p);
 	void setDriveMMAccel(final int accel);
     void setDriveMMVelocity(final int velocity);
