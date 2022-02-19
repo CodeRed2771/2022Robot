@@ -39,22 +39,22 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     
     // Vision Processing 
     public static double algorithim(Rect re) {
-        double cenX, cenY, dis, width;
+        double cenX, cenY, dis, width, score;
         cenX = re.x + (re.width / 2);
         cenY = re.y + (re.height/2);
         width = re.width;
         dis = distance(cenX, cenY);
-        currentScore = (width+cenY)/2-dis;
-        return currentScore;
+        score = (width+cenY)/2-dis;
+        return score;
     }
 
     public static Mat findClosestBall(ArrayList<MatOfPoint> ballsFound) {
             if (ballsFound.size() <= 1) {
                 closestBall = 0;
-                algorithim(Imgproc.boundingRect(ballsFound.get(0)));
+                currentScore = algorithim(Imgproc.boundingRect(ballsFound.get(0)));
             } else {
-                for (int i = 0; ballsFound.size() < i; i ++) {
-                    algorithim(Imgproc.boundingRect(ballsFound.get(i))); // Determining Closest Ball; Change as needed/
+                for (int i = 0; i < ballsFound.size(); i ++) {
+                    currentScore = algorithim(Imgproc.boundingRect(ballsFound.get(i))); // Determining Closest Ball; Change as needed/
                     iTest = i;
                     SmartDashboard.putNumber("i value", iTest);
                     if (bestScore < currentScore) {
