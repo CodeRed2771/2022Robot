@@ -342,7 +342,7 @@ public class DriveTrain {
         SmartDashboard.putNumber("TURN C ERR", moduleC.getTurnError());
 		SmartDashboard.putNumber("TURN D ERR", moduleD.getTurnError());
 		
-		SmartDashboard.putNumber("TURN A SETPOINT", moduleA.getTurnSetpoint());
+		//SmartDashboard.putNumber("TURN A SETPOINT", moduleA.getTurnSetpoint());
     }
 
     public static void humanDrive(double fwd, double str, double rot) {

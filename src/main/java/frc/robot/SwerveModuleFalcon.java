@@ -1,20 +1,22 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 public class SwerveModuleFalcon implements SwerveModule {
-    public CANSparkMax drive;
-    public WPI_TalonSRX turn;
-    private final SparkMaxPIDController drivePID;
-    private final RelativeEncoder driveEncoder;
+    public TalonFX drive;
+    public CANSparkMax turn;
+	private final SparkMaxPIDController turnPID;
+	private final RelativeEncoder turnEncoder;
 	private char mModuleID;
 	private final int FULL_ROTATION = 4096;
 	private double TURN_P, TURN_I, TURN_D, DRIVE_P, DRIVE_I, DRIVE_D;
@@ -37,63 +39,66 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @param tIZone       I might not need to know the I Zone value for the turning
 	 *                     PID
 	 */
-	public SwerveModuleFalcon(int driveMotorID, int turnTalonID, double dP, double dI, double dD, int dIZone, double tP, double tI,
+	public SwerveModuleFalcon(int driveMotorID, int turnMotorID, double dP, double dI, double dD, int dIZone, double tP, double tI,
 			double tD, int tIZone, double tZeroPos, char moduleID) {
 
-        drive = new CANSparkMax(driveMotorID, MotorType.kBrushless);
-        drive.restoreFactoryDefaults();
-        drive.setOpenLoopRampRate(.1);
-        drive.setSmartCurrentLimit(40);
-        drive.setIdleMode(IdleMode.kBrake);
-        
-        mModuleID = moduleID;
+		mModuleID = moduleID;
 
-	  /**
-         * In order to use PID functionality for a controller, a CANPIDController object
-         * is constructed by calling the getPIDController() method on an existing
-         * CANSparkMax object
-         */
-        drivePID = drive.getPIDController();
+		DRIVE_P = dP;
+		DRIVE_I = dI;
+		DRIVE_D = dD;
+		DRIVE_IZONE = dIZone;
 
-        // Encoder object created to display position values
-        driveEncoder = drive.getEncoder();
+		drive = new TalonFX(driveMotorID);
+		drive.configFactoryDefault(10);
+		drive.config_kP(0, DRIVE_P, 0);
+		drive.config_kI(0, DRIVE_I, 0);
+		drive.config_kD(0, DRIVE_D, 0);
+		drive.config_kF(0, 0, 0);
+		drive.config_IntegralZone(0, DRIVE_IZONE, 0);
+		drive.selectProfileSlot(0, 0);
+		/* set the peak and nominal outputs */
+		drive.configNominalOutputForward(0, 0);
+		drive.configNominalOutputReverse(0, 0);
+		drive.configPeakOutputForward(1, 0);
+		drive.configPeakOutputReverse(-1, 0);
+		drive.setNeutralMode(NeutralMode.Brake);
+		drive.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+		
+		drive.configClosedloopRamp(.45, 0);
+		/* set closed loop gains in slot0 - see documentation */
+		drive.selectProfileSlot(0, 0);
 
-        DRIVE_P = dP;
-        DRIVE_I = dI;
-        DRIVE_D = dD;
-        DRIVE_IZONE = dIZone;
-
-        drivePID.setP(DRIVE_P);
-        drivePID.setI(DRIVE_I);
-        drivePID.setD(DRIVE_D);
-        drivePID.setIZone(DRIVE_IZONE);
-        drivePID.setFF(0);
-        drivePID.setOutputRange(-1, 1);
-
-        drivePID.setSmartMotionMaxVelocity(Calibration.DT_MM_VELOCITY, 0);
-        drivePID.setSmartMotionMaxAccel(Calibration.DT_MM_ACCEL, 0);
+     //   drivePID.setSmartMotionMaxVelocity(Calibration.DT_MM_VELOCITY, 0);
+     //   drivePID.setSmartMotionMaxAccel(Calibration.DT_MM_ACCEL, 0);
 
         // TURN
 
-		turn = new WPI_TalonSRX(turnTalonID);
-		turn.configFactoryDefault(10);
+		turn = new CANSparkMax(turnMotorID, MotorType.kBrushless);
+		turn.restoreFactoryDefaults();
+        turn.setOpenLoopRampRate(.5);
+        turn.setSmartCurrentLimit(30);
+        turn.setIdleMode(IdleMode.kBrake);
 
 		turnZeroPos = tZeroPos;
 
-		turn.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0); // ?? don't know if zeros are right
+		turnEncoder = turn.getAlternateEncoder(4096);
+		turnPID = turn.getPIDController();
+		turnPID.setFeedbackDevice(turnEncoder);
+
 		TURN_P = tP;
 		TURN_I = tI;
 		TURN_D = tD;
 		TURN_IZONE = tIZone;
 
-		turn.config_kP(0, TURN_P, 0);
-		turn.config_kI(0, TURN_I, 0);
-		turn.config_kD(0, TURN_D, 0);
-		turn.config_IntegralZone(0, TURN_IZONE, 0);
-		turn.selectProfileSlot(0, 0);
-		turn.configClosedloopRamp(.1, 0);
-		//turn.setSensorPhase(true);
+		turnPID.setP(TURN_P);
+		turnPID.setI(TURN_I);
+		turnPID.setD(TURN_D);
+		turnPID.setIZone(TURN_IZONE);
+		turnPID.setFF(0);
+        turnPID.setOutputRange(-1, 1);
 		
+		turn.burnFlash(); // save settings for power off
 	}
 
 	// public void setFollower(int talonToFollow) {
@@ -104,11 +109,11 @@ public class SwerveModuleFalcon implements SwerveModule {
 	// }
 
     public void setDriveMMAccel(final int accel) {
-        drivePID.setSmartMotionMaxAccel(accel, 0);
+		drive.configMotionAcceleration(accel);
     }
 
     public void setDriveMMVelocity(final int velocity) {
-        drivePID.setSmartMotionMaxVelocity(velocity, 0);
+		drive.configMotionCruiseVelocity(velocity);
     }
 
 	// public double getDriveVelocity() {
@@ -129,7 +134,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @param p value from -1 to 1
 	 */
 	public void setTurnPower(double p) {
-		this.turn.set(ControlMode.PercentOutput, p);
+		this.turn.set(p);
 	}
 
 	/**
@@ -138,7 +143,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @param p value from -1 to 1
 	 */
 	public void setDrivePower(double p) {
-		this.drive.set((isReversed ? -1 : 1) * p);
+		this.drive.set(ControlMode.PercentOutput, (isReversed ? -1 : 1) * p);
 	}
 
 	/**
@@ -147,7 +152,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @return turn encoder position
 	 */
 	public double getTurnRelativePosition() {
-		return turn.getSelectedSensorPosition(0);
+		return turnEncoder.getPosition();
 	}
 
 	/**
@@ -157,7 +162,8 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @return turn encoder absolute position
 	 */
 	public double getTurnAbsolutePosition() {
-		return (turn.getSensorCollection().getPulseWidthPosition() & 0xFFF) / 4096d;
+		return(0);
+		//return (turn.getSensorCollection().getPulseWidthPosition() & 0xFFF) / 4096d;
 	}
 
 	public double getTurnPosition() {
@@ -191,19 +197,19 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public void resetTurnEnc() {
-		this.turn.getSensorCollection().setQuadraturePosition(0, 10);
+		//this.turn.getSensorCollection().setQuadraturePosition(0, 10);
 	}
 
 	public double getDriveEnc() {
-		return driveEncoder.getPosition();
+		return drive.getSelectedSensorPosition();
 	}
 
 	public void resetDriveEnc() {
-        this.driveEncoder.setPosition(0);
+        this.drive.setSelectedSensorPosition(0);
 	}
 
 	public void setEncPos(int d) {
-		turn.getSensorCollection().setQuadraturePosition(d, 10);
+		turnEncoder.setPosition(d);
 	}
 
 	/**
@@ -218,11 +224,11 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public int getTurnRotations() {
-		return (int) (turn.getSelectedSensorPosition(0) / FULL_ROTATION);
+		return (int) ((turnEncoder.getPosition()) / FULL_ROTATION);
 	}
 
 	public double getTurnOrientation() {
-		return (turn.getSelectedSensorPosition(0) % FULL_ROTATION) / FULL_ROTATION;
+		return (turnEncoder.getPosition() % FULL_ROTATION) / FULL_ROTATION;
 
 		// SmartDashboard.putNumber("module-a-" + this.hashCode(),
 		// turn.getSelectedSensorPosition(0));
@@ -240,7 +246,7 @@ public class SwerveModuleFalcon implements SwerveModule {
     // These are used for driving and turning in auto.
     public void setDrivePIDToSetPoint(final double setpoint) {
         currentDriveSetpoint = setpoint;
-        drivePID.setReference(setpoint, ControlType.kSmartMotion);
+        drive.set(TalonFXControlMode.MotionMagic, setpoint);
     }
 
     public boolean hasDriveCompleted(final double allowedError) {
@@ -252,7 +258,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public void setTurnPIDToSetPoint(double setpoint) {
-		turn.set(ControlMode.Position, setpoint);
+		turn.set(setpoint);
 	}
 
 	public void setTurnOrientation(double position) {
@@ -318,7 +324,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 				base -= FULL_ROTATION;
 			}
 			
-			turn.set(ControlMode.Position, (((closestTurnPosition * FULL_ROTATION) + (base))));
+			turn.set((((closestTurnPosition * FULL_ROTATION) + (base))));
 		} else {
 			if ((base - ((1 - closestTurnPosition) * FULL_ROTATION)) - turnRelativePosition < -FULL_ROTATION / 2) {
 				base += FULL_ROTATION;
@@ -327,7 +333,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 				base -= FULL_ROTATION;
 			}
 			
-			turn.set(ControlMode.Position, (base - (((1 - closestTurnPosition) * FULL_ROTATION))));
+			turn.set((base - (((1 - closestTurnPosition) * FULL_ROTATION))));
 		}
 	}
 
@@ -355,11 +361,11 @@ public class SwerveModuleFalcon implements SwerveModule {
 	// }
 
 	public double getTurnError() {
-		return turn.getClosedLoopError(0);
+		return 9999; // fix later
 	}
 
 	public double getTurnSetpoint() {
-		return turn.getClosedLoopTarget(0);
+		return 9999; // fix later
 	}
 
 	// public double getDriveError() {
@@ -379,22 +385,22 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
     public void setBrakeMode(final boolean b) {
-        drive.setIdleMode(b ? IdleMode.kBrake : IdleMode.kCoast);
+        drive.setNeutralMode(b ? NeutralMode.Brake : NeutralMode.Coast);
     }
 
     public void setDrivePIDValues(final double p, final double i, final double d, final double f) {
-        drivePID.setP(p);
-        drivePID.setI(i);
-        drivePID.setD(d);
-        drivePID.setFF(f);
+		drive.config_kP(0, p, 0);
+        drive.config_kI(0, i, 0);
+        drive.config_kD(0, d, 0);
+        drive.config_kF(0, f, 0);
     }
 
 	public void setTurnPIDValues(double p, double i, double d, double izone, double f) {
-		turn.config_kP(0, p, 0);
-        turn.config_kI(0, i, 0);
-        turn.config_IntegralZone(0,  izone);
-        turn.config_kD(0, d, 0);
-        turn.config_kF(0, f, 0);
+		turnPID.setP(p);
+        turnPID.setI(i);
+        turnPID.setIZone(izone);
+        turnPID.setD(d);
+        turnPID.setFF(f);
 	}
 
 }

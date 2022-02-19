@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
         Intake.init();
         RobotGyro.init();
         Calibration.loadSwerveCalibration();
-        DriveTrain.init("NEO");
+        DriveTrain.init("FALCON");
         //DriveAuto.init();
 
         Shooter.init();
