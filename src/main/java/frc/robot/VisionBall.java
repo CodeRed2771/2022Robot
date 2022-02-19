@@ -25,7 +25,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     private static AtomicBoolean running = new AtomicBoolean(false);
     private static double centerY = 0.0;
     private static AtomicBoolean foundBall = new AtomicBoolean(false);
-    private static int closestBall = 0;
+    private static int closestBallIndex = -1;
     private static int ballAmount = 0;
     private static double bestScore = 0;
     private static double currentScore = 0;
@@ -49,22 +49,31 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     }
 
     public static Mat findClosestBall(ArrayList<MatOfPoint> ballsFound) {
-            if (ballsFound.size() <= 1) {
-                closestBall = 0;
-                currentScore = algorithim(Imgproc.boundingRect(ballsFound.get(0)));
-            } else {
-                for (int i = 0; i < ballsFound.size(); i ++) {
-                    currentScore = algorithim(Imgproc.boundingRect(ballsFound.get(i))); // Determining Closest Ball; Change as needed/
-                    iTest = i;
-                    SmartDashboard.putNumber("i value", iTest);
-                    if (bestScore < currentScore) {
-                        bestScore = currentScore;
-                        closestBall = i;
-                    }
+        double topScore = 0;
+        int closestIndex = 0;
+
+        if (ballsFound.size() <= 1) {
+            closestIndex = 0;
+            currentScore = algorithim(Imgproc.boundingRect(ballsFound.get(0)));
+            topScore = currentScore;
+        } else {
+            for (int i = 0; i < ballsFound.size(); i ++) {
+                currentScore = algorithim(Imgproc.boundingRect(ballsFound.get(i))); // Determining Closest Ball; Change as needed/
+                iTest = i;
+                SmartDashboard.putNumber("i value", iTest);
+                if (topScore < currentScore) {
+                    topScore = currentScore;
+                    closestIndex = i;
                 }
             }
-        ballAmount = ballsFound.size();
-        return ballsFound.get(closestBall);
+        }
+        synchronized (imgLock) {
+            closestBallIndex = closestIndex;
+            bestScore = topScore;
+            ballAmount = ballsFound.size();
+        }
+
+        return ballsFound.get(closestBallIndex);
     }
 
     // Vision Set-Up and Run
@@ -80,16 +89,19 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                     synchronized (imgLock) {
                         centerX = r.x + (r.width / 2);
                         centerY = r.y + (r.height/2);
+                        foundBall.set(true);
                     }
-                    foundBall.set(true);
                 } else {
-                    centerX = IMG_WIDTH / 2; // default to being centered
-                    centerY = IMG_HEIGHT / 2;
-                    ballAmount = 0;
-                    foundBall.set(false);
-                    bestScore = 0;
-                }
-            });
+                    synchronized (imgLock) {
+                        centerX = IMG_WIDTH / 2; // default to being centered
+                        centerY = IMG_HEIGHT / 2;
+                        ballAmount = 0;
+                        foundBall.set(false);
+                    // bestScore = 0;                    
+                    }
+            }
+        }
+            );
         } else {
             visionThread = new VisionThread(camera, new VisionBallPipelineBlue(), pipeline -> {
                 if (!pipeline.filterContoursOutput().isEmpty()) {
@@ -104,11 +116,10 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                     centerY = IMG_HEIGHT / 2;
                     ballAmount = 0;
                     foundBall.set(false);
-                    bestScore = 0;
+                    // bestScore = 0;
                 }
             });
         }
-       
     }
 
     public static void start() {
@@ -130,16 +141,9 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
         return degrees;
     }
 
-    public static double distnaceToBall() {
+    public static double distanceToBall() {
         return distance(centerX, centerY);
     }
-
-    @Override
-    public void copyPipelineOutputs(VisionBallPipelineRed pipeline) {
-        // TODO Auto-generated method stub
-        
-    }
-
 
     // Return Values for Finding Balls
     public static int getBallNumber() {
@@ -157,11 +161,17 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
         return foundBall.compareAndSet(true, true);
     }
 
-    public static int getBallIndex() {
-        return closestBall;
+    public static int getClosestBallIndex() {
+        return closestBallIndex;
     }
 
     public static double getBallScore() {
         return bestScore;
+    }
+
+    @Override
+    public void copyPipelineOutputs(VisionBallPipelineRed pipeline) {
+        // TODO Auto-generated method stub
+        
     }
 }

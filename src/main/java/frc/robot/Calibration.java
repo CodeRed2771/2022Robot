@@ -33,7 +33,7 @@ public class Calibration {
     // COMPETIION
 
     private final static double DT_A_ABS_ZERO_INITIAL = .380; // .277; // COMPEITION
-    private final static double DT_B_ABS_ZERO_INITIAL = .349; // .554;
+    private final static double DT_B_ABS_ZERO_INITIAL = .940; // .554;
     private final static double DT_C_ABS_ZERO_INITIAL = .431; // .042;
     private final static double DT_D_ABS_ZERO_INITIAL = .075; // .924;
     

@@ -4,13 +4,10 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 public class SwerveModuleFalcon implements SwerveModule {
     public TalonFX drive;
@@ -78,11 +75,14 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turn.restoreFactoryDefaults();
         turn.setOpenLoopRampRate(.5);
         turn.setSmartCurrentLimit(30);
+		
+
         turn.setIdleMode(IdleMode.kBrake);
+		turn.setInverted(true);
 
 		turnZeroPos = tZeroPos;
 
-		turnEncoder = turn.getAlternateEncoder(4096);
+		turnEncoder = turn.getAlternateEncoder(8192);
 		turnPID = turn.getPIDController();
 		turnPID.setFeedbackDevice(turnEncoder);
 
@@ -96,7 +96,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turnPID.setD(TURN_D);
 		turnPID.setIZone(TURN_IZONE);
 		turnPID.setFF(0);
-        turnPID.setOutputRange(-1, 1);
+        turnPID.setOutputRange(-.2, .2);
 		
 		turn.burnFlash(); // save settings for power off
 	}
@@ -162,7 +162,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @return turn encoder absolute position
 	 */
 	public double getTurnAbsolutePosition() {
-		return(0);
+		return(turnEncoder.getPosition() - (int)turnEncoder.getPosition()); // change 23.3434 to .3434
 		//return (turn.getSensorCollection().getPulseWidthPosition() & 0xFFF) / 4096d;
 	}
 
@@ -208,7 +208,7 @@ public class SwerveModuleFalcon implements SwerveModule {
         this.drive.setSelectedSensorPosition(0);
 	}
 
-	public void setEncPos(int d) {
+	public void setEncPos(double d) {
 		turnEncoder.setPosition(d);
 	}
 

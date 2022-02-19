@@ -202,8 +202,8 @@ public class SwerveModuleNEO implements SwerveModule {
         this.driveEncoder.setPosition(0);
 	}
 
-	public void setEncPos(int d) {
-		turn.getSensorCollection().setQuadraturePosition(d, 10);
+	public void setEncPos(double d) {
+		turn.getSensorCollection().setQuadraturePosition((int) d, 10);
 	}
 
 	/**

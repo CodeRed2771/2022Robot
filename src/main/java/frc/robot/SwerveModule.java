@@ -18,7 +18,7 @@ public interface SwerveModule {
 	void resetTurnEnc();
 	double getDriveEnc();
 	void resetDriveEnc();
-	void setEncPos(int d);
+	void setEncPos(double d);
 	boolean isTurnEncConnected();
 	int getTurnRotations();
 	double getTurnOrientation();

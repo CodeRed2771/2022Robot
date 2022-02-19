@@ -10,6 +10,8 @@ package frc.robot;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import javax.lang.model.util.ElementScanner6;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -48,7 +50,12 @@ public class Robot extends TimedRobot {
         Intake.init();
         RobotGyro.init();
         Calibration.loadSwerveCalibration();
-        DriveTrain.init("FALCON");
+        
+        if (Calibration.isPracticeBot())
+            DriveTrain.init("NEO");
+        else
+            DriveTrain.init("FALCON");
+        
         //DriveAuto.init();
 
         Shooter.init();
@@ -61,7 +68,7 @@ public class Robot extends TimedRobot {
         DriveTrain.allowTurnEncoderReset();
         DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
 
-        SmartDashboard.putBoolean("Show Encoders", false);
+        SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
         SmartDashboard.putString("Alliance R or B", "R");
     }
@@ -79,7 +86,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         SmartDashboard.putNumber("DIST", Vision.getDistanceFromTarget());
-        SmartDashboard.putNumber("Ball Found" , VisionBall.getBallIndex());
+        SmartDashboard.putNumber("Ball # Selected" , VisionBall.getClosestBallIndex());
         SmartDashboard.putNumber("Y Offset", VisionBall.getBallYOffset());
         SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
         SmartDashboard.putNumber("Score", VisionBall.getBallScore());
@@ -191,7 +198,7 @@ public class Robot extends TimedRobot {
 
          // Sets the PID values based on input from the SmartDashboard
         // This is only needed during tuning
-        // if (SmartDashboard.getBoolean("Tune Drive-Turn PIDs", false)) {
+        if (SmartDashboard.getBoolean("Tune Drive-Turn PIDs", false)) {
        
             DriveTrain.setDrivePIDValues(SmartDashboard.getNumber("AUTO DRIVE P", Calibration.AUTO_DRIVE_P),
                     SmartDashboard.getNumber("AUTO DRIVE I", Calibration.AUTO_DRIVE_I),
@@ -207,7 +214,7 @@ public class Robot extends TimedRobot {
             DriveTrain.setDriveMMAccel((int) SmartDashboard.getNumber("DRIVE MM ACCEL", Calibration.DT_MM_ACCEL));
             DriveTrain.setDriveMMVelocity(
                     (int) SmartDashboard.getNumber("DRIVE MM VELOCITY", Calibration.DT_MM_VELOCITY));
-        // }
+        }
     }
 
     @Override
