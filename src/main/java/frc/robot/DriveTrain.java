@@ -3,6 +3,8 @@ package frc.robot;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import javax.lang.model.util.ElementScanner6;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -10,20 +12,35 @@ public class DriveTrain {
 
     public static SwerveModule moduleA, moduleB, moduleC, moduleD;
 
-    public static void init() {
-       
-        moduleA = new SwerveModule(Calibration.DT_A_DRIVE_SPARK_ID, Calibration.DT_A_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
-        Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-        Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_A_ABS_ZERO(), 'A'); // Front right
-        moduleB = new SwerveModule(Calibration.DT_B_DRIVE_SPARK_ID, Calibration.DT_B_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
-        Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-        Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_B_ABS_ZERO(), 'B'); // Back left
-        moduleC = new SwerveModule(Calibration.DT_C_DRIVE_SPARK_ID, Calibration.DT_C_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
-        Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-        Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_C_ABS_ZERO(),'C'); // Back right
-        moduleD = new SwerveModule(Calibration.DT_D_DRIVE_SPARK_ID, Calibration.DT_D_TURN_TALON_ID, Calibration.AUTO_DRIVE_P,
-        Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-        Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_D_ABS_ZERO(),'D'); // Front left
+    public static void init(String driveMotorType) {
+        
+        if (driveMotorType.equals("NEO")) {
+            moduleA = new SwerveModuleNEO(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Calibration.AUTO_DRIVE_P,
+            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
+            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_A_ABS_ZERO(), 'A'); // Front right
+            moduleB = new SwerveModuleNEO(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Calibration.AUTO_DRIVE_P,
+            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
+            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_B_ABS_ZERO(), 'B'); // Back left
+            moduleC = new SwerveModuleNEO(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.AUTO_DRIVE_P,
+            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
+            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_C_ABS_ZERO(),'C'); // Back right
+            moduleD = new SwerveModuleNEO(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.AUTO_DRIVE_P,
+            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
+            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_D_ABS_ZERO(),'D'); // Front left
+        } else {
+            moduleA = new SwerveModuleFalcon(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Calibration.AUTO_DRIVE_P,
+            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
+            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_A_ABS_ZERO(), 'A'); // Front right
+            moduleB = new SwerveModuleFalcon(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Calibration.AUTO_DRIVE_P,
+            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
+            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_B_ABS_ZERO(), 'B'); // Back left
+            moduleC = new SwerveModuleFalcon(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.AUTO_DRIVE_P,
+            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
+            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_C_ABS_ZERO(),'C'); // Back right
+            moduleD = new SwerveModuleFalcon(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.AUTO_DRIVE_P,
+            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
+            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_D_ABS_ZERO(),'D'); // Front left
+        } 
 
         SmartDashboard.putNumber("TURN P", Calibration.TURN_P);
         SmartDashboard.putNumber("TURN I", Calibration.TURN_I);
