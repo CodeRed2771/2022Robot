@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
         DriveTrain.stopDriveAndTurnMotors();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
         
-        VisionBall.init(SmartDashboard.getString("Alliance R or B", "R")); // Ball vision tracking setup
+        VisionBall.init(); // Ball vision tracking setup
         VisionBall.start(); // Start the vision thread
     }
 

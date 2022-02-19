@@ -11,6 +11,8 @@ import org.opencv.imgproc.Imgproc;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.*;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
@@ -29,7 +31,6 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     private static int ballAmount = 0;
     private static double bestScore = 0;
     private static double currentScore = 0;
-    private static double iTest; 
 
     
     // Distance Formula 
@@ -39,12 +40,14 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     
     // Vision Processing 
     public static double algorithim(Rect re) {
-        double cenX, cenY, dis, width, score;
+        double cenX, cenY, dis, width, score, yOffset, xOffset;
         cenX = re.x + (re.width / 2);
         cenY = re.y + (re.height/2);
         width = re.width;
+        xOffset = cenX - (IMG_WIDTH / 2);
+        yOffset = cenY - (IMG_HEIGHT / 2);
         dis = distance(cenX, cenY);
-        score = (width+cenY)/2-dis;
+        score = dis+ xOffset + yOffset;
         return score;
     }
 
@@ -59,8 +62,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
         } else {
             for (int i = 0; i < ballsFound.size(); i ++) {
                 currentScore = algorithim(Imgproc.boundingRect(ballsFound.get(i))); // Determining Closest Ball; Change as needed/
-                iTest = i;
-                SmartDashboard.putNumber("i value", iTest);
+                SmartDashboard.putNumber("Current Score", currentScore);
                 if (topScore < currentScore) {
                     topScore = currentScore;
                     closestIndex = i;
@@ -77,11 +79,11 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     }
 
     // Vision Set-Up and Run
-    public static void init(String allianceColor) {
+    public static void init() {
         camera = CameraServer.startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 
-        if (allianceColor == "R") {
+        if (DriverStation.getAlliance() == Alliance.Red) {
             visionThread = new VisionThread(camera, new VisionBallPipelineRed(), pipeline -> {
                 if (!pipeline.filterContoursOutput().isEmpty()) {
 
@@ -97,7 +99,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                         centerY = IMG_HEIGHT / 2;
                         ballAmount = 0;
                         foundBall.set(false);
-                    // bestScore = 0;                    
+                        bestScore = 0;                    
                     }
             }
         }
@@ -112,11 +114,13 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                     }
                     foundBall.set(true);
                 } else {
-                    centerX = IMG_WIDTH / 2; // default to being centered
-                    centerY = IMG_HEIGHT / 2;
-                    ballAmount = 0;
-                    foundBall.set(false);
-                    // bestScore = 0;
+                    synchronized (imgLock) {
+                        centerX = IMG_WIDTH / 2; // default to being centered
+                        centerY = IMG_HEIGHT / 2;
+                        ballAmount = 0;
+                        foundBall.set(false);
+                        bestScore = 0;                    
+                    }
                 }
             });
         }
