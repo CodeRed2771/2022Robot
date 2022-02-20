@@ -317,20 +317,20 @@ public class SwerveModuleFalcon implements SwerveModule {
 		isReversed = (closestTurnPosition != reqPosition);
 
 		if (turnRelativePosition >= 0) {
-			if ((base + (closestTurnPosition * FULL_ROTATION)) - turnRelativePosition < -FULL_ROTATION / 2) {
-				base += FULL_ROTATION;
-			} else if ((base + (closestTurnPosition * FULL_ROTATION)) - turnRelativePosition > FULL_ROTATION / 2) {
-				base -= FULL_ROTATION;
-			}
+			// if ((base + (closestTurnPosition * FULL_ROTATION)) - turnRelativePosition < -FULL_ROTATION / 2) {
+			// 	base += FULL_ROTATION;
+			// } else if ((base + (closestTurnPosition * FULL_ROTATION)) - turnRelativePosition > FULL_ROTATION / 2) {
+			// 	base -= FULL_ROTATION;
+			// }
 			
 			turnPos = ((((closestTurnPosition * FULL_ROTATION) + (base))));
 		} else {
-			if ((base - ((1 - closestTurnPosition) * FULL_ROTATION)) - turnRelativePosition < -FULL_ROTATION / 2) {
-				base += FULL_ROTATION;
-			} else if ((base - ((1 - closestTurnPosition) * FULL_ROTATION)) - turnRelativePosition > FULL_ROTATION
-					/ 2) {
-				base -= FULL_ROTATION;
-			}
+			// if ((base - ((1 - closestTurnPosition) * FULL_ROTATION)) - turnRelativePosition < -FULL_ROTATION / 2) {
+			// 	base += FULL_ROTATION;
+			// } else if ((base - ((1 - closestTurnPosition) * FULL_ROTATION)) - turnRelativePosition > FULL_ROTATION
+			// 		/ 2) {
+			// 	base -= FULL_ROTATION;
+			// }
 			
 			turnPos = ((base - (((1 - closestTurnPosition) * FULL_ROTATION))));
 		

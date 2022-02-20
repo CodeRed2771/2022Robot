@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
     String autoSelected;
     XboxController gamepad1;
     XboxController gamepad2;
-    
+    SwerveTurnTest swtest;
 
     AutoBaseClass mAutoProgram;
 
@@ -51,6 +51,8 @@ public class Robot extends TimedRobot {
         RobotGyro.init();
         Calibration.loadSwerveCalibration();
         
+        // swtest = new SwerveTurnTest();
+
         if (Calibration.isPracticeBot())
             DriveTrain.init("NEO");
         else
@@ -75,7 +77,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        mAutoProgram.stop();
+        // mAutoProgram.stop();
+      
         DriveTrain.stopDriveAndTurnMotors();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
         
@@ -152,6 +155,21 @@ public class Robot extends TimedRobot {
 
         double ballLaneAssist = VisionBall.getBallXOffset();
 
+        // if (Math.abs(driveRotAmount)>.1) {
+        //     swtest.move(driveRotAmount);
+        // }
+
+        // if (gamepad1.getAButton()) {
+        //     swtest.setPosA();
+        // }
+        // if (gamepad1.getBButton()) {
+        //     swtest.setPosB();
+        // }
+        // if (gamepad1.getXButton()) {
+        //     swtest.setPosOrig();
+        // }
+        // swtest.tick();
+
         // SmartDashboard.putNumber("SWERVE ROT AXIS", driveRotAmount);
         driveRotAmount = rotationalAdjust(driveRotAmount);
         // SmartDashboard.putNumber("ADJUSTED SWERVE ROT AMOUNT", driveRotAmount);
@@ -180,6 +198,7 @@ public class Robot extends TimedRobot {
                 DriveTrain.fieldCentricDrive(driveFWDAmount, driveStrafeAmount, driveRotAmount);
             }
         }
+
 
         showDashboardInfo();
     }
@@ -287,9 +306,9 @@ public class Robot extends TimedRobot {
 
     public void disabledInit() {
         // allows the turn encoders to be reset once during disabled periodic
-        DriveTrain.allowTurnEncoderReset();
-        DriveTrain.resetDriveEncoders();
-        DriveTrain.resetTurnEncoders();
+        // DriveTrain.allowTurnEncoderReset();
+        // DriveTrain.resetDriveEncoders();
+        // DriveTrain.resetTurnEncoders();
 
         Shooter.StopShooter();
         
