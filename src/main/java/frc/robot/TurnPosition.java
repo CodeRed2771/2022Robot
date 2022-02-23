@@ -3,59 +3,76 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnPosition {
+    boolean reverseBoolean;
     public double getNewTurnPosition(double currentPosition, double newPosition) {
-        double absoluteCurrentPos = Math.abs(currentPosition);
-        double intergerCurrentPos = Math.round(absoluteCurrentPos);
-        double currentDecimal = absoluteCurrentPos - intergerCurrentPos;
-        double regularBestPos;
-        double reverseBestPos;
-        double regular = intergerCurrentPos + newPosition; // Somewhat unsure
-        double regularPlusOffset = (regular + 1) - currentPosition;
-        double regularMinusOffset = Math.abs(currentPosition - regular);
+        double intergerCurrentPos = Math.round(currentPosition);
+        double regular; 
+        double regularPlusOffset;
+        double regularMinusOffset;
+        double currentDecimal;
+        double reverseDecimal;
+        double reverse;
+        double reversePlusOffset;
+        double reverseMinusOffset;
         double reverseBestOffset = 1;
         double regularBestOffset = 1;
+        if (currentPosition >= 0) {
+            regular = intergerCurrentPos + newPosition;
+            regularPlusOffset = (regular + 1) - currentPosition;
+            regularMinusOffset = Math.abs(currentPosition - regular);
+            currentDecimal = currentPosition - intergerCurrentPos;
+            reverseDecimal = 1 - currentDecimal;
+            reverse = intergerCurrentPos + reverseDecimal;
+            reversePlusOffset = (reverse+1) - currentPosition;
+            reverseMinusOffset = Math.abs(currentPosition - reverse);
+        } else {
+            regular = intergerCurrentPos - newPosition;
+            regularPlusOffset = Math.abs((regular - 1) + currentPosition);
+            regularMinusOffset = Math.abs(currentPosition + regular);
+            currentDecimal = Math.abs(currentPosition) + intergerCurrentPos;
+            reverseDecimal = 1 - currentDecimal;
+            reverse = intergerCurrentPos - reverseDecimal;
+            reversePlusOffset = (reverse-1) + currentPosition;
+            reverseMinusOffset = Math.abs(currentPosition + reverse);
+        }
+        double regularBestPos;
+        double reverseBestPos;
         double bestPos; 
-        boolean reverseBoolean;
-          
+        
         // Regular
-        if (regularPlusOffset < regularMinusOffset) {
-            regularBestPos = regular +1;
+        if (regularPlusOffset <= regularMinusOffset) {
+            if (currentPosition >= 0 ) {
+                regularBestPos = regular + 1;
+            } else {
+                regularBestPos = regular - 1;
+            }
             regularBestOffset = regularPlusOffset; 
-        } else if (regularPlusOffset > regularMinusOffset) {
+        } else {
             regularBestPos =  regular; 
             reverseBestOffset = regularMinusOffset;
-        } else {
-            regularBestPos = regular + 1; 
-            regularBestOffset = regularPlusOffset; 
         }
 
         // Reverse 
-        double reverse = regularBestPos - Math.abs((intergerCurrentPos+0.5)-regularBestPos); // Very Unsure
-        double reversePlusOffset = (reverse + 1) - currentPosition;
-        double reverseMinusOffset = Math.abs(currentPosition - reverse); 
-
-        if (reversePlusOffset < reverseMinusOffset) {
-            reverseBestPos = reverse + 1;
+        if (reversePlusOffset <= reverseMinusOffset) {
+            if (currentPosition <= 0) {
+                reverseBestPos = reverse + 1;
+            } else {
+                reverseBestPos = reverse -1;
+            }
             reverseBestOffset = reversePlusOffset; 
             
-        } else if (reversePlusOffset > reverseMinusOffset) {
+        } else {
             reverseBestPos = reverse; 
             reverseBestOffset = reverseMinusOffset;
-        } else {
-            reverseBestPos = reverse + 1; 
-            reverseBestOffset = reversePlusOffset; 
         }
 
         // Regular vs. Reverse
-        if (regularBestOffset < reverseBestOffset) {
+        if (regularBestOffset <= reverseBestOffset) {
             bestPos = regularBestPos;
             reverseBoolean = false;
-        } else if (regularBestOffset > reverseBestOffset) {
+        } else {
             bestPos = reverseBestPos;
             reverseBoolean = true;
-        } else {
-            bestPos = regularBestPos;
-            reverseBoolean = false;
         }
 
         SmartDashboard.putNumber("Optomized Encoder Position", bestPos);
