@@ -169,7 +169,7 @@ public class SwerveModuleNEO implements SwerveModule {
 		if (currentPos - turnZeroPos > 0) {
 			return currentPos - turnZeroPos;
 		} else {
-			return (1 - turnZeroPos) + currentPos));
+			return (1 - turnZeroPos) + currentPos;
 		}
 	}
 
@@ -395,6 +395,14 @@ public class SwerveModuleNEO implements SwerveModule {
         turn.config_IntegralZone(0,  izone);
         turn.config_kD(0, d, 0);
         turn.config_kF(0, f, 0);
+	}
+
+	public double getTurnZero() {
+		return turnZeroPos;
+	}
+
+	public void resetZeroPosToCurrentPos() {
+		
 	}
 
 }
