@@ -16,7 +16,7 @@ public class TurnPosition {
         double regularBestOffset = 1;
         double bestPos; 
         boolean reverseBoolean;
-        
+          
         // Regular
         if (regularPlusOffset < regularMinusOffset) {
             regularBestPos = regular +1;

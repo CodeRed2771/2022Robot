@@ -169,7 +169,7 @@ public class SwerveModuleNEO implements SwerveModule {
 		if (currentPos - turnZeroPos > 0) {
 			return currentPos - turnZeroPos;
 		} else {
-			return (1 - turnZeroPos) + currentPos;
+			return (1 - turnZeroPos) + currentPos));
 		}
 	}
 
