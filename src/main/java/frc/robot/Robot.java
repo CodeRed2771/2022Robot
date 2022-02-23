@@ -82,6 +82,8 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         // mAutoProgram.stop();
       
+        DriveTrain.resetTurnZeroToCurrentPos(); // testing line
+
         DriveTrain.stopDriveAndTurnMotors();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
         
@@ -143,8 +145,11 @@ public class Robot extends TimedRobot {
         // --------------------------------------------------
         if (gamepad1.getStartButton()) {
             RobotGyro.reset();
-            DriveTrain.allowTurnEncoderReset();
-            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
+            
+
+
+//            DriveTrain.allowTurnEncoderReset();
+//            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
             DriveTrain.setAllTurnOrientation(0, false);
         }
 

@@ -32,15 +32,15 @@ public class Calibration {
 	
     // COMPETIION
 
-    private final static double DT_A_ABS_ZERO_INITIAL = .376; // .277; // OLD BOT (ZUNI)
-    private final static double DT_B_ABS_ZERO_INITIAL = .838; // .554;
-    private final static double DT_C_ABS_ZERO_INITIAL = .443; // .042;
-    private final static double DT_D_ABS_ZERO_INITIAL = .110; // .924;
+    private final static double DT_A_ABS_ZERO_INITIAL = .376; // OLD BOT (ZUNI)
+    private final static double DT_B_ABS_ZERO_INITIAL = .838; 
+    private final static double DT_C_ABS_ZERO_INITIAL = .443; 
+    private final static double DT_D_ABS_ZERO_INITIAL = .110; 
     
-    public final static double DT_NEW_A_ABS_ZERO_INITIAL = 0; // .277; // NEW BOT
-    public final static double DT_NEW_B_ABS_ZERO_INITIAL = 0; // .554;
-    public final static double DT_NEW_C_ABS_ZERO_INITIAL = 0; // .042;
-    public final static double DT_NEW_D_ABS_ZERO_INITIAL = 0; // .924;
+    public final static double DT_NEW_A_ABS_ZERO_INITIAL = 0; // NEW BOT
+    public final static double DT_NEW_B_ABS_ZERO_INITIAL = 0; 
+    public final static double DT_NEW_C_ABS_ZERO_INITIAL = 0; 
+    public final static double DT_NEW_D_ABS_ZERO_INITIAL = 0; 
     
     public static final double SHOOTER_P = 0.00063;
     public static final double SHOOTER_I = 0.0; // not used
@@ -62,7 +62,7 @@ public class Calibration {
     public final static double VISION_ROT_I = 0;
     public final static double VISION_ROT_D = 0;
 
-    public final static double TURN_P = 8; //was 10 3.10.19
+    public final static double TURN_P = 90; //was 10 3.10.19
 	public final static double TURN_I = 0.01; // was .01
 	public final static double TURN_D = 400; // was 400
     public final static double TURN_I_ZONE = 40; // 8/10/21 this was not set, so it's not right

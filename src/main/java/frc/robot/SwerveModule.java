@@ -36,4 +36,6 @@ public interface SwerveModule {
     void setBrakeMode(final boolean b);
     void setDrivePIDValues(final double p, final double i, final double d, final double f);
 	void setTurnPIDValues(double p, double i, double d, double izone, double f);
+	double getTurnZero();
+	void resetZeroPosToCurrentPos();
 }
