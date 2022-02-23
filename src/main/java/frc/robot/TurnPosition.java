@@ -3,8 +3,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnPosition {
-    boolean reverseBoolean;
-    public double getNewTurnPosition(double currentPosition, double newPosition) {
+    private static boolean reverseBoolean;
+    private static double bestPos;
+    public static double getNewTurnPosition(double currentPosition, double newPosition) {
         double intergerCurrentPos = Math.round(currentPosition);
         double regular; 
         double regularPlusOffset;
@@ -37,7 +38,7 @@ public class TurnPosition {
         }
         double regularBestPos;
         double reverseBestPos;
-        double bestPos; 
+
         
         // Regular
         if (regularPlusOffset <= regularMinusOffset) {
@@ -77,5 +78,8 @@ public class TurnPosition {
 
         SmartDashboard.putNumber("Optomized Encoder Position", bestPos);
         return bestPos; 
+    }
+    public static double getBestPosition() {
+        return bestPos;
     }
 }

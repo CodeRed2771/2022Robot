@@ -60,6 +60,9 @@ public class Robot extends TimedRobot {
         
         //DriveAuto.init();
 
+        SmartDashboard.putNumber("Current Position", 0);
+        SmartDashboard.putNumber("New Position", 0);
+
         Shooter.init();
         Vision.init(); // Limelight shooter vision tracking
         setupAutoChoices();
@@ -130,6 +133,10 @@ public class Robot extends TimedRobot {
         if (gamepad2.getRightBumper() || gamepad1.getRightBumper()) {
             Shooter.StopShooter();
         }
+
+        if (gamepad1.getYButton()) {
+            SmartDashboard.putNumber("Result", TurnPosition.getNewTurnPosition(SmartDashboard.getNumber("Current Position", 0), SmartDashboard.getNumber("New Position", 0)  ));
+        }
         
         // --------------------------------------------------
         // RESET - allow manual reset of systems by pressing Start
@@ -175,6 +182,7 @@ public class Robot extends TimedRobot {
         // SmartDashboard.putNumber("ADJUSTED SWERVE ROT AMOUNT", driveRotAmount);
         driveFWDAmount = forwardAdjust(driveFWDAmount, true);
         driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
+        SmartDashboard.putNumber("Best Position", TurnPosition.getBestPosition());
 
         // if (Intake.isRunning()) {
             if (gamepad1.getLeftBumper()) {
