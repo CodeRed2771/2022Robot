@@ -259,6 +259,10 @@ public class SwerveModuleNEO implements SwerveModule {
 		setTurnOrientation(position, true);
 	}
 
+	public void resetTurnReversedFlag() {
+		isReversed = false;
+	}
+
 	/**
 	 * Set turn to pos from 0 to 1 using PID
 	 * 

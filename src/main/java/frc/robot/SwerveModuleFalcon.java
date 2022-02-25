@@ -1,5 +1,7 @@
 package frc.robot;
 
+import javax.lang.model.util.ElementScanner6;
+
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -102,7 +104,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turnPID.setFF(0);
         turnPID.setOutputRange(-1, 1);
 		
-		turnPID.setReference(0, ControlType.kVelocity);
+		//turnPID.setReference(0, ControlType.kVelocity);
 
 		turn.burnFlash(); // save settings for power off
 	}
@@ -235,11 +237,24 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public int getTurnRotations() {
+		// i have verified that the (int) typecast 
+		// does properly truncate off the decimal portion
+		// without any rounding.
 		return (int) turnEncoder.getPosition();
 	}
 
 	public double getTurnOrientation() {
-		return turnEncoder.getPosition() - (int) turnEncoder.getPosition();
+		if (turnEncoder.getPosition() >= 0) {
+			return turnEncoder.getPosition() - (int) turnEncoder.getPosition();	
+		} else
+			return turnEncoder.getPosition() + (int) turnEncoder.getPosition();
+	}
+	
+	public double getTurnPositionWithInRotation() {
+		if (turnEncoder.getPosition() >= 0) {
+			return turnEncoder.getPosition() - (int) turnEncoder.getPosition();	
+		} else
+			return turnEncoder.getPosition() + (int) turnEncoder.getPosition();
 	}
 
     public double getCurrentDriveSetpoint() {
@@ -264,16 +279,114 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turn.set(setpoint);
 	}
 
-	public void setTurnOrientation(double position) {
-		setTurnOrientation(position, true);
+	public void setTurnOrientation(double reqPosition, boolean optimize) {
+		setTurnOrientation(reqPosition);
 	}
-
 	/**
 	 * Set turn to pos from 0 to 1 using PID
 	 * 
 	 * @param reqPosition orientation to set to
 	 */
-	public void setTurnOrientation(double reqPosition, boolean optimize) {
+	public void setTurnOrientation(double reqPosition) {
+		// reqPosition - a value between 0 and 1 that indicates the rotational position
+		//               that we want the module to be facing.
+		// Output
+		//      The result of this method is to instruct the turn motor to go to a
+		//      position that will equal the desired position.  But that position might
+		//      be the opposite side of the circle if we can get there quicker and
+		//      just invert the drive direction.
+		//      
+		// Note
+		//		Since "zero" on the modules doesn't equal zero as the requested position
+		//      we need to take into consideration the specific zero position of this 
+		//		module.  In other words, if the straight ahead "zero" position of this 
+		//		module is a reading of ".250" and our requested position is "0", then we
+		//		actually have to go to ".250" to satisfy the requested position.
+		// 		The encoders actual position will be a number like 5.2332 or -5.3842
+		//		indicating that it's 5 revolutions in plus a partial revolution.
+		//		so the final turn instruction needs to be relative to that original 
+		//      reading otherwise the module will have to unwind a bunch of revolutions.
+
+        boolean invertDrive = false;
+        double nearestPosInRotation = 0;
+        double newTargetPosition = 0;
+
+		// I think it would be best to adjust our requested position first so that it  
+		// is compatible with our modules zero offset.  Then all calculations after that
+		// will be in actual encoder positions.
+
+		reqPosition += turnZeroPos;  
+		if (reqPosition > 0.99999) // we went past the rotation point
+			reqPosition -= 1;  // remove the extra rotation. change 1.2344 to .2344
+        double reqPositionReverse = (reqPosition >= .5 ? reqPosition - .5 : reqPosition + .5) ; // e.g. .8 becomes .3
+
+		// now we can check where we currently are and figure out the optimal new position 
+		// based on which of the two potential positions is closest.
+		double currentPosInRotation = getTurnPositionWithInRotation();  // this is where it is .
+		int currentRevolutions = getTurnRotations();  // remember this for later
+
+        // e.g. curpos = .125;  req = .800  rot=15
+
+        // if the difference between the current position and the requested position is less than 
+        // a half rotation, then use that position, otherwise use the reverse position
+       if (Math.abs(currentPosInRotation - reqPosition) <= .25 || Math.abs(currentPosInRotation - (1 + reqPosition)) <= .25) {
+            nearestPosInRotation = reqPosition;
+            invertDrive = false;
+        } else {
+            nearestPosInRotation = reqPositionReverse;
+            invertDrive = true;
+        }
+        
+        // now we need to determine if we need to change our rotation counter to get to 
+        // this new position
+        // if we're at .9 and need to get to .1 for instance, then we need to increment 
+        // our rotation count or the module will unwind backwards a revolution.
+
+        // e.g. curpos = .125;  nearest = .300  rot=15
+        // have to handle cur = .125 nearest = .99  rot=15 
+        // and have to handle negative rotations
+        double newRevolutions = currentRevolutions;
+        if (nearestPosInRotation < currentPosInRotation)   {
+            // our nearest is a smaller number so we may need to change revolutions
+            // if the difference is larger than .5 then we are rotating across
+            // the zero position, so we need to adjust revolutions
+            if (Math.abs(currentPosInRotation - nearestPosInRotation) > .5) {
+                // e.g cur = .9  near = .1 rot = 15, then new = 16.1
+                // e.g cur = .9  near = .1 rot = -15, then new = -16.1
+                newRevolutions = (currentRevolutions >= 0 ? currentRevolutions + 1 : currentRevolutions - 1);
+            } 
+        } else { 
+            // see if we're backing up across the zero and then reduce the revs
+            if (Math.abs(currentPosInRotation - nearestPosInRotation) > .5) {
+                // e.g cur = .9  near = .1 rot = 15, then new = 16.1
+                // e.g cur = .9  near = .1 rot = -15, then new = -16.1
+                newRevolutions = (currentRevolutions >= 0 ? currentRevolutions - 1 : currentRevolutions + 1);
+            } 
+        }
+
+        newTargetPosition = (newRevolutions >= 0 ? newRevolutions + nearestPosInRotation : newRevolutions - nearestPosInRotation);
+        
+		// Set drive inversion if needed
+		isReversed = invertDrive; // invert
+
+        // TURN
+        turnPID.setReference(newTargetPosition, ControlType.kPosition );
+
+        System.out.println("");
+        System.out.println("Current Rotations:" + currentRevolutions);
+        System.out.println("Current Position: " + currentPosInRotation);
+        System.out.println("Requested Pos:    " + reqPosition);
+        System.out.println("Requested Pos Rev:" + reqPositionReverse);
+        System.out.println("Nearest Pos:      " + nearestPosInRotation);
+		System.out.println("NEW TARGET POS:   " + newTargetPosition);
+        System.out.println("INVERT DRIVE:     " + invertDrive);
+	}
+
+	public void resetTurnReversedFlag() {
+		isReversed = false;
+	}
+
+	public void setTurnOrientationOLD(double reqPosition, boolean optimize) {
 		int base = getTurnRotations();
 		double currentTurnPosition = getTurnPosition();
 		double reverseTurnPosition = (reqPosition + 0.5) % 1.0;

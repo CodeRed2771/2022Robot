@@ -62,8 +62,8 @@ public class Calibration {
     public final static double VISION_ROT_I = 0;
     public final static double VISION_ROT_D = 0;
 
-    public final static double TURN_P = 90; //was 10 3.10.19
-	public final static double TURN_I = 0.01; // was .01
+    public final static double TURN_P = 20; //was 10 3.10.19
+	public final static double TURN_I = 0.00; // was .01
 	public final static double TURN_D = 400; // was 400
     public final static double TURN_I_ZONE = 40; // 8/10/21 this was not set, so it's not right
     public final static double TURN_F = 0;    // 8/10/21 this was also not used before but could be helpful

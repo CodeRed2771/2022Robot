@@ -60,6 +60,13 @@ public class DriveTrain {
         moduleD.resetZeroPosToCurrentPos();
     }
 
+    public static void resetTurnReversedFlag() {
+        moduleA.resetTurnReversedFlag();
+        moduleB.resetTurnReversedFlag();
+        moduleC.resetTurnReversedFlag();
+        moduleD.resetTurnReversedFlag();
+    }
+
     public static void setDrivePower(double modAPower, double modBPower, double modCPower, double modDPower) {
         moduleA.setDrivePower(modAPower);
         moduleB.setDrivePower(modBPower);

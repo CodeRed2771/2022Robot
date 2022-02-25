@@ -73,7 +73,9 @@ public class Robot extends TimedRobot {
 
         DriveTrain.allowTurnEncoderReset();
         DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
-
+        DriveTrain.resetTurnZeroToCurrentPos(); // testing line
+        DriveTrain.resetTurnReversedFlag();
+ 
         SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
         SmartDashboard.putString("Alliance R or B", "R");
@@ -84,6 +86,7 @@ public class Robot extends TimedRobot {
         // mAutoProgram.stop();
       
         DriveTrain.resetTurnZeroToCurrentPos(); // testing line
+        DriveTrain.resetTurnReversedFlag();
 
         DriveTrain.stopDriveAndTurnMotors();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
@@ -99,6 +102,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Y Offset", VisionBall.getBallYOffset());
         SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
         SmartDashboard.putNumber("Score", VisionBall.getBallScore());
+       
         if (gamepad1.getAButton()) {
             Shooter.StartShooter();
         }
@@ -147,8 +151,6 @@ public class Robot extends TimedRobot {
         if (gamepad1.getStartButton()) {
             RobotGyro.reset();
             
-
-
 //            DriveTrain.allowTurnEncoderReset();
 //            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
             DriveTrain.setAllTurnOrientation(0, false);
