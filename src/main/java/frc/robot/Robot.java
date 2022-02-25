@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
     final String autoAlign = "Auto Align";
     final String ballPickUp = "Auto Ball Pick Up";
     final String AutoTarmacShoot1 = "Auto Tarmac Shoot 1";
+    final String AutoTarmacShoot2 = "Auto Tarmac Shoot 2";
 
     private boolean isIntakeUpPosition = true;
     private boolean intakeKeyAlreadyPressed = false;
@@ -286,6 +287,9 @@ public class Robot extends TimedRobot {
         case AutoTarmacShoot1:
             mAutoProgram = new AutoTarmacShoot1();
             mAutoProgram.start();
+        case AutoTarmacShoot2:
+            mAutoProgram = new AutoTarmacShoot2();
+            mAutoProgram.start();
         }
     }
 
@@ -303,6 +307,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(autoAlign, autoAlign);
         autoChooser.addOption(ballPickUp, ballPickUp);
         autoChooser.addOption(AutoTarmacShoot1, AutoTarmacShoot1);
+        autoChooser.addOption(AutoTarmacShoot2, AutoTarmacShoot2);
 
         SmartDashboard.putData("Auto Chose:", autoChooser);
     }
