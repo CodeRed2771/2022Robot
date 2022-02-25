@@ -33,7 +33,7 @@ public class Calibration {
     // COMPETIION
 
     private final static double DT_A_ABS_ZERO_INITIAL = .376; // OLD BOT (ZUNI)
-    private final static double DT_B_ABS_ZERO_INITIAL = .838; 
+    private final static double DT_B_ABS_ZERO_INITIAL = .352; 
     private final static double DT_C_ABS_ZERO_INITIAL = .443; 
     private final static double DT_D_ABS_ZERO_INITIAL = .110; 
     

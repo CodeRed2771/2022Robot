@@ -224,7 +224,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.updateValues();
 
         Shooter.tick();
-        //DriveAuto.tick();
+        DriveAuto.tick();
 
         SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
         SmartDashboard.putNumber("Distance to Target", Vision.getDistanceFromTarget());
