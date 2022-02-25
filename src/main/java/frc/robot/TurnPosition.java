@@ -1,22 +1,25 @@
 package frc.robot;
 
+import java.util.Scanner;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnPosition {
     private static boolean reverseBoolean;
     private static double bestPos;
+    private static double intergerCurrentPos;
+    private static double regular; 
+    private static double regularPlusOffset;
+    private static double regularMinusOffset;
+    private static double currentDecimal;
+    private static double reverseDecimal;
+    private static double reverse;
+    private static double reversePlusOffset;
+    private static double reverseMinusOffset;
+    private static double reverseBestOffset = 1;
+    private static double regularBestOffset = 1;
     public static double getNewTurnPosition(double currentPosition, double newPosition) {
-        double intergerCurrentPos = Math.round(currentPosition);
-        double regular; 
-        double regularPlusOffset;
-        double regularMinusOffset;
-        double currentDecimal;
-        double reverseDecimal;
-        double reverse;
-        double reversePlusOffset;
-        double reverseMinusOffset;
-        double reverseBestOffset = 1;
-        double regularBestOffset = 1;
+        intergerCurrentPos = Math.round(currentPosition);
         if (currentPosition >= 0) {
             regular = intergerCurrentPos + newPosition;
             regularPlusOffset = (regular + 1) - currentPosition;
@@ -81,5 +84,26 @@ public class TurnPosition {
     }
     public static double getBestPosition() {
         return bestPos;
+    }
+    public static void main(String[] args) {
+        Scanner variablesSanner = new Scanner(System.in);
+        String variables = variablesSanner.nextLine();
+        while (true) {
+            switch (variables) {
+                case "All": 
+                    Scanner currentValueScanner = new Scanner(System.in);
+                    double currentValue = currentValueScanner.nextDouble();
+                    Scanner newValueScanner = new Scanner(System.in);
+                    double newValue =  newValueScanner.nextDouble();
+                    System.out.println("Value" + TurnPosition.getNewTurnPosition(currentValue, newValue));
+                    break;
+                default: 
+                Scanner currentValueScannerD = new Scanner(System.in);
+                double currentValueD = currentValueScannerD.nextDouble();
+                Scanner newValueScannerD = new Scanner(System.in);
+                double newValueD =  newValueScannerD.nextDouble();
+                System.out.println("Value" + TurnPosition.getNewTurnPosition(currentValueD, newValueD));
+            }
+        }
     }
 }
