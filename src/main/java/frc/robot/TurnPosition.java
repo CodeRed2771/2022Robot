@@ -89,19 +89,20 @@ public class TurnPosition {
         Scanner variablesSanner = new Scanner(System.in);
         String variables = variablesSanner.nextLine();
         while (true) {
-            boolean returnValues;
             switch (variables) {
                 case "All": 
-                    returnValues = true;
                     Scanner currentValueScanner = new Scanner(System.in);
                     double currentValue = currentValueScanner.nextDouble();
                     Scanner newValueScanner = new Scanner(System.in);
                     double newValue =  newValueScanner.nextDouble();
-                    //System.in.println("Value" + TurnPosition.getNewTurnPosition(currentValue, newValue));
+                    System.out.println("Value" + TurnPosition.getNewTurnPosition(currentValue, newValue));
                     break;
                 default: 
-                    returnValues = false;
-
+                Scanner currentValueScannerD = new Scanner(System.in);
+                double currentValueD = currentValueScannerD.nextDouble();
+                Scanner newValueScannerD = new Scanner(System.in);
+                double newValueD =  newValueScannerD.nextDouble();
+                System.out.println("Value" + TurnPosition.getNewTurnPosition(currentValueD, newValueD));
             }
         }
     }
