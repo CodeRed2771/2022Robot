@@ -10,6 +10,8 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class SwerveModuleNEO implements SwerveModule {
     public CANSparkMax drive;
     public WPI_TalonSRX turn;
@@ -82,7 +84,6 @@ public class SwerveModuleNEO implements SwerveModule {
 
 		turn.selectProfileSlot(0, 0);
 		turn.configClosedloopRamp(.1, 0);
-		//turn.setSensorPhase(true);
 		
 	}
 
@@ -180,9 +181,24 @@ public class SwerveModuleNEO implements SwerveModule {
 		isReversed = false;
 	}
 
-	public void resetTurnEnc() {
-		this.turn.getSensorCollection().setQuadraturePosition(0, 10);
+	/*
+		resets the Quad Encoder based on absolute encoder
+	*/
+	public void resetTurnEncoder() {
+		double modOffset = 0;
+		setTurnPower(0);
+		Timer.delay(.1); // give module time to settle down
+		modOffset = getTurnAbsolutePosition();
+		setEncPos((int) (calculatePositionDifference(modOffset, turnZeroPos) * 4096d));
 	}
+
+	private static double calculatePositionDifference(double currentPosition, double calibrationZeroPosition) {
+        if (currentPosition - calibrationZeroPosition >= 0) {
+            return currentPosition - calibrationZeroPosition;
+        } else {
+            return (1 - calibrationZeroPosition) + currentPosition;
+        }
+    }
 
 	public double getDriveEnc() {
 		return driveEncoder.getPosition();

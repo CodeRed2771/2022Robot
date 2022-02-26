@@ -209,48 +209,21 @@ public class DriveTrain {
         allowTurnEncoderReset = true;
     }
 
-    // OLD
     public static void resetTurnEncoders() {
         if (allowTurnEncoderReset) {
-            double modAOff = 0, modBOff = 0, modCOff = 0, modDOff = 0;
+            moduleA.resetTurnEncoder();
+            moduleB.resetTurnEncoder();
+            moduleC.resetTurnEncoder();
+            moduleD.resetTurnEncoder();
 
-            moduleA.setTurnPower(0);
-            moduleC.setTurnPower(0);
-            moduleB.setTurnPower(0);
-            moduleD.setTurnPower(0);
-            Timer.delay(.1);
-            // first find the current absolute position of the turn encoders
-            modAOff = DriveTrain.moduleA.getTurnAbsolutePosition();
-            modBOff = DriveTrain.moduleB.getTurnAbsolutePosition();
-            modCOff = DriveTrain.moduleC.getTurnAbsolutePosition();
-            modDOff = DriveTrain.moduleD.getTurnAbsolutePosition();
+            // new robot
+			// moduleA.setEncPos((calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO())));
+			// moduleB.setEncPos( (calculatePositionDifference(modBOff, Calibration.GET_DT_B_ABS_ZERO())));
+			// moduleC.setEncPos( (calculatePositionDifference(modCOff, Calibration.GET_DT_C_ABS_ZERO())));
+			// moduleD.setEncPos( (calculatePositionDifference(modDOff, Calibration.GET_DT_D_ABS_ZERO())));
 
-            // now use the difference between the current position and the
-            // calibration zero
-            // position
-            // to tell the encoder what the current relative position is
-            // (relative to the
-            // zero pos)
-			moduleA.setEncPos((calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO())));
-			moduleB.setEncPos( (calculatePositionDifference(modBOff, Calibration.GET_DT_B_ABS_ZERO())));
-			moduleC.setEncPos( (calculatePositionDifference(modCOff, Calibration.GET_DT_C_ABS_ZERO())));
-			moduleD.setEncPos( (calculatePositionDifference(modDOff, Calibration.GET_DT_D_ABS_ZERO())));
-
-            // Lamprey version
-            // moduleA.setEncPos((int) (calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO()) * 1024d));
-            // moduleB.setEncPos((int) (calculatePositionDifference(modBOff, Calibration.GET_DT_B_ABS_ZERO()) * 1024d));
-            // moduleC.setEncPos((int) (calculatePositionDifference(modCOff, Calibration.GET_DT_C_ABS_ZERO()) * 1024d));
-            // moduleD.setEncPos((int) (calculatePositionDifference(modDOff, Calibration.GET_DT_D_ABS_ZERO()) * 1024d));
-
+           
             allowTurnEncoderReset = false;
-        }
-    }
-
-    private static double calculatePositionDifference(double currentPosition, double calibrationZeroPosition) {
-        if (currentPosition - calibrationZeroPosition >= 0) {
-            return currentPosition - calibrationZeroPosition;
-        } else {
-            return (1 - calibrationZeroPosition) + currentPosition;
         }
     }
 

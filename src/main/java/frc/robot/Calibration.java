@@ -35,7 +35,7 @@ public class Calibration {
     private final static double DT_A_ABS_ZERO_INITIAL = .376; // OLD BOT (ZUNI)
     private final static double DT_B_ABS_ZERO_INITIAL = .352; 
     private final static double DT_C_ABS_ZERO_INITIAL = .443; 
-    private final static double DT_D_ABS_ZERO_INITIAL = .110; 
+    private final static double DT_D_ABS_ZERO_INITIAL = .098; 
     
     public final static double DT_NEW_A_ABS_ZERO_INITIAL = 0; // NEW BOT
     public final static double DT_NEW_B_ABS_ZERO_INITIAL = 0; 
@@ -64,19 +64,19 @@ public class Calibration {
 
     public static double getTurnP() { 
         if (isPracticeBot())
-            return 20;  
+            return 8;  // zuni
         else    
             return 20;  // competition
     }
     public static double getTurnI() { 
         if (isPracticeBot())
-            return 0;  
+            return 0.01;  
         else    
             return 0;  // competition
     }
     public static double getTurnIZone() { 
         if (isPracticeBot())
-            return 0;  
+            return 40;  
         else    
             return 0;  // competition
     }

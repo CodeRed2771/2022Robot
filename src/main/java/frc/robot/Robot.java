@@ -54,8 +54,11 @@ public class Robot extends TimedRobot {
         
         // swtest = new SwerveTurnTest();
 
-        if (Calibration.isPracticeBot())
+        if (Calibration.isPracticeBot())  {
             DriveTrain.init("NEO");
+            DriveTrain.allowTurnEncoderReset();
+            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
+        }
         else
             DriveTrain.init("FALCON");
         
@@ -139,8 +142,9 @@ public class Robot extends TimedRobot {
         if (gamepad1.getStartButton()) {
             RobotGyro.reset();
             
-//            DriveTrain.allowTurnEncoderReset();
-//            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
+            DriveTrain.allowTurnEncoderReset();
+            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
+
             DriveTrain.setAllTurnOrientation(0, false);
         }
 

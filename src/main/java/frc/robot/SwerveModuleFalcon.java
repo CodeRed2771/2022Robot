@@ -12,6 +12,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModuleFalcon implements SwerveModule {
@@ -201,11 +202,24 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turnZeroPos = turnEncoder.getPosition() - (int)turnEncoder.getPosition();
 	}
 
-	public void resetTurnEnc() {
-		turnEncoder.setPosition(0);
-		//this.turn.getSensorCollection().setQuadraturePosition(0, 10);
+	/*
+		resets the Quad Encoder based on absolute encoder
+	*/
+	public void resetTurnEncoder() {
+		double modOffset = 0;
+		setTurnPower(0);
+		Timer.delay(.1); // give module time to settle down
+		modOffset = getTurnAbsolutePosition();
+		setEncPos((calculatePositionDifference(modOffset, turnZeroPos)));
 	}
 
+	private static double calculatePositionDifference(double currentPosition, double calibrationZeroPosition) {
+        if (currentPosition - calibrationZeroPosition >= 0) {
+            return currentPosition - calibrationZeroPosition;
+        } else {
+            return (1 - calibrationZeroPosition) + currentPosition;
+        }
+    }
 	public double getDriveEnc() {
 		return drive.getSelectedSensorPosition();
 	}
