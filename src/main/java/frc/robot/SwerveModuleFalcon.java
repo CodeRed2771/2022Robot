@@ -21,8 +21,8 @@ public class SwerveModuleFalcon implements SwerveModule {
 	private final RelativeEncoder turnEncoder;
 	private char mModuleID;
 	private final int FULL_ROTATION = 1;
-	private double TURN_P, TURN_I, TURN_D, DRIVE_P, DRIVE_I, DRIVE_D;
-	private final int TURN_IZONE, DRIVE_IZONE;
+	private double TURN_P, TURN_I, TURN_D, TURN_F, DRIVE_P, DRIVE_I, DRIVE_D;
+	private final double TURN_IZONE, DRIVE_IZONE;
 	private double turnZeroPos = 0;
 	private double currentDriveSetpoint = 0;
 	private boolean isReversed = false;
@@ -30,26 +30,18 @@ public class SwerveModuleFalcon implements SwerveModule {
 	/**
 	 * Lets make a new module :)
 	 * 
-	 * @param driveTalonID First I gotta know what talon we are using for driving
-	 * @param turnTalonID  Next I gotta know what talon we are using to turn
-	 * @param tP           I probably need to know the P constant for the turning
-	 *                     PID
-	 * @param tI           I probably need to know the I constant for the turning
-	 *                     PID
-	 * @param tD           I probably need to know the D constant for the turning
-	 *                     PID
-	 * @param tIZone       I might not need to know the I Zone value for the turning
-	 *                     PID
+	 * @param driveMotorID First I gotta know what talon we are using for driving
+	 * @param turnMotorID  Next I gotta know what talon we are using to turn
+
 	 */
-	public SwerveModuleFalcon(int driveMotorID, int turnMotorID, double dP, double dI, double dD, int dIZone, double tP, double tI,
-			double tD, int tIZone, double tZeroPos, char moduleID) {
+	public SwerveModuleFalcon(int driveMotorID, int turnMotorID, double tZeroPos, char moduleID) {
 
 		mModuleID = moduleID;
 
-		DRIVE_P = dP;
-		DRIVE_I = dI;
-		DRIVE_D = dD;
-		DRIVE_IZONE = dIZone;
+		DRIVE_P = Calibration.AUTO_DRIVE_P;
+		DRIVE_I = Calibration.AUTO_DRIVE_I;
+		DRIVE_D = Calibration.AUTO_DRIVE_D;
+		DRIVE_IZONE = Calibration.AUTO_DRIVE_IZONE;
 
 		drive = new TalonFX(driveMotorID);
 		drive.configFactoryDefault(10);
@@ -89,24 +81,23 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turnPID = turn.getPIDController();
 		turnPID.setFeedbackDevice(turnEncoder);
 
-		turnZeroPos = tZeroPos;
-		turnZeroPos = turnEncoder.getPosition();
+		TURN_P = Calibration.getTurnP();
+		TURN_I = Calibration.getTurnI();
+		TURN_D = Calibration.getTurnD();
+		TURN_IZONE = Calibration.getTurnIZone();
+		TURN_F = Calibration.getTurnF();
 
-		TURN_P = tP;
-		TURN_I = tI;
-		TURN_D = tD;
-		TURN_IZONE = tIZone;
-
-		turnPID.setP(TURN_P);
-		turnPID.setI(TURN_I);
-		turnPID.setD(TURN_D);
-		turnPID.setIZone(TURN_IZONE);
-		turnPID.setFF(0);
+		setTurnPIDValues(TURN_P, TURN_I, TURN_D, TURN_IZONE, TURN_F);
+		
         turnPID.setOutputRange(-1, 1);
 		
 		//turnPID.setReference(0, ControlType.kVelocity);
 
 		turn.burnFlash(); // save settings for power off
+
+		turnZeroPos = tZeroPos;
+		turnZeroPos = turnEncoder.getPosition();
+
 	}
 
 	// public void setFollower(int talonToFollow) {
@@ -205,6 +196,8 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public void resetZeroPosToCurrentPos() {
+		// sets the known "zero position" to be whatever we're at now.
+		// should only be called when the modules are KNOWN to be straight.
 		turnZeroPos = turnEncoder.getPosition() - (int)turnEncoder.getPosition();
 	}
 

@@ -45,10 +45,10 @@ public class SwerveTurnTest {
 
 		turnZeroPos = turnEncoder.getPosition();
 
-		TURN_P = Calibration.TURN_P;
-		TURN_I = Calibration.TURN_I;
-		TURN_D = Calibration.TURN_D;
-		TURN_IZONE = (int) Calibration.TURN_I_ZONE;
+		TURN_P = Calibration.getTurnP();
+		TURN_I = Calibration.getTurnI();
+		TURN_D = Calibration.getTurnD();
+		TURN_IZONE = (int) Calibration.getTurnIZone();
 
 		turnPID.setP(TURN_P);
 		turnPID.setI(TURN_I);

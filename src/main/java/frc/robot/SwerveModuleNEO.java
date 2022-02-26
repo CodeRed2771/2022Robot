@@ -17,8 +17,8 @@ public class SwerveModuleNEO implements SwerveModule {
     private final RelativeEncoder driveEncoder;
 	private char mModuleID;
 	private final int FULL_ROTATION = 4096;
-	private double TURN_P, TURN_I, TURN_D, DRIVE_P, DRIVE_I, DRIVE_D;
-	private final int TURN_IZONE, DRIVE_IZONE;
+	private double TURN_P, TURN_I, TURN_D, TURN_F, DRIVE_P, DRIVE_I, DRIVE_D;
+	private double TURN_IZONE, DRIVE_IZONE;
 	private double turnZeroPos = 0;
 	private double currentDriveSetpoint = 0;
 	private boolean isReversed = false;
@@ -28,17 +28,8 @@ public class SwerveModuleNEO implements SwerveModule {
 	 * 
 	 * @param driveTalonID First I gotta know what talon we are using for driving
 	 * @param turnTalonID  Next I gotta know what talon we are using to turn
-	 * @param tP           I probably need to know the P constant for the turning
-	 *                     PID
-	 * @param tI           I probably need to know the I constant for the turning
-	 *                     PID
-	 * @param tD           I probably need to know the D constant for the turning
-	 *                     PID
-	 * @param tIZone       I might not need to know the I Zone value for the turning
-	 *                     PID
 	 */
-	public SwerveModuleNEO(int driveMotorID, int turnTalonID, double dP, double dI, double dD, int dIZone, double tP, double tI,
-			double tD, int tIZone, double tZeroPos, char moduleID) {
+	public SwerveModuleNEO(int driveMotorID, int turnTalonID, double tZeroPos, char moduleID) {
 
         drive = new CANSparkMax(driveMotorID, MotorType.kBrushless);
         drive.restoreFactoryDefaults();
@@ -58,10 +49,10 @@ public class SwerveModuleNEO implements SwerveModule {
         // Encoder object created to display position values
         driveEncoder = drive.getEncoder();
 
-        DRIVE_P = dP;
-        DRIVE_I = dI;
-        DRIVE_D = dD;
-        DRIVE_IZONE = dIZone;
+        DRIVE_P = Calibration.AUTO_DRIVE_P;
+        DRIVE_I = Calibration.AUTO_DRIVE_I;
+        DRIVE_D = Calibration.AUTO_DRIVE_D;
+        DRIVE_IZONE = Calibration.AUTO_DRIVE_IZONE;
 
         drivePID.setP(DRIVE_P);
         drivePID.setI(DRIVE_I);
@@ -81,15 +72,14 @@ public class SwerveModuleNEO implements SwerveModule {
 		turnZeroPos = tZeroPos;
 
 		turn.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0); // ?? don't know if zeros are right
-		TURN_P = tP;
-		TURN_I = tI;
-		TURN_D = tD;
-		TURN_IZONE = tIZone;
+		TURN_P = Calibration.getTurnP();
+		TURN_I = Calibration.getTurnI();
+		TURN_D = Calibration.getTurnD();
+		TURN_F = Calibration.getTurnF();
+		TURN_IZONE = Calibration.getTurnIZone();
 
-		turn.config_kP(0, TURN_P, 0);
-		turn.config_kI(0, TURN_I, 0);
-		turn.config_kD(0, TURN_D, 0);
-		turn.config_IntegralZone(0, TURN_IZONE, 0);
+		setTurnPIDValues(TURN_P, TURN_I, TURN_D, TURN_IZONE, TURN_F);
+
 		turn.selectProfileSlot(0, 0);
 		turn.configClosedloopRamp(.1, 0);
 		//turn.setSensorPhase(true);

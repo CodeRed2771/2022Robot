@@ -64,18 +64,13 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Current Position", 0);
         SmartDashboard.putNumber("New Position", 0);
 
-        Shooter.init();
+       // Shooter.init();
         Vision.init(); // Limelight shooter vision tracking
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
 
         RobotGyro.reset();
 
-        DriveTrain.allowTurnEncoderReset();
-        DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
-        DriveTrain.resetTurnZeroToCurrentPos(); // testing line
-        DriveTrain.resetTurnReversedFlag();
- 
         SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
         SmartDashboard.putString("Alliance R or B", "R");
@@ -85,9 +80,6 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         // mAutoProgram.stop();
       
-        DriveTrain.resetTurnZeroToCurrentPos(); // testing line
-        DriveTrain.resetTurnReversedFlag();
-
         DriveTrain.stopDriveAndTurnMotors();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
         
@@ -139,10 +131,6 @@ public class Robot extends TimedRobot {
 
         if (gamepad2.getRightBumper() || gamepad1.getRightBumper()) {
             Shooter.StopShooter();
-        }
-
-        if (gamepad1.getYButton()) {
-            SmartDashboard.putNumber("Result", TurnPosition.getNewTurnPosition(SmartDashboard.getNumber("Current Position", 0), SmartDashboard.getNumber("New Position", 0)  ));
         }
         
         // --------------------------------------------------
@@ -240,11 +228,11 @@ public class Robot extends TimedRobot {
                     SmartDashboard.getNumber("AUTO DRIVE D", Calibration.AUTO_DRIVE_D),
                     SmartDashboard.getNumber("AUTO DRIVE F", Calibration.AUTO_DRIVE_F));
 
-            DriveTrain.setTurnPIDValues(SmartDashboard.getNumber("TURN P", Calibration.TURN_P),
-                    SmartDashboard.getNumber("TURN I", Calibration.TURN_I),
-                    SmartDashboard.getNumber("TURN D", Calibration.TURN_D),
-                    (int)SmartDashboard.getNumber("TURN I ZONE", Calibration.TURN_I_ZONE),
-                    SmartDashboard.getNumber("TURN F", Calibration.TURN_F));
+            DriveTrain.setTurnPIDValues(SmartDashboard.getNumber("TURN P", Calibration.getTurnP()),
+                    SmartDashboard.getNumber("TURN I", Calibration.getTurnI()),
+                    SmartDashboard.getNumber("TURN D", Calibration.getTurnD()),
+                    SmartDashboard.getNumber("TURN I ZONE", Calibration.getTurnIZone()),
+                    SmartDashboard.getNumber("TURN F", Calibration.getTurnF()));
 
             DriveTrain.setDriveMMAccel((int) SmartDashboard.getNumber("DRIVE MM ACCEL", Calibration.DT_MM_ACCEL));
             DriveTrain.setDriveMMVelocity(
