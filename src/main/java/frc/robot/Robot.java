@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.libs.HID.Gamepad;
+import pabeles.concurrency.IntOperatorTask.Max;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class Robot extends TimedRobot {
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
     final String autoWheelAlign = "Auto Wheel Align";
     final String autoAlign = "Auto Align";
     final String ballPickUp = "Auto Ball Pick Up";
+    final String AutoLeaveTarmac = "Auto Leave Tarmac";
     final String AutoTarmacShoot1 = "Auto Tarmac Shoot 1";
     final String AutoTarmacShoot2 = "Auto Tarmac Shoot 2";
 
@@ -62,7 +64,7 @@ public class Robot extends TimedRobot {
         else
             DriveTrain.init("FALCON");
         
-        //DriveAuto.init();
+        DriveAuto.init();
 
         SmartDashboard.putNumber("Current Position", 0);
         SmartDashboard.putNumber("New Position", 0);
@@ -278,12 +280,18 @@ public class Robot extends TimedRobot {
             mAutoProgram = new AutoBallPickUp();
             mAutoProgram.start();
             break;
+        case AutoLeaveTarmac:
+            mAutoProgram = new AutoLeaveTarmack();
+            mAutoProgram.start();
+            break;
         case AutoTarmacShoot1:
             mAutoProgram = new AutoTarmacShoot1();
             mAutoProgram.start();
+            break;
         case AutoTarmacShoot2:
             mAutoProgram = new AutoTarmacShoot2();
             mAutoProgram.start();
+            break;
         }
     }
 
@@ -300,6 +308,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(autoWheelAlign, autoWheelAlign);
         autoChooser.addOption(autoAlign, autoAlign);
         autoChooser.addOption(ballPickUp, ballPickUp);
+        autoChooser.addOption(AutoLeaveTarmac, AutoLeaveTarmac);
         autoChooser.addOption(AutoTarmacShoot1, AutoTarmacShoot1);
         autoChooser.addOption(AutoTarmacShoot2, AutoTarmacShoot2);
 

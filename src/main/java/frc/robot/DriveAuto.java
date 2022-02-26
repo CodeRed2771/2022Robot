@@ -27,8 +27,7 @@ public class DriveAuto {
     public static void init() {
         System.out.println("START OF DRIVEAUTO INIT");
 
-        rotDrivePID = new PIDController(Calibration.AUTO_ROT_P, Calibration.AUTO_ROT_I, Calibration.AUTO_ROT_D,
-                Calibration.AUTO_ROT_F);
+        rotDrivePID = new PIDController(Calibration.AUTO_ROT_P, Calibration.AUTO_ROT_I, Calibration.AUTO_ROT_D);
         rotDrivePID.setTolerance(2); // degrees off
 
         DriveTrain.setDriveMMAccel(Calibration.DT_MM_ACCEL);
@@ -246,11 +245,11 @@ public class DriveAuto {
     }
 
     private static double convertToTicks(double inches) {
-        return (double) (inches * Calibration.DRIVE_DISTANCE_TICKS_PER_INCH);
+        return (double) (inches * Calibration.getDriveTicksPerInch());
     }
 
     private static double convertTicksToInches(double ticks) {
-        return ticks / Calibration.DRIVE_DISTANCE_TICKS_PER_INCH;
+        return ticks / Calibration.getDriveTicksPerInch();
     }
 
     public static void showEncoderValues() {

@@ -139,7 +139,12 @@ public class Calibration {
 	public final static int DT_MM_VELOCITY = 2000;
 	
 	// COMPETIION AND PRACTICE
-	public static final double DRIVE_DISTANCE_TICKS_PER_INCH = .39;  
+    public final static double getDriveTicksPerInch() {
+        if (isPracticeBot()) 
+            return(.39);  
+        else
+            return(500);
+    }
 
     // TEST BOT2
     // public static final double DRIVE_DISTANCE_TICKS_PER_INCH = 32.900;
