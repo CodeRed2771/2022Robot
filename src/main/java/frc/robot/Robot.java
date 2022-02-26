@@ -229,10 +229,10 @@ public class Robot extends TimedRobot {
         // This is only needed during tuning
         if (SmartDashboard.getBoolean("Tune Drive-Turn PIDs", false)) {
        
-            DriveTrain.setDrivePIDValues(SmartDashboard.getNumber("AUTO DRIVE P", Calibration.AUTO_DRIVE_P),
-                    SmartDashboard.getNumber("AUTO DRIVE I", Calibration.AUTO_DRIVE_I),
-                    SmartDashboard.getNumber("AUTO DRIVE D", Calibration.AUTO_DRIVE_D),
-                    SmartDashboard.getNumber("AUTO DRIVE F", Calibration.AUTO_DRIVE_F));
+            DriveTrain.setDrivePIDValues(SmartDashboard.getNumber("AUTO DRIVE P", Calibration.getDriveP()),
+                    SmartDashboard.getNumber("AUTO DRIVE I", Calibration.getDriveI()),
+                    SmartDashboard.getNumber("AUTO DRIVE D", Calibration.getDriveD()),
+                    SmartDashboard.getNumber("AUTO DRIVE F", Calibration.getDriveF()));
 
             DriveTrain.setTurnPIDValues(SmartDashboard.getNumber("TURN P", Calibration.getTurnP()),
                     SmartDashboard.getNumber("TURN I", Calibration.getTurnI()),

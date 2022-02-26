@@ -47,8 +47,7 @@ public class Calibration {
     public static final double SHOOTER_D = 0.05;
     public static final double SHOOTER_F = 0.000190;
     public static final int SHOOTER_DEFAULT_SPEED = 2000;
-    public static final int FEEDER_DEFAULT_SPEED = 3800
-    ;
+    public static final int FEEDER_DEFAULT_SPEED = 3800;
 
     public final static double VISION_FWD_P = 0.05;
     public final static double VISION_FWD_I = 0;
@@ -93,6 +92,39 @@ public class Calibration {
             return 0;  // competition
     }    
     
+    /********************** DRIVE PID ******************/
+    
+    public static double getDriveP() { 
+        if (isPracticeBot())
+            return .00115;  // zuni
+        else    
+            return .7;  // competition
+    }
+    public static double getDriveI() { 
+        if (isPracticeBot())
+            return 0.01;  
+        else    
+            return 0;  // competition
+    }
+    public static double getDriveIZone() { 
+        if (isPracticeBot())
+            return 50;  
+        else    
+            return 0;  // competition
+    }
+    public static double getDriveD() { 
+        if (isPracticeBot())
+            return 0;  
+        else    
+            return 0;  // competition
+    }    
+    public static double getDriveF() { 
+        if (isPracticeBot())
+            return 0.000156;  
+        else    
+            return 0;  // competition
+    }   
+
     // Physical Module - A
     public final static int DT_A_DRIVE_ID = 3;
     public final static int DT_A_TURN_ID = 4;
@@ -135,15 +167,15 @@ public class Calibration {
     public final static double DT_ROT_PID_D = .000;
     public final static double DT_ROT_PID_IZONE = 18;
 
-	public final static int DT_MM_ACCEL = 1000;
-	public final static int DT_MM_VELOCITY = 2000;
+	public final static int DT_MM_ACCEL = 10000;
+	public final static int DT_MM_VELOCITY = 20000;
 	
 	// COMPETIION AND PRACTICE
     public final static double getDriveTicksPerInch() {
         if (isPracticeBot()) 
             return(.39);  
         else
-            return(500);
+            return(1153);
     }
 
     // TEST BOT2
@@ -153,12 +185,6 @@ public class Calibration {
     public static final double AUTO_ROT_I = 0.001;
     public static final double AUTO_ROT_D = 0.1; // was 067
     public static final double AUTO_ROT_F = 0.0;
-
-    public static final double AUTO_DRIVE_P = .00115; 
-    public static final double AUTO_DRIVE_I = 0;
-    public static final double AUTO_DRIVE_D = 0; // was 0
-    public static final double AUTO_DRIVE_F = 0.000156;
-    public static final int AUTO_DRIVE_IZONE = 50;
 
     public static final double INTAKE_MAX_CURRENT = 14;
 

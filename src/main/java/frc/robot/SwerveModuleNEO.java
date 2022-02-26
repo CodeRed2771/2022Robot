@@ -51,10 +51,10 @@ public class SwerveModuleNEO implements SwerveModule {
         // Encoder object created to display position values
         driveEncoder = drive.getEncoder();
 
-        DRIVE_P = Calibration.AUTO_DRIVE_P;
-        DRIVE_I = Calibration.AUTO_DRIVE_I;
-        DRIVE_D = Calibration.AUTO_DRIVE_D;
-        DRIVE_IZONE = Calibration.AUTO_DRIVE_IZONE;
+		DRIVE_P = Calibration.getDriveP();
+		DRIVE_I = Calibration.getDriveI();
+		DRIVE_D = Calibration.getDriveD();
+		DRIVE_IZONE = Calibration.getDriveIZone();
 
         drivePID.setP(DRIVE_P);
         drivePID.setI(DRIVE_I);

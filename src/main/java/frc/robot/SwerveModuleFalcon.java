@@ -39,10 +39,10 @@ public class SwerveModuleFalcon implements SwerveModule {
 
 		mModuleID = moduleID;
 
-		DRIVE_P = Calibration.AUTO_DRIVE_P;
-		DRIVE_I = Calibration.AUTO_DRIVE_I;
-		DRIVE_D = Calibration.AUTO_DRIVE_D;
-		DRIVE_IZONE = Calibration.AUTO_DRIVE_IZONE;
+		DRIVE_P = Calibration.getDriveP();
+		DRIVE_I = Calibration.getDriveI();
+		DRIVE_D = Calibration.getDriveD();
+		DRIVE_IZONE = Calibration.getDriveIZone();
 
 		drive = new TalonFX(driveMotorID);
 		drive.configFactoryDefault(10);
@@ -271,7 +271,7 @@ public class SwerveModuleFalcon implements SwerveModule {
     // These are used for driving and turning in auto.
     public void setDrivePIDToSetPoint(final double setpoint) {
         currentDriveSetpoint = setpoint;
-        drive.set(TalonFXControlMode.MotionMagic, setpoint);
+        drive.set(TalonFXControlMode.MotionMagic, setpoint); 
     }
 
     public boolean hasDriveCompleted(final double allowedError) {
