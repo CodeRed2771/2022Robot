@@ -18,10 +18,10 @@ public class DriveTrain {
             moduleC = new SwerveModuleNEO(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.GET_DT_C_ABS_ZERO(), 'C'); // Back right
             moduleD = new SwerveModuleNEO(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.GET_DT_D_ABS_ZERO(), 'D'); // Front left
         } else {
-            moduleA = new SwerveModuleFalcon(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Calibration.DT_NEW_A_ABS_ZERO_INITIAL, 'A'); // Front right
-            moduleB = new SwerveModuleFalcon(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Calibration.DT_NEW_B_ABS_ZERO_INITIAL, 'B'); // Back left
-            moduleC = new SwerveModuleFalcon(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.DT_NEW_C_ABS_ZERO_INITIAL, 'C'); // Back right
-            moduleD = new SwerveModuleFalcon(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.DT_NEW_D_ABS_ZERO_INITIAL, 'D'); // Front left
+            moduleA = new SwerveModuleFalcon(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Wiring.TURN_ABS_ENC_A, Calibration.DT_NEW_A_ABS_ZERO_INITIAL, 'A'); // Front right
+            moduleB = new SwerveModuleFalcon(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Wiring.TURN_ABS_ENC_B, Calibration.DT_NEW_B_ABS_ZERO_INITIAL, 'B'); // Back left
+            moduleC = new SwerveModuleFalcon(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Wiring.TURN_ABS_ENC_C, Calibration.DT_NEW_C_ABS_ZERO_INITIAL, 'C'); // Back right
+            moduleD = new SwerveModuleFalcon(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Wiring.TURN_ABS_ENC_D, Calibration.DT_NEW_D_ABS_ZERO_INITIAL, 'D'); // Front left
         } 
 
         SmartDashboard.putNumber("TURN P", Calibration.getTurnP());
@@ -290,7 +290,7 @@ public class DriveTrain {
 
     public static void showTurnEncodersOnDash() {
         SmartDashboard.putNumber("TURN A RAW", round(moduleA.getTurnAbsolutePosition(), 3));
-        SmartDashboard.putNumber("TURN B RAW", moduleB.getTurnAbsolutePosition());
+        SmartDashboard.putNumber("TURN B RAW", round(moduleB.getTurnAbsolutePosition(), 3));
         SmartDashboard.putNumber("TURN C RAW", round(moduleC.getTurnAbsolutePosition(), 3));
         SmartDashboard.putNumber("TURN D RAW", round(moduleD.getTurnAbsolutePosition(), 3));
 

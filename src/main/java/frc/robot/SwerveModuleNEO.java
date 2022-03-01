@@ -261,10 +261,6 @@ public class SwerveModuleNEO implements SwerveModule {
 		turn.set(ControlMode.Position, setpoint);
 	}
 
-	public void setTurnOrientation(double position) {
-		setTurnOrientation(position, true);
-	}
-
 	public void resetTurnReversedFlag() {
 		isReversed = false;
 	}

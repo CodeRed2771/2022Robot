@@ -37,7 +37,7 @@ public class Calibration {
     private final static double DT_C_ABS_ZERO_INITIAL = .443; 
     private final static double DT_D_ABS_ZERO_INITIAL = .098; 
     
-    public final static double DT_NEW_A_ABS_ZERO_INITIAL = 0; // NEW BOT
+    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .820; // NEW BOT
     public final static double DT_NEW_B_ABS_ZERO_INITIAL = 0; 
     public final static double DT_NEW_C_ABS_ZERO_INITIAL = 0; 
     public final static double DT_NEW_D_ABS_ZERO_INITIAL = 0; 
@@ -188,7 +188,7 @@ public class Calibration {
 
     public static final double INTAKE_MAX_CURRENT = 14;
 
-    public static final DigitalInput botIndicator = new DigitalInput(9);
+    public static final DigitalInput botIndicator = new DigitalInput(Wiring.PRACTICE_BOT_INDICATOR);
 
     public static void loadSwerveCalibration() {
         File calibrationFile = new File("/home/lvuser/swerve.calibration");

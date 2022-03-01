@@ -19,7 +19,6 @@ public class Shooter {
 
     private static CANSparkMax shooterMotor = new CANSparkMax(Wiring.SHOOTER_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax feederMotor = new CANSparkMax(Wiring.FEEDER_MOTOR_ID, MotorType.kBrushless);
-    private static Servo gate = new Servo(Wiring.SERVO_PWM_ID);
 
     private static boolean isInitialized = false;
     private static boolean isEnabled = false;
@@ -70,8 +69,6 @@ public class Shooter {
         SmartDashboard.putNumber("Feeder Setpoint", Calibration.FEEDER_DEFAULT_SPEED);
         SmartDashboard.putBoolean("Shooter TUNE", false);
 
-        closeGate();
-
         isInitialized = true;
     }
 
@@ -104,9 +101,9 @@ public class Shooter {
 
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    openGate();
+                    // openGate();
                     if (timer >= 3) {
-                        closeGate();
+                        // closeGate();
                         resetTimer();
                         oneShot = false;
                     }
@@ -114,9 +111,9 @@ public class Shooter {
 
                 if (continuousShooting) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    openGate();
+                    // openGate();
                     if (timer >= 200) {
-                        closeGate();
+                        // closeGate();
                         resetTimer();
                         continuousShooting = false;
                     }
@@ -142,7 +139,6 @@ public class Shooter {
         
         if (!isInitialized) return;
 
-        closeGate();
         oneShot = false;
         continuousShooting = false;
         resetTimer();
@@ -168,27 +164,6 @@ public class Shooter {
             return true;
         else
             return (getShooterSpeed() > 0 && Math.abs(getShooterSpeed() - targetSpeed) < 300);
-    }
-
-    public static void closeGate () {
-       
-        if (Calibration.isPracticeBot()) {
-            gate.set(0.8); // PRACTICE
-        } else {
-            gate.set(0.45); // COMP BOT
-        }
-       
-        isGateOpen = false;
-    }
-
-    public static void openGate () {
-        if (Calibration.isPracticeBot()) {
-            gate.set(0.50); // PRACTICE
-        } else {
-            gate.set(0.31); // COMP BOT
-        }
-       
-        isGateOpen = true;
     }
 
     public static void oneShot () {

@@ -12,6 +12,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -20,6 +21,7 @@ public class SwerveModuleFalcon implements SwerveModule {
     public CANSparkMax turn;
 	private final SparkMaxPIDController turnPID;
 	private final RelativeEncoder turnEncoder;
+	private final DutyCycleEncoder turnAbsEncoder;
 	private char mModuleID;
 	private final int FULL_ROTATION = 1;
 	private double TURN_P, TURN_I, TURN_D, TURN_F, DRIVE_P, DRIVE_I, DRIVE_D;
@@ -35,7 +37,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @param turnMotorID  Next I gotta know what talon we are using to turn
 
 	 */
-	public SwerveModuleFalcon(int driveMotorID, int turnMotorID, double tZeroPos, char moduleID) {
+	public SwerveModuleFalcon(int driveMotorID, int turnMotorID, int turnAbsEncID, double tZeroPos, char moduleID) {
 
 		mModuleID = moduleID;
 
@@ -68,6 +70,7 @@ public class SwerveModuleFalcon implements SwerveModule {
      //   drivePID.setSmartMotionMaxAccel(Calibration.DT_MM_ACCEL, 0);
 
         // TURN
+		turnAbsEncoder = new DutyCycleEncoder(turnAbsEncID);
 
 		turn = new CANSparkMax(turnMotorID, MotorType.kBrushless);
 		turn.restoreFactoryDefaults();
@@ -97,7 +100,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turn.burnFlash(); // save settings for power off
 
 		turnZeroPos = tZeroPos;
-		turnZeroPos = turnEncoder.getPosition();
+		// turnZeroPos = turnEncoder.getPosition();
 
 	}
 
@@ -162,8 +165,11 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @return turn encoder absolute position
 	 */
 	public double getTurnAbsolutePosition() {
-		return(turnEncoder.getPosition() - (int)turnEncoder.getPosition()); // change 23.3434 to .3434
-		//return (turn.getSensorCollection().getPulseWidthPosition() & 0xFFF) / 4096d;
+		// return(turnEncoder.getPosition() - (int)turnEncoder.getPosition()); // change 23.3434 to .3434
+		if (turnAbsEncoder.get() >= 0)
+			return (turnAbsEncoder.get() - (int) turnAbsEncoder.get()); // e.g. 3.2345 - 3.000 = .2345
+		else
+			return ((int)Math.abs( turnAbsEncoder.get()) + 1 - Math.abs(turnAbsEncoder.get())); // e.g. -3.7345  = .2345
 	}
 
 	public double getTurnPosition() {
@@ -199,7 +205,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 	public void resetZeroPosToCurrentPos() {
 		// sets the known "zero position" to be whatever we're at now.
 		// should only be called when the modules are KNOWN to be straight.
-		turnZeroPos = turnEncoder.getPosition() - (int)turnEncoder.getPosition();
+		// turnZeroPos = turnEncoder.getPosition() - (int)turnEncoder.getPosition();
 	}
 
 	/*
@@ -286,15 +292,12 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turn.set(setpoint);
 	}
 
-	public void setTurnOrientation(double reqPosition, boolean optimize) {
-		setTurnOrientation(reqPosition);
-	}
 	/**
 	 * Set turn to pos from 0 to 1 using PID
 	 * 
 	 * @param reqPosition orientation to set to
 	 */
-	public void setTurnOrientation(double reqPosition) {
+	public void setTurnOrientation(double reqPosition, boolean optimize) {
 		// reqPosition - a value between 0 and 1 that indicates the rotational position
 		//               that we want the module to be facing.
 		// Output
@@ -334,15 +337,21 @@ public class SwerveModuleFalcon implements SwerveModule {
 
         // e.g. curpos = .125;  req = .800  rot=15
 
-        // if the difference between the current position and the requested position is less than 
-        // a half rotation, then use that position, otherwise use the reverse position
-       if (Math.abs(currentPosInRotation - reqPosition) <= .25 || Math.abs(currentPosInRotation - (1 + reqPosition)) <= .25) {
-            nearestPosInRotation = reqPosition;
-            invertDrive = false;
-        } else {
-            nearestPosInRotation = reqPositionReverse;
-            invertDrive = true;
-        }
+		if (optimize) {
+			// if the difference between the current position and the requested position is less than 
+			// a half rotation, then use that position, otherwise use the reverse position
+			if (Math.abs(currentPosInRotation - reqPosition) <= .25 || Math.abs(currentPosInRotation - (1 + reqPosition)) <= .25) {
+				nearestPosInRotation = reqPosition;
+				invertDrive = false;
+			} else {
+				nearestPosInRotation = reqPositionReverse;
+				invertDrive = true;
+			}
+		} else {
+			nearestPosInRotation = reqPosition;
+			invertDrive = false;
+		}
+        
         
         // now we need to determine if we need to change our rotation counter to get to 
         // this new position
