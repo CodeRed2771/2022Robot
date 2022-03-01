@@ -294,13 +294,13 @@ public class DriveTrain {
         SmartDashboard.putNumber("TURN C RAW", round(moduleC.getTurnAbsolutePosition(), 3));
         SmartDashboard.putNumber("TURN D RAW", round(moduleD.getTurnAbsolutePosition(), 3));
 
-        SmartDashboard.putNumber("TURN A ENC", moduleA.getTurnRelativePosition());
+        SmartDashboard.putNumber("TURN A ENC", round(moduleA.getTurnRelativePosition(),2));
         SmartDashboard.putNumber("TURN B ENC", moduleB.getTurnRelativePosition());
         SmartDashboard.putNumber("TURN C ENC", moduleC.getTurnRelativePosition());
         SmartDashboard.putNumber("TURN D ENC", moduleD.getTurnRelativePosition());
 
         SmartDashboard.putNumber("TURN A POS", round(moduleA.getTurnPosition(), 2));
-        SmartDashboard.putNumber("TURN B POS", moduleB.getTurnPosition());
+        SmartDashboard.putNumber("TURN B POS", round(moduleB.getTurnPosition(), 2));
         SmartDashboard.putNumber("TURN C POS", round(moduleC.getTurnPosition(), 2));
         SmartDashboard.putNumber("TURN D POS", round(moduleD.getTurnPosition(), 2));
 

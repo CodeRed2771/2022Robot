@@ -86,6 +86,8 @@ public class Robot extends TimedRobot {
         // mAutoProgram.stop();
       
         DriveTrain.stopDriveAndTurnMotors();
+        DriveTrain.allowTurnEncoderReset();
+        DriveTrain.resetTurnEncoders();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
         
         VisionBall.init(); // Ball vision tracking setup
@@ -123,6 +125,9 @@ public class Robot extends TimedRobot {
         
 
         if (gamepad2.getXButton()) {
+            
+
+
             if (!intakeKeyAlreadyPressed) {
                 if (isIntakeUpPosition) {
 
