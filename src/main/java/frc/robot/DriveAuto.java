@@ -221,7 +221,7 @@ public class DriveAuto {
     }
 
     public static boolean hasArrived() {
-        return DriveTrain.hasDriveCompleted(.1);
+        return DriveTrain.hasDriveCompleted(.5); // half inch accuracy
     }
 
     public static boolean turnCompleted(double allowedError) {

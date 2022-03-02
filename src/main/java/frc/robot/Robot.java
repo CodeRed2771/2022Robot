@@ -336,6 +336,7 @@ public class Robot extends TimedRobot {
         if (mAutoProgram.isRunning()) {
             mAutoProgram.tick();
         }
+        showDashboardInfo();
     }
 
     public void disabledInit() {

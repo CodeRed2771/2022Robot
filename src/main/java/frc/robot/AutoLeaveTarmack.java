@@ -18,16 +18,19 @@ public class AutoLeaveTarmack extends AutoBaseClass{
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
                 case 0: 
-                    driveInches(-90, 0, 1);
+                    driveInches(90, 0, 1);
                     setTimerAndAdvanceStep(6000);
                     break;
                 case 1:
                     if (driveCompleted()) {
-                        advanceStep();
+                        setTimerAndAdvanceStep(1000);
                     }
                     break;
-                case 2: 
-                    driveInches(60, 0, 1);
+                case 2:
+                    break;
+                case 3: 
+                    DriveTrain.resetDriveEncoders();
+                    driveInches(-90, 0, 1);
                     setTimerAndAdvanceStep(6000);
                     break;
             }

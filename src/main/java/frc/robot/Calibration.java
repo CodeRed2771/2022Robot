@@ -98,7 +98,7 @@ public class Calibration {
         if (isPracticeBot())
             return .00115;  // zuni
         else    
-            return .7;  // competition
+            return .3;  // competition
     }
     public static double getDriveI() { 
         if (isPracticeBot())
@@ -175,7 +175,7 @@ public class Calibration {
         if (isPracticeBot()) 
             return(.39);  
         else
-            return(1153);
+            return(1230);
     }
 
     // TEST BOT2
