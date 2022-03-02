@@ -33,22 +33,21 @@ public class Calibration {
     // COMPETIION
 
     private final static double DT_A_ABS_ZERO_INITIAL = .376; // OLD BOT (ZUNI)
-    private final static double DT_B_ABS_ZERO_INITIAL = .838; 
+    private final static double DT_B_ABS_ZERO_INITIAL = .352; 
     private final static double DT_C_ABS_ZERO_INITIAL = .443; 
-    private final static double DT_D_ABS_ZERO_INITIAL = .110; 
+    private final static double DT_D_ABS_ZERO_INITIAL = .098; 
     
-    public final static double DT_NEW_A_ABS_ZERO_INITIAL = 0; // NEW BOT
-    public final static double DT_NEW_B_ABS_ZERO_INITIAL = 0; 
-    public final static double DT_NEW_C_ABS_ZERO_INITIAL = 0; 
-    public final static double DT_NEW_D_ABS_ZERO_INITIAL = 0; 
+    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .684; // NEW BOT
+    public final static double DT_NEW_B_ABS_ZERO_INITIAL = .983; 
+    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .013; 
+    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .276; 
     
     public static final double SHOOTER_P = 0.00063;
     public static final double SHOOTER_I = 0.0; // not used
     public static final double SHOOTER_D = 0.05;
     public static final double SHOOTER_F = 0.000190;
     public static final int SHOOTER_DEFAULT_SPEED = 2000;
-    public static final int FEEDER_DEFAULT_SPEED = 3800
-    ;
+    public static final int FEEDER_DEFAULT_SPEED = 3800;
 
     public final static double VISION_FWD_P = 0.05;
     public final static double VISION_FWD_I = 0;
@@ -62,11 +61,69 @@ public class Calibration {
     public final static double VISION_ROT_I = 0;
     public final static double VISION_ROT_D = 0;
 
-    public final static double TURN_P = 20; //was 10 3.10.19
-	public final static double TURN_I = 0.00; // was .01
-	public final static double TURN_D = 400; // was 400
-    public final static double TURN_I_ZONE = 40; // 8/10/21 this was not set, so it's not right
-    public final static double TURN_F = 0;    // 8/10/21 this was also not used before but could be helpful
+    public static double getTurnP() { 
+        if (isPracticeBot())
+            return 8;  // zuni
+        else    
+            return 20;  // competition
+    }
+    public static double getTurnI() { 
+        if (isPracticeBot())
+            return 0.01;  
+        else    
+            return 0;  // competition
+    }
+    public static double getTurnIZone() { 
+        if (isPracticeBot())
+            return 40;  
+        else    
+            return 0;  // competition
+    }
+    public static double getTurnD() { 
+        if (isPracticeBot())
+            return 400;  
+        else    
+            return 0;  // competition
+    }    
+    public static double getTurnF() { 
+        if (isPracticeBot())
+            return 0;  
+        else    
+            return 0;  // competition
+    }    
+    
+    /********************** DRIVE PID ******************/
+    
+    public static double getDriveP() { 
+        if (isPracticeBot())
+            return .00115;  // zuni
+        else    
+            return .7;  // competition
+    }
+    public static double getDriveI() { 
+        if (isPracticeBot())
+            return 0.01;  
+        else    
+            return 0;  // competition
+    }
+    public static double getDriveIZone() { 
+        if (isPracticeBot())
+            return 50;  
+        else    
+            return 0;  // competition
+    }
+    public static double getDriveD() { 
+        if (isPracticeBot())
+            return 0;  
+        else    
+            return 0;  // competition
+    }    
+    public static double getDriveF() { 
+        if (isPracticeBot())
+            return 0.000156;  
+        else    
+            return 0;  // competition
+    }   
 
     // Physical Module - A
     public final static int DT_A_DRIVE_ID = 3;
@@ -110,11 +167,16 @@ public class Calibration {
     public final static double DT_ROT_PID_D = .000;
     public final static double DT_ROT_PID_IZONE = 18;
 
-	public final static int DT_MM_ACCEL = 1000;
-	public final static int DT_MM_VELOCITY = 2000;
+	public final static int DT_MM_ACCEL = 10000;
+	public final static int DT_MM_VELOCITY = 20000;
 	
 	// COMPETIION AND PRACTICE
-	public static final double DRIVE_DISTANCE_TICKS_PER_INCH = .39;  
+    public final static double getDriveTicksPerInch() {
+        if (isPracticeBot()) 
+            return(.39);  
+        else
+            return(1153);
+    }
 
     // TEST BOT2
     // public static final double DRIVE_DISTANCE_TICKS_PER_INCH = 32.900;
@@ -124,15 +186,9 @@ public class Calibration {
     public static final double AUTO_ROT_D = 0.1; // was 067
     public static final double AUTO_ROT_F = 0.0;
 
-    public static final double AUTO_DRIVE_P = .00115; 
-    public static final double AUTO_DRIVE_I = 0;
-    public static final double AUTO_DRIVE_D = 0; // was 0
-    public static final double AUTO_DRIVE_F = 0.000156;
-    public static final int AUTO_DRIVE_IZONE = 50;
-
     public static final double INTAKE_MAX_CURRENT = 14;
 
-    public static final DigitalInput botIndicator = new DigitalInput(9);
+    public static final DigitalInput botIndicator = new DigitalInput(Wiring.PRACTICE_BOT_INDICATOR);
 
     public static void loadSwerveCalibration() {
         File calibrationFile = new File("/home/lvuser/swerve.calibration");

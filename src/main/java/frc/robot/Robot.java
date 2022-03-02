@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.libs.HID.Gamepad;
+import pabeles.concurrency.IntOperatorTask.Max;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class Robot extends TimedRobot {
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
     final String autoWheelAlign = "Auto Wheel Align";
     final String autoAlign = "Auto Align";
     final String ballPickUp = "Auto Ball Pick Up";
+    final String AutoLeaveTarmac = "Auto Leave Tarmac";
     final String AutoTarmacShoot1 = "Auto Tarmac Shoot 1";
     final String AutoTarmacShoot2 = "Auto Tarmac Shoot 2";
 
@@ -54,28 +56,26 @@ public class Robot extends TimedRobot {
         
         // swtest = new SwerveTurnTest();
 
-        if (Calibration.isPracticeBot())
+        if (Calibration.isPracticeBot())  {
             DriveTrain.init("NEO");
+            DriveTrain.allowTurnEncoderReset();
+            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
+        }
         else
             DriveTrain.init("FALCON");
         
-        //DriveAuto.init();
+        DriveAuto.init();
 
         SmartDashboard.putNumber("Current Position", 0);
         SmartDashboard.putNumber("New Position", 0);
 
-        Shooter.init();
+       // Shooter.init();
         Vision.init(); // Limelight shooter vision tracking
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
 
         RobotGyro.reset();
 
-        DriveTrain.allowTurnEncoderReset();
-        DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
-        DriveTrain.resetTurnZeroToCurrentPos(); // testing line
-        DriveTrain.resetTurnReversedFlag();
- 
         SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
         SmartDashboard.putString("Alliance R or B", "R");
@@ -85,10 +85,9 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         // mAutoProgram.stop();
       
-        DriveTrain.resetTurnZeroToCurrentPos(); // testing line
-        DriveTrain.resetTurnReversedFlag();
-
         DriveTrain.stopDriveAndTurnMotors();
+        DriveTrain.allowTurnEncoderReset();
+        DriveTrain.resetTurnEncoders();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
         
         VisionBall.init(); // Ball vision tracking setup
@@ -126,6 +125,9 @@ public class Robot extends TimedRobot {
         
 
         if (gamepad2.getXButton()) {
+            
+
+
             if (!intakeKeyAlreadyPressed) {
                 if (isIntakeUpPosition) {
 
@@ -140,10 +142,6 @@ public class Robot extends TimedRobot {
         if (gamepad2.getRightBumper() || gamepad1.getRightBumper()) {
             Shooter.StopShooter();
         }
-
-        if (gamepad1.getYButton()) {
-            SmartDashboard.putNumber("Result", TurnPosition.getNewTurnPosition(SmartDashboard.getNumber("Current Position", 0), SmartDashboard.getNumber("New Position", 0)  ));
-        }
         
         // --------------------------------------------------
         // RESET - allow manual reset of systems by pressing Start
@@ -151,8 +149,9 @@ public class Robot extends TimedRobot {
         if (gamepad1.getStartButton()) {
             RobotGyro.reset();
             
-//            DriveTrain.allowTurnEncoderReset();
-//            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
+            DriveTrain.allowTurnEncoderReset();
+            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
+
             DriveTrain.setAllTurnOrientation(0, false);
         }
 
@@ -224,7 +223,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.updateValues();
 
         Shooter.tick();
-        //DriveAuto.tick();
+        DriveAuto.tick();
 
         SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
         SmartDashboard.putNumber("Distance to Target", Vision.getDistanceFromTarget());
@@ -235,16 +234,16 @@ public class Robot extends TimedRobot {
         // This is only needed during tuning
         if (SmartDashboard.getBoolean("Tune Drive-Turn PIDs", false)) {
        
-            DriveTrain.setDrivePIDValues(SmartDashboard.getNumber("AUTO DRIVE P", Calibration.AUTO_DRIVE_P),
-                    SmartDashboard.getNumber("AUTO DRIVE I", Calibration.AUTO_DRIVE_I),
-                    SmartDashboard.getNumber("AUTO DRIVE D", Calibration.AUTO_DRIVE_D),
-                    SmartDashboard.getNumber("AUTO DRIVE F", Calibration.AUTO_DRIVE_F));
+            DriveTrain.setDrivePIDValues(SmartDashboard.getNumber("AUTO DRIVE P", Calibration.getDriveP()),
+                    SmartDashboard.getNumber("AUTO DRIVE I", Calibration.getDriveI()),
+                    SmartDashboard.getNumber("AUTO DRIVE D", Calibration.getDriveD()),
+                    SmartDashboard.getNumber("AUTO DRIVE F", Calibration.getDriveF()));
 
-            DriveTrain.setTurnPIDValues(SmartDashboard.getNumber("TURN P", Calibration.TURN_P),
-                    SmartDashboard.getNumber("TURN I", Calibration.TURN_I),
-                    SmartDashboard.getNumber("TURN D", Calibration.TURN_D),
-                    (int)SmartDashboard.getNumber("TURN I ZONE", Calibration.TURN_I_ZONE),
-                    SmartDashboard.getNumber("TURN F", Calibration.TURN_F));
+            DriveTrain.setTurnPIDValues(SmartDashboard.getNumber("TURN P", Calibration.getTurnP()),
+                    SmartDashboard.getNumber("TURN I", Calibration.getTurnI()),
+                    SmartDashboard.getNumber("TURN D", Calibration.getTurnD()),
+                    SmartDashboard.getNumber("TURN I ZONE", Calibration.getTurnIZone()),
+                    SmartDashboard.getNumber("TURN F", Calibration.getTurnF()));
 
             DriveTrain.setDriveMMAccel((int) SmartDashboard.getNumber("DRIVE MM ACCEL", Calibration.DT_MM_ACCEL));
             DriveTrain.setDriveMMVelocity(
@@ -286,12 +285,18 @@ public class Robot extends TimedRobot {
             mAutoProgram = new AutoBallPickUp();
             mAutoProgram.start();
             break;
+        case AutoLeaveTarmac:
+            mAutoProgram = new AutoLeaveTarmack();
+            mAutoProgram.start();
+            break;
         case AutoTarmacShoot1:
             mAutoProgram = new AutoTarmacShoot1();
             mAutoProgram.start();
+            break;
         case AutoTarmacShoot2:
             mAutoProgram = new AutoTarmacShoot2();
             mAutoProgram.start();
+            break;
         }
     }
 
@@ -308,6 +313,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(autoWheelAlign, autoWheelAlign);
         autoChooser.addOption(autoAlign, autoAlign);
         autoChooser.addOption(ballPickUp, ballPickUp);
+        autoChooser.addOption(AutoLeaveTarmac, AutoLeaveTarmac);
         autoChooser.addOption(AutoTarmacShoot1, AutoTarmacShoot1);
         autoChooser.addOption(AutoTarmacShoot2, AutoTarmacShoot2);
 

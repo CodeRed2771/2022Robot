@@ -19,8 +19,8 @@ public class Shooter {
 
     private static CANSparkMax shooterMotor = new CANSparkMax(Wiring.SHOOTER_MOTOR_ID, MotorType.kBrushless);
     private static CANSparkMax feederMotor = new CANSparkMax(Wiring.FEEDER_MOTOR_ID, MotorType.kBrushless);
-    private static Servo gate = new Servo(Wiring.SERVO_PWM_ID);
 
+    private static boolean isInitialized = false;
     private static boolean isEnabled = false;
     private static boolean isGateOpen = false;
     private static boolean oneShot = false;
@@ -67,13 +67,16 @@ public class Shooter {
         SmartDashboard.putNumber("Shoot F", Calibration.SHOOTER_F);
         SmartDashboard.putNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
         SmartDashboard.putNumber("Feeder Setpoint", Calibration.FEEDER_DEFAULT_SPEED);
-        SmartDashboard.putBoolean("Shooter TUNE", true);
+        SmartDashboard.putBoolean("Shooter TUNE", false);
 
-        closeGate();
+        isInitialized = true;
     }
 
     public static void tick() {
         double shooterVelocityTarget = 0;
+
+        if (!isInitialized) 
+            return;
 
         shooterVelocityTarget = SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
 
@@ -98,9 +101,9 @@ public class Shooter {
 
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    openGate();
+                    // openGate();
                     if (timer >= 3) {
-                        closeGate();
+                        // closeGate();
                         resetTimer();
                         oneShot = false;
                     }
@@ -108,9 +111,9 @@ public class Shooter {
 
                 if (continuousShooting) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    openGate();
+                    // openGate();
                     if (timer >= 200) {
-                        closeGate();
+                        // closeGate();
                         resetTimer();
                         continuousShooting = false;
                     }
@@ -133,7 +136,9 @@ public class Shooter {
 
     public static void StopShooter() {
         isEnabled = false;
-        closeGate();
+        
+        if (!isInitialized) return;
+
         oneShot = false;
         continuousShooting = false;
         resetTimer();
@@ -148,32 +153,17 @@ public class Shooter {
     } 
 
     public static double getShooterSpeed() {
-        return shooterMotor.getEncoder().getVelocity();
+        if (!isInitialized) 
+            return 0;
+        else
+            return shooterMotor.getEncoder().getVelocity();
     }
 
     public static boolean isAtSpeed() {
-        return (getShooterSpeed() > 0 && Math.abs(getShooterSpeed() - targetSpeed) < 300);
-    }
-
-    public static void closeGate () {
-       
-        if (Calibration.isPracticeBot()) {
-            gate.set(0.8); // PRACTICE
-        } else {
-            gate.set(0.45); // COMP BOT
-        }
-       
-        isGateOpen = false;
-    }
-
-    public static void openGate () {
-        if (Calibration.isPracticeBot()) {
-            gate.set(0.50); // PRACTICE
-        } else {
-            gate.set(0.31); // COMP BOT
-        }
-       
-        isGateOpen = true;
+        if (!isInitialized) 
+            return true;
+        else
+            return (getShooterSpeed() > 0 && Math.abs(getShooterSpeed() - targetSpeed) < 300);
     }
 
     public static void oneShot () {

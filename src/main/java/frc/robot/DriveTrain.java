@@ -2,9 +2,6 @@ package frc.robot;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
-import javax.lang.model.util.ElementScanner6;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -16,36 +13,20 @@ public class DriveTrain {
     public static void init(String driveMotorType) {
         
         if (driveMotorType.equals("NEO")) {
-            moduleA = new SwerveModuleNEO(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Calibration.AUTO_DRIVE_P,
-            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_A_ABS_ZERO(), 'A'); // Front right
-            moduleB = new SwerveModuleNEO(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Calibration.AUTO_DRIVE_P,
-            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_B_ABS_ZERO(), 'B'); // Back left
-            moduleC = new SwerveModuleNEO(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.AUTO_DRIVE_P,
-            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_C_ABS_ZERO(),'C'); // Back right
-            moduleD = new SwerveModuleNEO(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.AUTO_DRIVE_P,
-            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.GET_DT_D_ABS_ZERO(),'D'); // Front left
+            moduleA = new SwerveModuleNEO(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Calibration.GET_DT_A_ABS_ZERO(), 'A'); // Front right
+            moduleB = new SwerveModuleNEO(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Calibration.GET_DT_B_ABS_ZERO(), 'B'); // Back left
+            moduleC = new SwerveModuleNEO(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.GET_DT_C_ABS_ZERO(), 'C'); // Back right
+            moduleD = new SwerveModuleNEO(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.GET_DT_D_ABS_ZERO(), 'D'); // Front left
         } else {
-            moduleA = new SwerveModuleFalcon(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Calibration.AUTO_DRIVE_P,
-            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.DT_NEW_A_ABS_ZERO_INITIAL, 'A'); // Front right
-            moduleB = new SwerveModuleFalcon(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Calibration.AUTO_DRIVE_P,
-            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.DT_NEW_B_ABS_ZERO_INITIAL, 'B'); // Back left
-            moduleC = new SwerveModuleFalcon(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.AUTO_DRIVE_P,
-            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.DT_NEW_C_ABS_ZERO_INITIAL,'C'); // Back right
-            moduleD = new SwerveModuleFalcon(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.AUTO_DRIVE_P,
-            Calibration.AUTO_DRIVE_I, Calibration.AUTO_DRIVE_D, Calibration.AUTO_DRIVE_IZONE, Calibration.TURN_P,
-            Calibration.TURN_I, Calibration.TURN_D, 200, Calibration.DT_NEW_D_ABS_ZERO_INITIAL,'D'); // Front left
+            moduleA = new SwerveModuleFalcon(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Wiring.TURN_ABS_ENC_A, Calibration.DT_NEW_A_ABS_ZERO_INITIAL, 'A'); // Front right
+            moduleB = new SwerveModuleFalcon(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Wiring.TURN_ABS_ENC_B, Calibration.DT_NEW_B_ABS_ZERO_INITIAL, 'B'); // Back left
+            moduleC = new SwerveModuleFalcon(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Wiring.TURN_ABS_ENC_C, Calibration.DT_NEW_C_ABS_ZERO_INITIAL, 'C'); // Back right
+            moduleD = new SwerveModuleFalcon(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Wiring.TURN_ABS_ENC_D, Calibration.DT_NEW_D_ABS_ZERO_INITIAL, 'D'); // Front left
         } 
 
-        SmartDashboard.putNumber("TURN P", Calibration.TURN_P);
-        SmartDashboard.putNumber("TURN I", Calibration.TURN_I);
-        SmartDashboard.putNumber("TURN D", Calibration.TURN_D);
+        SmartDashboard.putNumber("TURN P", Calibration.getTurnP());
+        SmartDashboard.putNumber("TURN I", Calibration.getTurnI());
+        SmartDashboard.putNumber("TURN D", Calibration.getTurnD());
      //   SmartDashboard.putNumber("TURN I ZONE", Calibration.TURN_I_ZONE);
      //   SmartDashboard.putNumber("TURN F", Calibration.TURN_F);
     }
@@ -54,6 +35,9 @@ public class DriveTrain {
     private static final double l = 29, w = 18, r = Math.sqrt((l * l) + (w * w));
 
     public static void resetTurnZeroToCurrentPos() {
+   		// sets the known "zero position" to be whatever we're at now.
+		// should only be called when the modules are KNOWN to be straight.
+
         moduleA.resetZeroPosToCurrentPos();
         moduleB.resetZeroPosToCurrentPos();
         moduleC.resetZeroPosToCurrentPos();
@@ -225,48 +209,21 @@ public class DriveTrain {
         allowTurnEncoderReset = true;
     }
 
-    // OLD
     public static void resetTurnEncoders() {
         if (allowTurnEncoderReset) {
-            double modAOff = 0, modBOff = 0, modCOff = 0, modDOff = 0;
+            moduleA.resetTurnEncoder();
+            moduleB.resetTurnEncoder();
+            moduleC.resetTurnEncoder();
+            moduleD.resetTurnEncoder();
 
-            moduleA.setTurnPower(0);
-            moduleC.setTurnPower(0);
-            moduleB.setTurnPower(0);
-            moduleD.setTurnPower(0);
-            Timer.delay(.1);
-            // first find the current absolute position of the turn encoders
-            modAOff = DriveTrain.moduleA.getTurnAbsolutePosition();
-            modBOff = DriveTrain.moduleB.getTurnAbsolutePosition();
-            modCOff = DriveTrain.moduleC.getTurnAbsolutePosition();
-            modDOff = DriveTrain.moduleD.getTurnAbsolutePosition();
+            // new robot
+			// moduleA.setEncPos((calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO())));
+			// moduleB.setEncPos( (calculatePositionDifference(modBOff, Calibration.GET_DT_B_ABS_ZERO())));
+			// moduleC.setEncPos( (calculatePositionDifference(modCOff, Calibration.GET_DT_C_ABS_ZERO())));
+			// moduleD.setEncPos( (calculatePositionDifference(modDOff, Calibration.GET_DT_D_ABS_ZERO())));
 
-            // now use the difference between the current position and the
-            // calibration zero
-            // position
-            // to tell the encoder what the current relative position is
-            // (relative to the
-            // zero pos)
-			moduleA.setEncPos((calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO())));
-			moduleB.setEncPos( (calculatePositionDifference(modBOff, Calibration.GET_DT_B_ABS_ZERO())));
-			moduleC.setEncPos( (calculatePositionDifference(modCOff, Calibration.GET_DT_C_ABS_ZERO())));
-			moduleD.setEncPos( (calculatePositionDifference(modDOff, Calibration.GET_DT_D_ABS_ZERO())));
-
-            // Lamprey version
-            // moduleA.setEncPos((int) (calculatePositionDifference(modAOff, Calibration.GET_DT_A_ABS_ZERO()) * 1024d));
-            // moduleB.setEncPos((int) (calculatePositionDifference(modBOff, Calibration.GET_DT_B_ABS_ZERO()) * 1024d));
-            // moduleC.setEncPos((int) (calculatePositionDifference(modCOff, Calibration.GET_DT_C_ABS_ZERO()) * 1024d));
-            // moduleD.setEncPos((int) (calculatePositionDifference(modDOff, Calibration.GET_DT_D_ABS_ZERO()) * 1024d));
-
+           
             allowTurnEncoderReset = false;
-        }
-    }
-
-    private static double calculatePositionDifference(double currentPosition, double calibrationZeroPosition) {
-        if (currentPosition - calibrationZeroPosition >= 0) {
-            return currentPosition - calibrationZeroPosition;
-        } else {
-            return (1 - calibrationZeroPosition) + currentPosition;
         }
     }
 
@@ -333,17 +290,17 @@ public class DriveTrain {
 
     public static void showTurnEncodersOnDash() {
         SmartDashboard.putNumber("TURN A RAW", round(moduleA.getTurnAbsolutePosition(), 3));
-        SmartDashboard.putNumber("TURN B RAW", moduleB.getTurnAbsolutePosition());
+        SmartDashboard.putNumber("TURN B RAW", round(moduleB.getTurnAbsolutePosition(), 3));
         SmartDashboard.putNumber("TURN C RAW", round(moduleC.getTurnAbsolutePosition(), 3));
         SmartDashboard.putNumber("TURN D RAW", round(moduleD.getTurnAbsolutePosition(), 3));
 
-        SmartDashboard.putNumber("TURN A ENC", moduleA.getTurnRelativePosition());
+        SmartDashboard.putNumber("TURN A ENC", round(moduleA.getTurnRelativePosition(),2));
         SmartDashboard.putNumber("TURN B ENC", moduleB.getTurnRelativePosition());
         SmartDashboard.putNumber("TURN C ENC", moduleC.getTurnRelativePosition());
         SmartDashboard.putNumber("TURN D ENC", moduleD.getTurnRelativePosition());
 
         SmartDashboard.putNumber("TURN A POS", round(moduleA.getTurnPosition(), 2));
-        SmartDashboard.putNumber("TURN B POS", moduleB.getTurnPosition());
+        SmartDashboard.putNumber("TURN B POS", round(moduleB.getTurnPosition(), 2));
         SmartDashboard.putNumber("TURN C POS", round(moduleC.getTurnPosition(), 2));
         SmartDashboard.putNumber("TURN D POS", round(moduleD.getTurnPosition(), 2));
 

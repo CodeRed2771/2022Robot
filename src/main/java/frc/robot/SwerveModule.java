@@ -15,7 +15,7 @@ public interface SwerveModule {
 	double getTurnAngle();
 	boolean modulesReversed();
 	void unReverseModule();
-	void resetTurnEnc();
+	void resetTurnEncoder();
 	double getDriveEnc();
 	void resetDriveEnc();
 	void setEncPos(double d);
@@ -27,7 +27,6 @@ public interface SwerveModule {
     boolean hasDriveCompleted(final double allowedError);
 	boolean hasDriveCompleted();
 	void setTurnPIDToSetPoint(double setpoint);
-	void setTurnOrientation(double position);
 	void setTurnOrientation(double reqPosition, boolean optimize);
 	double getTurnError();
 	double getTurnSetpoint();

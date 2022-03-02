@@ -12,6 +12,8 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModuleFalcon implements SwerveModule {
@@ -19,10 +21,11 @@ public class SwerveModuleFalcon implements SwerveModule {
     public CANSparkMax turn;
 	private final SparkMaxPIDController turnPID;
 	private final RelativeEncoder turnEncoder;
+	private final DutyCycleEncoder turnAbsEncoder;
 	private char mModuleID;
 	private final int FULL_ROTATION = 1;
-	private double TURN_P, TURN_I, TURN_D, DRIVE_P, DRIVE_I, DRIVE_D;
-	private final int TURN_IZONE, DRIVE_IZONE;
+	private double TURN_P, TURN_I, TURN_D, TURN_F, DRIVE_P, DRIVE_I, DRIVE_D;
+	private final double TURN_IZONE, DRIVE_IZONE;
 	private double turnZeroPos = 0;
 	private double currentDriveSetpoint = 0;
 	private boolean isReversed = false;
@@ -30,26 +33,18 @@ public class SwerveModuleFalcon implements SwerveModule {
 	/**
 	 * Lets make a new module :)
 	 * 
-	 * @param driveTalonID First I gotta know what talon we are using for driving
-	 * @param turnTalonID  Next I gotta know what talon we are using to turn
-	 * @param tP           I probably need to know the P constant for the turning
-	 *                     PID
-	 * @param tI           I probably need to know the I constant for the turning
-	 *                     PID
-	 * @param tD           I probably need to know the D constant for the turning
-	 *                     PID
-	 * @param tIZone       I might not need to know the I Zone value for the turning
-	 *                     PID
+	 * @param driveMotorID First I gotta know what talon we are using for driving
+	 * @param turnMotorID  Next I gotta know what talon we are using to turn
+
 	 */
-	public SwerveModuleFalcon(int driveMotorID, int turnMotorID, double dP, double dI, double dD, int dIZone, double tP, double tI,
-			double tD, int tIZone, double tZeroPos, char moduleID) {
+	public SwerveModuleFalcon(int driveMotorID, int turnMotorID, int turnAbsEncID, double tZeroPos, char moduleID) {
 
 		mModuleID = moduleID;
 
-		DRIVE_P = dP;
-		DRIVE_I = dI;
-		DRIVE_D = dD;
-		DRIVE_IZONE = dIZone;
+		DRIVE_P = Calibration.getDriveP();
+		DRIVE_I = Calibration.getDriveI();
+		DRIVE_D = Calibration.getDriveD();
+		DRIVE_IZONE = Calibration.getDriveIZone();
 
 		drive = new TalonFX(driveMotorID);
 		drive.configFactoryDefault(10);
@@ -75,6 +70,7 @@ public class SwerveModuleFalcon implements SwerveModule {
      //   drivePID.setSmartMotionMaxAccel(Calibration.DT_MM_ACCEL, 0);
 
         // TURN
+		turnAbsEncoder = new DutyCycleEncoder(turnAbsEncID);
 
 		turn = new CANSparkMax(turnMotorID, MotorType.kBrushless);
 		turn.restoreFactoryDefaults();
@@ -89,24 +85,23 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turnPID = turn.getPIDController();
 		turnPID.setFeedbackDevice(turnEncoder);
 
-		turnZeroPos = tZeroPos;
-		turnZeroPos = turnEncoder.getPosition();
+		TURN_P = Calibration.getTurnP();
+		TURN_I = Calibration.getTurnI();
+		TURN_D = Calibration.getTurnD();
+		TURN_IZONE = Calibration.getTurnIZone();
+		TURN_F = Calibration.getTurnF();
 
-		TURN_P = tP;
-		TURN_I = tI;
-		TURN_D = tD;
-		TURN_IZONE = tIZone;
-
-		turnPID.setP(TURN_P);
-		turnPID.setI(TURN_I);
-		turnPID.setD(TURN_D);
-		turnPID.setIZone(TURN_IZONE);
-		turnPID.setFF(0);
+		setTurnPIDValues(TURN_P, TURN_I, TURN_D, TURN_IZONE, TURN_F);
+		
         turnPID.setOutputRange(-1, 1);
 		
 		//turnPID.setReference(0, ControlType.kVelocity);
 
 		turn.burnFlash(); // save settings for power off
+
+		turnZeroPos = tZeroPos;
+		// turnZeroPos = turnEncoder.getPosition();
+
 	}
 
 	// public void setFollower(int talonToFollow) {
@@ -170,21 +165,32 @@ public class SwerveModuleFalcon implements SwerveModule {
 	 * @return turn encoder absolute position
 	 */
 	public double getTurnAbsolutePosition() {
-		return(turnEncoder.getPosition() - (int)turnEncoder.getPosition()); // change 23.3434 to .3434
-		//return (turn.getSensorCollection().getPulseWidthPosition() & 0xFFF) / 4096d;
+		double encPos = 0;
+
+		if (turnAbsEncoder.get() >= 0)
+			encPos = (turnAbsEncoder.get() - (int) turnAbsEncoder.get()); // e.g. 3.2345 - 3.000 = .2345
+		else
+			encPos = ((int)Math.abs( turnAbsEncoder.get()) + 1 - Math.abs(turnAbsEncoder.get())); // e.g. -3.7655  = .2345
+		// now invert it because the turn motors are inverted
+		if (encPos <= .5) 
+			encPos = 1 - encPos; // e.g .2 becomes .8
+		else
+			encPos = .5 - (encPos - .5); // e.g. .5 - (.8 - .5) = .2
+		
+		return encPos;
 	}
 
 	public double getTurnPosition() {
 		// returns the 0 to 1 value of the turn position
 		// uses the calibration value and the actual position
 		// to determine the relative turn position
-
-		double currentPos = getTurnAbsolutePosition();
-		if (currentPos - turnZeroPos > 0) {
-			return currentPos - turnZeroPos;
-		} else {
-			return (1 - turnZeroPos) + currentPos;
-		}
+		return getTurnPositionWithInRotation();
+		// double currentPos = getTurnAbsolutePosition();
+		// if (currentPos - turnZeroPos > 0) {
+		// 	return currentPos - turnZeroPos;
+		// } else {
+		// 	return (1 - turnZeroPos) + currentPos;
+		// }
 	}
 
 	public double getTurnAngle() {
@@ -205,14 +211,33 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public void resetZeroPosToCurrentPos() {
-		turnZeroPos = turnEncoder.getPosition() - (int)turnEncoder.getPosition();
+		// sets the known "zero position" to be whatever we're at now.
+		// should only be called when the modules are KNOWN to be straight.
+		// turnZeroPos = turnEncoder.getPosition() - (int)turnEncoder.getPosition();
 	}
 
-	public void resetTurnEnc() {
-		turnEncoder.setPosition(0);
-		//this.turn.getSensorCollection().setQuadraturePosition(0, 10);
+	/*
+		resets the Quad Encoder based on absolute encoder
+	*/
+	public void resetTurnEncoder() {
+		double currentPos = 0;
+		double positionToSet = 0;
+		setTurnPower(0);
+		Timer.delay(.1); // give module time to settle down
+		currentPos = getTurnAbsolutePosition();
+		
+		positionToSet = calculatePositionDifference(currentPos, turnZeroPos);
+		setEncPos(positionToSet);
+		// setEncPos(0.95);
 	}
 
+	private static double calculatePositionDifference(double currentPosition, double calibrationZeroPosition) {
+        if (currentPosition - calibrationZeroPosition >= 0) {
+            return currentPosition - calibrationZeroPosition;
+        } else {
+            return (1 - calibrationZeroPosition) + currentPosition;
+        }
+    }
 	public double getDriveEnc() {
 		return drive.getSelectedSensorPosition();
 	}
@@ -254,7 +279,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		if (turnEncoder.getPosition() >= 0) {
 			return turnEncoder.getPosition() - (int) turnEncoder.getPosition();	
 		} else
-			return turnEncoder.getPosition() + (int) turnEncoder.getPosition();
+		return turnEncoder.getPosition() + (int) turnEncoder.getPosition();
 	}
 
     public double getCurrentDriveSetpoint() {
@@ -264,7 +289,7 @@ public class SwerveModuleFalcon implements SwerveModule {
     // These are used for driving and turning in auto.
     public void setDrivePIDToSetPoint(final double setpoint) {
         currentDriveSetpoint = setpoint;
-        drive.set(TalonFXControlMode.MotionMagic, setpoint);
+        drive.set(TalonFXControlMode.MotionMagic, setpoint); 
     }
 
     public boolean hasDriveCompleted(final double allowedError) {
@@ -279,15 +304,12 @@ public class SwerveModuleFalcon implements SwerveModule {
 		turn.set(setpoint);
 	}
 
-	public void setTurnOrientation(double reqPosition, boolean optimize) {
-		setTurnOrientation(reqPosition);
-	}
 	/**
 	 * Set turn to pos from 0 to 1 using PID
 	 * 
 	 * @param reqPosition orientation to set to
 	 */
-	public void setTurnOrientation(double reqPosition) {
+	public void setTurnOrientation(double reqPosition, boolean optimize) {
 		// reqPosition - a value between 0 and 1 that indicates the rotational position
 		//               that we want the module to be facing.
 		// Output
@@ -315,7 +337,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		// is compatible with our modules zero offset.  Then all calculations after that
 		// will be in actual encoder positions.
 
-		reqPosition += turnZeroPos;  
+		//reqPosition += turnZeroPos;  
 		if (reqPosition > 0.99999) // we went past the rotation point
 			reqPosition -= 1;  // remove the extra rotation. change 1.2344 to .2344
         double reqPositionReverse = (reqPosition >= .5 ? reqPosition - .5 : reqPosition + .5) ; // e.g. .8 becomes .3
@@ -327,15 +349,21 @@ public class SwerveModuleFalcon implements SwerveModule {
 
         // e.g. curpos = .125;  req = .800  rot=15
 
-        // if the difference between the current position and the requested position is less than 
-        // a half rotation, then use that position, otherwise use the reverse position
-       if (Math.abs(currentPosInRotation - reqPosition) <= .25 || Math.abs(currentPosInRotation - (1 + reqPosition)) <= .25) {
-            nearestPosInRotation = reqPosition;
-            invertDrive = false;
-        } else {
-            nearestPosInRotation = reqPositionReverse;
-            invertDrive = true;
-        }
+		if (optimize) {
+			// if the difference between the current position and the requested position is less than 
+			// a half rotation, then use that position, otherwise use the reverse position
+			if (Math.abs(currentPosInRotation - reqPosition) <= .25 || Math.abs(currentPosInRotation - (1 + reqPosition)) <= .25) {
+				nearestPosInRotation = reqPosition;
+				invertDrive = false;
+			} else {
+				nearestPosInRotation = reqPositionReverse;
+				invertDrive = true;
+			}
+		} else {
+			nearestPosInRotation = reqPosition;
+			invertDrive = false;
+		}
+        
         
         // now we need to determine if we need to change our rotation counter to get to 
         // this new position
@@ -372,14 +400,14 @@ public class SwerveModuleFalcon implements SwerveModule {
         // TURN
         turnPID.setReference(newTargetPosition, ControlType.kPosition );
 
-        System.out.println("");
-        System.out.println("Current Rotations:" + currentRevolutions);
-        System.out.println("Current Position: " + currentPosInRotation);
-        System.out.println("Requested Pos:    " + reqPosition);
-        System.out.println("Requested Pos Rev:" + reqPositionReverse);
-        System.out.println("Nearest Pos:      " + nearestPosInRotation);
-		System.out.println("NEW TARGET POS:   " + newTargetPosition);
-        System.out.println("INVERT DRIVE:     " + invertDrive);
+        // System.out.println("");
+        // System.out.println("Current Rotations:" + currentRevolutions);
+        // System.out.println("Current Position: " + currentPosInRotation);
+        // System.out.println("Requested Pos:    " + reqPosition);
+        // System.out.println("Requested Pos Rev:" + reqPositionReverse);
+        // System.out.println("Nearest Pos:      " + nearestPosInRotation);
+		// System.out.println("NEW TARGET POS:   " + newTargetPosition);
+        // System.out.println("INVERT DRIVE:     " + invertDrive);
 	}
 
 	public void resetTurnReversedFlag() {
