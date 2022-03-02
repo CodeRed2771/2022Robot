@@ -58,7 +58,7 @@ public class Intake {
     }
 
     public static void moveSetpoint(double direction) {
-        int newSetpoint;
+        double newSetpoint;
         
         if(direction > 0) {
             newSetpoint = intakeDeployMotor.getSelectedSensorPosition(0)+4000;
