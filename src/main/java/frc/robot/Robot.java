@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Shooter.ShooterPosition;
 import frc.robot.libs.HID.Gamepad;
 import pabeles.concurrency.IntOperatorTask.Max;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -114,7 +115,7 @@ public class Robot extends TimedRobot {
         } else {
             Intake.stopIntake();
         }
-        if (gamepad2.getBButton()) {
+        if (gamepad2.getRightTriggerAxis() > 0 && gamepad2.getLeftBumper()) {
             Intake.reverseIntake();
         }
 
@@ -123,6 +124,16 @@ public class Robot extends TimedRobot {
             mAutoProgram.start(false);
         }
         
+        if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
+
+        }
+        if (gamepad2.getAButton()) {
+            Shooter.setShooterPosition(ShooterPosition.High);
+        } else if (gamepad2.getBButton()) {
+            Shooter.setShooterPosition(ShooterPosition.Medium);
+        } else if (gamepad2.getYButton()) {
+            Shooter.setShooterPosition(ShooterPosition.Low);
+        }
 
         if (gamepad2.getXButton()) {
             
@@ -191,15 +202,12 @@ public class Robot extends TimedRobot {
         driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
         SmartDashboard.putNumber("Best Position", TurnPosition.getBestPosition());
 
-        // if (Intake.isRunning()) {
-            if (gamepad1.getLeftBumper()) {
-                if (ballLaneAssist > 0) 
-                    driveStrafeAmount += .2;
-                else if (ballLaneAssist < 0) 
-                    driveStrafeAmount -= .2;
-            }
-            
-        // }
+        if (Intake.isRunning()) {
+            if (ballLaneAssist > 0) 
+                driveStrafeAmount += .2;
+            else if (ballLaneAssist < 0) 
+                driveStrafeAmount -= .2;
+        }
 
         if (Math.abs(driveFWDAmount) > .5) {
             if (mAutoProgram.isRunning())
