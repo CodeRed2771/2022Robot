@@ -28,7 +28,6 @@ public class Shooter {
     private static boolean oneShot = false;
     private static boolean continuousShooting = false;
     private static int timer = 0;
-    private static int liftTimer = 0;
     private static double targetSpeed = Calibration.SHOOTER_DEFAULT_SPEED;
     private static double adjustmentFactor = 1;
     private static SparkMaxPIDController shooterPID;
@@ -118,8 +117,10 @@ public class Shooter {
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
                     setBallLiftUp();
+                    startShooterPower();
                     if (timer >= 25) {
                         setBallLiftDown();
+                        stopShooterPower();
                         resetTimer();
                         oneShot = false;
                     }
@@ -128,6 +129,7 @@ public class Shooter {
                 if (continuousShooting) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
                     setBallLiftUp();
+                    startShooterPower();
                     if (timer == 25) {
                         setBallLiftDown();
                     }
@@ -139,6 +141,7 @@ public class Shooter {
                     }
                     if (timer == 125) {
                         setBallLiftDown();
+                        stopShooterPower();
                         resetTimer();
                         continuousShooting = false;
                     }
@@ -242,5 +245,31 @@ public class Shooter {
     public static ShooterPosition getShooterPosition() {
         return curShooterPosition;
     }
-}
 
+    public static double setShooterPower() {
+        double power = 0;
+        switch (getShooterPosition()) {
+            case Low:
+                power = 20;
+                break;
+            case Medium:
+                power = 30;
+                break;
+            case High:
+                power = 40;
+                break;
+        }
+        return power; 
+    }
+
+    public static void startShooterPower() {
+        shooterMotor.set(setShooterPower());
+        feederMotor.set(setShooterPower());
+    }
+
+    public static void stopShooterPower() {
+        shooterMotor.set(0);
+        feederMotor.set(0);
+    }
+
+}
