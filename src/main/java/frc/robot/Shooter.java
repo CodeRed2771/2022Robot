@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax;
@@ -26,10 +28,20 @@ public class Shooter {
     private static boolean oneShot = false;
     private static boolean continuousShooting = false;
     private static int timer = 0;
+    private static int liftTimer = 0;
     private static double targetSpeed = Calibration.SHOOTER_DEFAULT_SPEED;
     private static double adjustmentFactor = 1;
     private static SparkMaxPIDController shooterPID;
     private static SparkMaxPIDController feederPID;
+    private static DoubleSolenoid ballLiftSolenoid;
+    private static DoubleSolenoid shooterPositionSolenoid_Stage1;
+    private static DoubleSolenoid shooterPositionSolenoid_Stage2;
+    public static enum ShooterPosition {
+        Low,
+        Medium,
+        High
+    }
+    private static ShooterPosition curShooterPosition;
 
     public static void init() {
         shooterMotor.restoreFactoryDefaults();
@@ -70,6 +82,10 @@ public class Shooter {
         SmartDashboard.putBoolean("Shooter TUNE", false);
 
         isInitialized = true;
+
+        ballLiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.BALLLIFT_FOWARD, Wiring.BALLLIFT_REVERSE);
+        shooterPositionSolenoid_Stage1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.SHOOTERPOSITION_STAGE1_FOWARD, Wiring.SHOOTERPOSITION_STAGE1_REVERSE);
+        shooterPositionSolenoid_Stage1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.SHOOTERPOSITION_STAGE2_FOWARD, Wiring.SHOOTERPOSITION_STAGE2_REVERSE);
     }
 
     public static void tick() {
@@ -101,9 +117,9 @@ public class Shooter {
 
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    // openGate();
-                    if (timer >= 3) {
-                        // closeGate();
+                    setBallLiftUp();
+                    if (timer >= 25) {
+                        setBallLiftDown();
                         resetTimer();
                         oneShot = false;
                     }
@@ -111,9 +127,18 @@ public class Shooter {
 
                 if (continuousShooting) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    // openGate();
-                    if (timer >= 200) {
-                        // closeGate();
+                    setBallLiftUp();
+                    if (timer == 25) {
+                        setBallLiftDown();
+                    }
+                    if (timer == 50) {
+                        Intake.retractIntake();
+                    }
+                    if (timer == 100) {
+                        setBallLiftUp();
+                    }
+                    if (timer == 125) {
+                        setBallLiftDown();
                         resetTimer();
                         continuousShooting = false;
                     }
@@ -188,7 +213,34 @@ public class Shooter {
         
     }
 
+    public static void setShooterPosition(ShooterPosition position) {
+        switch (position) {
+            case Low:
+                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kReverse);
+                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
+                break;
+            case Medium:
+                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kForward);
+                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
+                break;
+            case  High:
+                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kForward);
+                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kForward);
+                break;
+        }
+        curShooterPosition = position;
+    }
+    
+    public static void setBallLiftUp() {
+        ballLiftSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
 
+    public static void setBallLiftDown() {
+        ballLiftSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
 
+    public static ShooterPosition getShooterPosition() {
+        return curShooterPosition;
+    }
 }
 

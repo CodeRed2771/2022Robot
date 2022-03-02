@@ -44,10 +44,10 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
         cenX = re.x + (re.width / 2);
         cenY = re.y + (re.height/2);
         width = re.width;
-        xOffset = cenX - (IMG_WIDTH / 2);
-        yOffset = cenY - (IMG_HEIGHT / 2);
+        xOffset = Math.abs(cenX - (IMG_WIDTH / 2));
+        yOffset = Math.abs(cenY - (IMG_HEIGHT / 2));
         dis = distance(cenX, cenY);
-        score = dis+ xOffset + yOffset;
+        score = dis+ xOffset + yOffset + dis;
         return score;
     }
 
