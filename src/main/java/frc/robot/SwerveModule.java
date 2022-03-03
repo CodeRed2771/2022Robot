@@ -24,7 +24,7 @@ public interface SwerveModule {
 	double getTurnOrientation();
     double getCurrentDriveSetpoint();
     void setDrivePIDToSetPoint(final double setpoint);
-    boolean hasDriveCompleted(final double allowedError);
+    boolean hasDriveCompleted(final double inchesError);
 	boolean hasDriveCompleted();
 	void setTurnPIDToSetPoint(double setpoint);
 	void setTurnOrientation(double reqPosition, boolean optimize);

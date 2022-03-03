@@ -292,12 +292,12 @@ public class SwerveModuleFalcon implements SwerveModule {
         drive.set(TalonFXControlMode.MotionMagic, setpoint); 
     }
 
-    public boolean hasDriveCompleted(final double allowedError) {
-        return Math.abs(currentDriveSetpoint - getDriveEnc()) <= allowedError;
+    public boolean hasDriveCompleted(final double inchesError) {
+        return Math.abs(currentDriveSetpoint - getDriveEnc()) <= Calibration.getDriveTicksPerInch() * inchesError;
     }
     
 	public boolean hasDriveCompleted() {
-		return hasDriveCompleted(0);
+		return hasDriveCompleted(0.25);
 	}
 
 	public void setTurnPIDToSetPoint(double setpoint) {
