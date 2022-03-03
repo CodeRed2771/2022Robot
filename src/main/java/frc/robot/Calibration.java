@@ -41,6 +41,8 @@ public class Calibration {
     public final static double DT_NEW_B_ABS_ZERO_INITIAL = .983; 
     public final static double DT_NEW_C_ABS_ZERO_INITIAL = .013; 
     public final static double DT_NEW_D_ABS_ZERO_INITIAL = .276; 
+
+    public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
     
     public static final double SHOOTER_P = 0.00063;
     public static final double SHOOTER_I = 0.0; // not used

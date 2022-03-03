@@ -202,12 +202,12 @@ public class Robot extends TimedRobot {
         driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
         SmartDashboard.putNumber("Best Position", TurnPosition.getBestPosition());
 
-        if (Intake.isRunning()) {
-            if (ballLaneAssist > 0) 
-                driveStrafeAmount += .2;
-            else if (ballLaneAssist < 0) 
-                driveStrafeAmount -= .2;
-        }
+        // if (Intake.isRunning()) {
+        //     if (ballLaneAssist > 0.05) 
+        //         driveStrafeAmount += .2;
+        //     else if (ballLaneAssist < -0.05) 
+        //         driveStrafeAmount -= .2;
+        // }
 
         if (Math.abs(driveFWDAmount) > .5) {
             if (mAutoProgram.isRunning())
@@ -231,6 +231,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.updateValues();
 
         Shooter.tick();
+        Intake.tick();
         DriveAuto.tick();
 
         SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
