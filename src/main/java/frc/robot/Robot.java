@@ -46,6 +46,10 @@ public class Robot extends TimedRobot {
     private boolean isIntakeUpPosition = true;
     private boolean intakeKeyAlreadyPressed = false;
 
+    private double lastFWDvalue = 0; 
+    private double lastSTRvalue = 0;
+    private double lastROTvalue = 0;
+
     @Override
     public void robotInit() {
         gamepad1 = new XboxController(0);
@@ -57,11 +61,8 @@ public class Robot extends TimedRobot {
         
         // swtest = new SwerveTurnTest();
 
-        if (Calibration.isPracticeBot())  {
+        if (Calibration.isPracticeBot()) 
             DriveTrain.init("NEO");
-            DriveTrain.allowTurnEncoderReset();
-            DriveTrain.resetTurnEncoders(); // sets encoders based on absolute encoder positions
-        }
         else
             DriveTrain.init("FALCON");
         
@@ -137,8 +138,6 @@ public class Robot extends TimedRobot {
 
         if (gamepad2.getXButton()) {
             
-
-
             if (!intakeKeyAlreadyPressed) {
                 if (isIntakeUpPosition) {
 
@@ -264,6 +263,11 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
 
         RobotGyro.reset();
+
+        DriveTrain.stopDriveAndTurnMotors();
+        DriveTrain.allowTurnEncoderReset();
+        DriveTrain.resetTurnEncoders();
+        DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
 
         mAutoProgram.stop();
         String selectedPos = positionChooser.getSelected();
@@ -394,36 +398,81 @@ public class Robot extends TimedRobot {
     }
 
     private double forwardAdjust(double fwd, boolean normalDrive) {
+        final double maxFWDchange = .02;
+        double adjustedFWD = 0;
+
         if (normalDrive) {
-            return fwd * .75;
+            adjustedFWD = fwd * 1;
         } else {
-            return fwd * .45;
+            adjustedFWD = fwd * .45;
         }
+        // ramp in non zero direction only
+        if (adjustedFWD >= 0) {
+            if (adjustedFWD > lastFWDvalue && adjustedFWD > .2) // speeding up so control it
+                if (adjustedFWD >  lastFWDvalue + maxFWDchange) {
+                    adjustedFWD = lastFWDvalue + maxFWDchange;
+                } 
+        } else {
+            if (adjustedFWD < lastFWDvalue && adjustedFWD < -.2) // speeding up in reverse
+                if (adjustedFWD < lastFWDvalue - maxFWDchange) {
+                    adjustedFWD = lastFWDvalue - maxFWDchange;
+                }
+        }
+
+        lastFWDvalue = adjustedFWD;
+        return adjustedFWD;
     }
 
     private double strafeAdjust(double strafeAmt, boolean normalDrive) {
-        // put some power restrictions in place to make it
-        // more controlled
+        final double maxSTRchange = .02;
+        double adjustedSTR = 0;
+ 
+        if (normalDrive) {
+            adjustedSTR = strafeAmt * 1;
+        } else {
+            adjustedSTR = strafeAmt * .45;
+        }
+        // ramp in non zero direction only
+        if (adjustedSTR >= 0) {
+            if (adjustedSTR > lastFWDvalue && adjustedSTR > .2) // speeding up so control it
+                if (adjustedSTR >  lastSTRvalue + maxSTRchange) {
+                    adjustedSTR = lastSTRvalue + maxSTRchange;
+                } 
+        } else {
+            if (adjustedSTR < lastFWDvalue && adjustedSTR < -.2) // speeding up in reverse
+                if (adjustedSTR < lastSTRvalue - maxSTRchange) {
+                    adjustedSTR = lastSTRvalue - maxSTRchange;
+                }
+        }
+
+        lastSTRvalue = adjustedSTR;
+        
+        return adjustedSTR;
+    }
+
+    private double strafeAdjustOLD(double strafeAmt, boolean normalDrive) {
+        final double maxSTRchange = .02;
+        double adjustedSTR = 0;
         double adjustedAmt = 0;
 
         if (Math.abs(strafeAmt) < .05) {
-            adjustedAmt = 0;
+            adjustedSTR = 0;
         } else {
             if (Math.abs(strafeAmt) < .4) {
-                adjustedAmt = .1 * Math.signum(strafeAmt);
+                adjustedSTR = .1 * Math.signum(strafeAmt);
             } else {
                 if (Math.abs(strafeAmt) < .7) {
-                    adjustedAmt = strafeAmt * .35;
+                    adjustedSTR = strafeAmt * .35;
                 } else {
                     if (Math.abs(strafeAmt) < .99) {
-                        adjustedAmt = strafeAmt * .5;
+                        adjustedSTR = strafeAmt * .5;
                     } else {
-                        adjustedAmt = strafeAmt * .8;
+                        adjustedSTR = strafeAmt * .8;
                     }
                 }
             }
         }
-        return adjustedAmt;
+        return adjustedSTR;
     }
 
     private void showDashboardInfo() {
