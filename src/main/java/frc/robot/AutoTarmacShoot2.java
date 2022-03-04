@@ -20,6 +20,7 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
                 case 0: 
                     driveInches(-10, 0, 1);
                     Shooter.setShooterPosition(Shooter.ShooterPosition.Low);
+                    Intake.deployIntake();
                     setTimerAndAdvanceStep(6000);
                     break;
                 case 1:
@@ -32,19 +33,29 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
                     setTimerAndAdvanceStep(7000);
                     break;
                 case 3: 
-                    // Wait
                     break;
                 case 4:
                     driveInches(-10, 0, .8);
-                    Shooter.setShooterPosition(Shooter.ShooterPosition.High);
+                    Intake.startIntake();
                     break;
                 case 5:
-                    Shooter.oneShot();
+                    if (driveCompleted()) {
+                        advanceStep();
+                    }
                     break;
-                case 6:
-                    // Wait
+                case 6: 
+                    Intake.retractIntake();
+                    setTimerAndAdvanceStep(7000);
                     break;
                 case 7:
+                    break;
+                case 8:
+                    Shooter.oneShot();
+                    setTimerAndAdvanceStep(700);
+                    break;
+                case 9:
+                    break;
+                case 10: 
                     stop();
                     break;
         }

@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
         }
         
         if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
-
+            Shooter.oneShot();
         }
         if (gamepad2.getAButton()) {
             Shooter.setShooterPosition(ShooterPosition.High);

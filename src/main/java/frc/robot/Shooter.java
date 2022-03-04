@@ -117,19 +117,18 @@ public class Shooter {
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
                     setBallLiftUp();
-                    startShooterPower();
+                    setShooterVelocity();
                     if (timer >= 25) {
                         setBallLiftDown();
-                        stopShooterPower();
+                        StopShooter();
                         resetTimer();
-                        oneShot = false;
                     }
                 }
 
                 if (continuousShooting) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
                     setBallLiftUp();
-                    startShooterPower();
+                    setShooterVelocity();
                     if (timer == 25) {
                         setBallLiftDown();
                     }
@@ -141,9 +140,8 @@ public class Shooter {
                     }
                     if (timer == 125) {
                         setBallLiftDown();
-                        stopShooterPower();
+                        StopShooter();
                         resetTimer();
-                        continuousShooting = false;
                     }
                 }
                 
@@ -246,7 +244,7 @@ public class Shooter {
         return curShooterPosition;
     }
 
-    public static double setShooterPower() {
+    public static double getShooterVelocity() {
         double power = 0;
         switch (getShooterPosition()) {
             case Low:
@@ -262,14 +260,9 @@ public class Shooter {
         return power; 
     }
 
-    public static void startShooterPower() {
-        shooterMotor.set(setShooterPower());
-        feederMotor.set(setShooterPower());
-    }
-
-    public static void stopShooterPower() {
-        shooterMotor.set(0);
-        feederMotor.set(0);
+    public static void setShooterVelocity() {
+        shooterMotor.set(getShooterVelocity());
+        feederMotor.set(getShooterVelocity());
     }
 
 }
