@@ -36,20 +36,13 @@ public class AutoTarmacShoot1 extends AutoBaseClass {
                         advanceStep();
                     } 
                     break;
-                case 2://segment 2
-                    turnDegrees(180, 0.5);
-                    setTimerAndAdvanceStep(1500);
-                    break;
-                case 3:
-                    if(driveCompleted()) {
-                        advanceStep();
-                    }
-                    break;
-                case 4://segment 3
+                case 3://segment 2
                     Shooter.StartShooter();
                     setTimerAndAdvanceStep(5000);
                     break;
-                case 5://segment 4
+                case 4:
+                    break;
+                case 5://segment 3
                     Shooter.StopShooter();
                     advanceStep();
                     break;
