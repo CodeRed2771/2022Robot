@@ -41,6 +41,13 @@ public class Shooter {
         High
     }
     private static ShooterPosition curShooterPosition;
+    public static enum ManualShotPreset {
+        SuperCloseLowShot,
+        BackOfTarmac,
+        TarmacLine
+    }
+    public static ManualShotPreset curManualShotPreset;
+    private static boolean manualVisionOverride = false;
 
     public static void init() {
         shooterMotor.restoreFactoryDefaults();
@@ -117,7 +124,6 @@ public class Shooter {
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
                     setBallLiftUp();
-                    setShooterVelocity();
                     if (timer >= 25) {
                         setBallLiftDown();
                         StopShooter();
@@ -128,7 +134,6 @@ public class Shooter {
                 if (continuousShooting) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
                     setBallLiftUp();
-                    setShooterVelocity();
                     if (timer == 25) {
                         setBallLiftDown();
                     }
@@ -260,9 +265,26 @@ public class Shooter {
         return power; 
     }
 
-    public static void setShooterVelocity() {
-        shooterMotor.set(getShooterVelocity());
-        feederMotor.set(getShooterVelocity());
+    public static void setManualPresetAngle(ManualShotPreset position) {
+        setShooterPosition(ShooterPosition.Medium);
+        switch(position) {
+            case SuperCloseLowShot:
+                setShooterVelocity(5000);
+                break;
+            case BackOfTarmac:
+                setShooterVelocity(8000);
+                break;
+            case TarmacLine:
+                setShooterVelocity(1200);
+                break;
+        }
+        manualVisionOverride = true;
+    }
+
+
+    public static void setShooterVelocity(double rpm) {
+        shooterMotor.set(rpm);
+        feederMotor.set(rpm);
     }
 
 }

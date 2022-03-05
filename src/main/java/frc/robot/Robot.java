@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Shooter.ManualShotPreset;
 import frc.robot.Shooter.ShooterPosition;
 import frc.robot.libs.HID.Gamepad;
 import pabeles.concurrency.IntOperatorTask.Max;
@@ -129,12 +130,11 @@ public class Robot extends TimedRobot {
             Shooter.oneShot();
         }
         if (gamepad2.getAButton()) {
-            Shooter.setShooterPosition(ShooterPosition.High);
+            Shooter.setManualPresetAngle(ManualShotPreset.SuperCloseLowShot);
         } else if (gamepad2.getBButton()) {
-            Shooter.setShooterPosition(ShooterPosition.Medium);
-        } else if (gamepad2.getYButton()) {
-            Shooter.setShooterPosition(ShooterPosition.Low);
+            Shooter.setManualPresetAngle(ManualShotPreset.TarmacLine);
         }
+
 
         if (gamepad2.getXButton()) {
             
@@ -164,7 +164,6 @@ public class Robot extends TimedRobot {
 
             DriveTrain.setAllTurnOrientation(0, false);
         }
-
         // DRIVE
         if (mAutoProgram.isRunning()) {
             mAutoProgram.tick();
