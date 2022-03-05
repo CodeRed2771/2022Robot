@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Shooter.ManualShotPreset;
 import frc.robot.Shooter.ShooterPosition;
 
 public class AutoTarmacShoot1 extends AutoBaseClass {
@@ -29,24 +30,22 @@ public class AutoTarmacShoot1 extends AutoBaseClass {
             
             switch (getCurrentStep()) {
                 case 0://segment 1 
-                    driveInches(70, 0, 0.75);
-                    Shooter.setShooterPosition(ShooterPosition.Medium);
+                    driveInches(44, 0, 0.75);
+                    Shooter.setManualPresets(ManualShotPreset.BackOfTarmac);
                     setTimerAndAdvanceStep(3000);
                     break;
                 case 1:
                     break;
                 case 2://segment 2
-                    Shooter.oneShot();
+                    Shooter.alignAndShoot();
                     setTimerAndAdvanceStep(1000);
                     break;
                 case 3:
                     break;
                 case 4:
-                    driveInches(12, 0, 0.75);
+                    driveInches(38, 0, 0.75);
                     setTimerAndAdvanceStep(2000);
                     break;
-                case 5:
-                    
                 case 6://stop
                     stop();
                     break;
