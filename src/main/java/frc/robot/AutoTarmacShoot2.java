@@ -17,48 +17,29 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
         if (isRunning()) {
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
-                case 0: 
-                    driveInches(-10, 0, 1);
-                    Shooter.setShooterPosition(Shooter.ShooterPosition.Low);
-                    Intake.deployIntake();
-                    setTimerAndAdvanceStep(6000);
+                case 0://segment 1 
+                    driveInches(70, 0, 0.75);
+                    Shooter.setShooterPosition(ShooterPosition.Medium);
+                    setTimerAndAdvanceStep(3000);
                     break;
                 case 1:
-                    if (driveCompleted()) {
-                        advanceStep();
-                    }
                     break;
-                case 2: 
+                case 2://segment 2
                     Shooter.oneShot();
-                    setTimerAndAdvanceStep(7000);
+                    setTimerAndAdvanceStep(1000);
                     break;
-                case 3: 
+                case 3:
                     break;
                 case 4:
-                    driveInches(-10, 0, .8);
-                    Intake.startIntake();
+                    driveInches(12, 0, 0.75);
+                    setTimerAndAdvanceStep(2000);
                     break;
                 case 5:
-                    if (driveCompleted()) {
-                        advanceStep();
-                    }
-                    break;
-                case 6: 
-                    Intake.retractIntake();
-                    setTimerAndAdvanceStep(7000);
-                    break;
-                case 7:
-                    break;
-                case 8:
-                    Shooter.oneShot();
-                    setTimerAndAdvanceStep(700);
-                    break;
-                case 9:
-                    break;
-                case 10: 
+                    
+                case 6://stop
                     stop();
                     break;
+            } 
         }
-    }
     }
 }
