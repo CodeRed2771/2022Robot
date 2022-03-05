@@ -37,7 +37,7 @@ public class AutoTarmacShoot1 extends AutoBaseClass {
                 case 1:
                     break;
                 case 2://segment 2
-                    Shooter.oneShot();
+                    Shooter.alignAndShoot();
                     setTimerAndAdvanceStep(1000);
                     break;
                 case 3:
