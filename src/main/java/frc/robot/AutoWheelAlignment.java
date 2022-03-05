@@ -27,34 +27,34 @@ public class AutoWheelAlignment extends AutoBaseClass {
             DriveAuto.tick();
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
-            case 0:
-                DriveTrain.setAllTurnOrientation(DriveTrain.angleToPosition(45), true);
-                setTimerAndAdvanceStep(2000);
-                break;
-            case 1:
-                 break;
-            case 2:
-                DriveTrain.setAllTurnOrientation(DriveTrain.angleToPosition(90), true);
-                setTimerAndAdvanceStep(2000);
-                break;
-            case 3:
-                break;
-            case 4:
-                DriveTrain.setAllTurnOrientation(DriveTrain.angleToPosition(135), true);
-                setTimerAndAdvanceStep(2000);
-                break;
-            case 5:
-                break;
-            case 6:
-                DriveTrain.setAllTurnOrientation(DriveTrain.angleToPosition(180), true);
-                setTimerAndAdvanceStep(2000);
-                break;
-            case 7:
-                break;
-  
-            case 8:
-                setStep(0);
-                break;
+                case 0:
+                    DriveTrain.setAllTurnOrientation(DriveTrain.angleToPosition(45), true);
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    DriveTrain.setAllTurnOrientation(DriveTrain.angleToPosition(90), true);
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    DriveTrain.setAllTurnOrientation(DriveTrain.angleToPosition(135), true);
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    DriveTrain.setAllTurnOrientation(DriveTrain.angleToPosition(180), true);
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 7:
+                    break;
+
+                case 8:
+                    setStep(0);
+                    break;
             }
         }
     }

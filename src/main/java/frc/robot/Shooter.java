@@ -162,8 +162,8 @@ public class Shooter {
                         resetTimer();
                         manualVisionOverride = false;
                     }
-                }
-
+               }
+ 
                 if (continuousShooting) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
                     setBallLiftUp();
