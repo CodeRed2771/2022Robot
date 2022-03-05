@@ -27,6 +27,10 @@ public class DriveTrain {
         SmartDashboard.putNumber("TURN P", Calibration.getTurnP());
         SmartDashboard.putNumber("TURN I", Calibration.getTurnI());
         SmartDashboard.putNumber("TURN D", Calibration.getTurnD());
+
+        allowTurnEncoderReset();
+        resetTurnEncoders();
+        
      //   SmartDashboard.putNumber("TURN I ZONE", Calibration.TURN_I_ZONE);
      //   SmartDashboard.putNumber("TURN F", Calibration.TURN_F);
     }

@@ -39,7 +39,7 @@ public class Calibration {
     
     public final static double DT_NEW_A_ABS_ZERO_INITIAL = .684; // NEW BOT
     public final static double DT_NEW_B_ABS_ZERO_INITIAL = .983; 
-    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .013; 
+    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .040; 
     public final static double DT_NEW_D_ABS_ZERO_INITIAL = .276; 
 
     public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
