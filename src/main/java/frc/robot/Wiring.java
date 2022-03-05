@@ -11,7 +11,6 @@ public class Wiring {
 	public static final int SHOOTER_MOTOR_ID = 10;
 	public static final int FEEDER_MOTOR_ID = 9;
 	public static final int INTAKE_MOTOR_ID = 11;
-	public static final int INTAKE_DEPLOY_MOTOR_ID = 12;
 	public static final int LIFT_MOTOR_ID = 15;
 	public static final int EXTEND_MOTOR_ID = 16;
 
@@ -22,6 +21,8 @@ public class Wiring {
 	public static final int SHOOTERPOSITION_STAGE2_FOWARD = 3;
 	public static final int BALLLIFT_REVERSE = 4;
 	public static final int BALLLIFT_FOWARD = 5;
+	public static final int INTAKE_DEPLOY_FORWARD = 6 ;
+	public static final int INTAKE_DEPLOY_REVERSE = 7;
 	
 
 	/**
