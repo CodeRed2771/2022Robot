@@ -70,8 +70,9 @@ public class Vision {
 
     public static double getDistanceFromTarget () {
         ty = table.getEntry("ty").getDouble(0);
-        degreesTargetOffGround = CameraAngle + ty;
-        distance = (TargetHeight - CameraHeight) / Math.tan(Math.toRadians(degreesTargetOffGround));
+        /*degreesTargetOffGround = CameraAngle + ty;
+        distance = (TargetHeight - CameraHeight) / Math.tan(Math.toRadians(degreesTargetOffGround));*/
+        distance = Calibration.VISION_DISTANCE_M*ty + Calibration.VISION_DISTANCE_B;
         SmartDashboard.putNumber("Distance:", distance);
         return distance;
     }
