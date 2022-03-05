@@ -50,6 +50,9 @@ public class AutoAlign extends AutoBaseClass {
                 if (Vision.seesTarget()) {
                     advanceStep();
                 }
+                // SmartDashboard.putNumber("Adj Angle Offset", angleOffset);
+                // SmartDashboard.putNumber("Angle Offset", Vision.getAngleOffset());
+                // SmartDashboard.putBoolean("Sees Target", Vision.seesTarget());
                 break;
             case 2:
                 if (Math.abs(angleOffset) > 1) {
@@ -70,21 +73,13 @@ public class AutoAlign extends AutoBaseClass {
                 }
                 break;
             case 4:
-                angleOffset = Vision.getDistanceAdjustedAngle();
-                // SmartDashboard.putNumber("Adj Angle Offset", angleOffset);
-                // SmartDashboard.putNumber("Angle Offset", Vision.getAngleOffset());
-                // SmartDashboard.putBoolean("Sees Target", Vision.seesTarget());
-                if (Vision.onTarget()) {
-                    advanceStep();
-                } else {
-                    setStep(1);
-                }
-                break;
-            case 5:
                 wasAligned = true;
                 // Vision.flashLED();
                 System.out.println("On Target!");
                 advanceStep();
+                break;
+            case 5: 
+                Shooter.setupShooterAuto();
                 break;
             case 6:
                 if (autoShoot()){
@@ -92,17 +87,6 @@ public class AutoAlign extends AutoBaseClass {
                 }
                 stop();
                 break;
-            //     ShooterPivoter.setDesiredShootPosition(Vision.getShooterPivoterDesiredShaftLocation());
-            //     setTimerAndAdvanceStep(1000);
-            //     break;
-            // case 5:
-            //     if (ShooterPivoter.shooterAtPosition()){
-            //         advanceStep();
-            //     }
-            //     break;
-            // case 6:
-            //     stop();
-            //     break;
             }
         }
     }

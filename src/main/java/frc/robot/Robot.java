@@ -130,9 +130,9 @@ public class Robot extends TimedRobot {
             Shooter.oneShot();
         }
         if (gamepad2.getAButton()) {
-            Shooter.setManualPresetAngle(ManualShotPreset.SuperCloseLowShot);
+            Shooter.setManualPresets(ManualShotPreset.SuperCloseLowShot);
         } else if (gamepad2.getBButton()) {
-            Shooter.setManualPresetAngle(ManualShotPreset.TarmacLine);
+            Shooter.setManualPresets(ManualShotPreset.TarmacLine);
         }
 
 

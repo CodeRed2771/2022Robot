@@ -128,6 +128,7 @@ public class Shooter {
                         setBallLiftDown();
                         StopShooter();
                         resetTimer();
+                        manualVisionOverride = false;
                     }
                 }
 
@@ -265,7 +266,7 @@ public class Shooter {
         return power; 
     }
 
-    public static void setManualPresetAngle(ManualShotPreset position) {
+    public static void setManualPresets(ManualShotPreset position) {
         setShooterPosition(ShooterPosition.Medium);
         switch(position) {
             case SuperCloseLowShot:
@@ -285,6 +286,10 @@ public class Shooter {
     public static void setShooterVelocity(double rpm) {
         shooterMotor.set(rpm);
         feederMotor.set(rpm);
+    }
+
+    public static void setupShooterAuto() {
+
     }
 
 }
