@@ -30,8 +30,8 @@ public class Robot extends TimedRobot {
     SendableChooser<String> positionChooser;
     SendableChooser<String> driveChooser;
     String autoSelected;
-    XboxController gamepad1;
-    XboxController gamepad2;
+    Gamepad gamepad1;
+    Gamepad gamepad2;
     SwerveTurnTest swtest;
 
     AutoBaseClass mAutoProgram;
@@ -53,8 +53,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        gamepad1 = new XboxController(0);
-        gamepad2 = new XboxController(1);
+        gamepad1 = new Gamepad(0);
+        gamepad2 = new Gamepad(1);
 
         Intake.init();
         RobotGyro.init();
@@ -112,21 +112,27 @@ public class Robot extends TimedRobot {
             Shooter.StopShooter();
         }
 
-        if (gamepad1.getRightTriggerAxis() > 0 || gamepad2.getRightTriggerAxis() > 0) {
+        if (gamepad1.getLeftTriggerAxis() > 0 || gamepad2.getLeftTriggerAxis() > 0) {
             Intake.startIntake();
         } else {
             Intake.stopIntake();
         }
-        if (gamepad2.getRightTriggerAxis() > 0 && gamepad2.getLeftBumper()) {
+        if (gamepad2.getLeftBumper()) {
             Intake.reverseIntake();
         }
+        if (gamepad2.getDPadUp()) {
+            Intake.deployIntake();
+         } else if (gamepad2.getDPadDown()) {
+             Intake.retractIntake();
+         }
+        SmartDashboard.putNumber("D pad", gamepad1.getPOV(1));
 
         if (gamepad1.getRightBumper()) {
             mAutoProgram = new AutoAlign();
             mAutoProgram.start(false);
         }
         
-        if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
+        if (gamepad2.getRightTriggerAxis() > 0 ||gamepad1.getRightTriggerAxis() > 0) {
             Shooter.alignAndShoot();
         }
         if (gamepad2.getAButton()) {

@@ -1,6 +1,7 @@
 package frc.robot.libs.HID;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -16,14 +17,15 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * Standalone class to make accessing a Logitech F310 gamepad simpler
  */
 
-public class Gamepad extends Joystick {
+public class Gamepad extends XboxController {
     // Gamepad axis ports
     private static final int AXIS_LEFT_X = 1;
     private static final int AXIS_LEFT_Y = 2;
     private static final int AXIS_SHOULDER = 3;
     private static final int AXIS_RIGHT_X = 4;
     private static final int AXIS_RIGHT_Y = 5;
-    private static final int AXIS_DPAD = 6;
+    private static final int AXIS_DPAD_X = 6;
+    private static final int AXIS_DPAD_Y = 7;
 
     // Gamepad buttons
     private static final int BUTTON_A = 2;
@@ -48,96 +50,13 @@ public class Gamepad extends Joystick {
         super(gamepadPort);
     }
 
-    /**
-     * Returns the X position of the left stick.
-     */
-    public double getLeftX() {
-        return getRawAxis(AXIS_LEFT_X);
-    }
-
-    /**
-     * Returns the X position of the right stick.
-     */
-    public double getRightX() {
-        return getRawAxis(AXIS_RIGHT_X);
-    }
-
-    /**
-     * Returns the Y position of the left stick.
-     */
-    public double getLeftY() {
-        return getRawAxis(AXIS_LEFT_Y);
-    }
-
-    /**
-     * Returns the Y position of the right stick.
-     */
-    public double getRightY() {
-        return getRawAxis(AXIS_RIGHT_Y);
-    }
-
-    /**
-     * Checks whether Button A is being pressed and returns true if it is.
-     */
-    public boolean getButtonStateA() {
-        return getRawButton(BUTTON_A);
-    }
-
-    /**
-     * Checks whether Button B is being pressed and returns true if it is.
-     */
-    public boolean getButtonStateB() {
-        return getRawButton(BUTTON_B);
-    }
-
-    /**
-     * Checks whether Button X is being pressed and returns true if it is.
-     */
-    public boolean getButtonStateX() {
-        return getRawButton(BUTTON_X);
-    }
-
-    /**
-     * Checks whether Button Y is being pressed and returns true if it is.
-     */
-    public boolean getButtonStateY() {
-        return getRawButton(BUTTON_Y);
-    }
-
-    /**
-     * Returns an object of Button A.
-     */
-    public JoystickButton getButtonA() {
-        return new JoystickButton(this, BUTTON_A);
-    }
-
-    /**
-     * Returns an object of Button B.
-     */
-    public JoystickButton getButtonB() {
-        return new JoystickButton(this, BUTTON_B);
-    }
-
-    /**
-     * Returns an object of Button X.
-     */
-    public JoystickButton getButtonX() {
-        return new JoystickButton(this, BUTTON_X);
-    }
-
-    /**
-     * Returns an object of Button Y.
-     */
-    public JoystickButton getButtonY() {
-        return new JoystickButton(this, BUTTON_Y);
-    }
-
-    /**
-     * Return the DPad axis positions.
-     */
     public double getDPadX() {
-        return getRawAxis(AXIS_DPAD);
+        return getRawAxis(AXIS_DPAD_X);
     }
+    public double getDPadY() {
+        return getRawAxis(AXIS_DPAD_Y);
+    }
+
 
     /**
      * DPad Left and Right only WPILIB cannot access the vertical axis of the
@@ -154,19 +73,21 @@ public class Gamepad extends Joystick {
         return (x > 0.5);
     }
 
+    public boolean getDPadUp() {
+        double y = getDPadY();
+        return (y < -0.5);
+    }
+
+    public boolean getDPadDown() {
+        double y = getDPadY();
+        return (y > 0.5);
+    }
+
     /**
      * Gets the state of the Start button
      * 
      * @return the state of the Start button
      */
-    public JoystickButton getStartButton() {
-        return new JoystickButton(this, BUTTON_START);
-    }
-
-    public JoystickButton getBackButton() {
-        return new JoystickButton(this, BUTTON_BACK);
-    }
-
     /**
      * Gets the state of the left shoulder
      * 
