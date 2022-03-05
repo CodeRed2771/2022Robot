@@ -83,7 +83,7 @@ public class AutoAlign extends AutoBaseClass {
                 break;
             case 6:
                 if (autoShoot()){
-                    Shooter.oneShot();
+                    Shooter.oneShotAuto();
                 }
                 stop();
                 break;

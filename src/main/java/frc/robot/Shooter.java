@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -48,6 +50,30 @@ public class Shooter {
     }
     public static ManualShotPreset curManualShotPreset;
     private static boolean manualVisionOverride = false;
+    private static boolean calibrationMode;
+
+    private static class shooterArrayValue {
+        ShooterPosition position;
+        double speed;
+        public shooterArrayValue(ShooterPosition position, double speed) {
+            this.position = position;
+            this.speed = speed;
+        }
+    }
+    private static shooterArrayValue[] shooterArray =  {
+        new shooterArrayValue(ShooterPosition.Medium, 7000),
+        new shooterArrayValue(ShooterPosition.Medium, 8000), 
+        new shooterArrayValue(ShooterPosition.Medium, 9000),
+        new shooterArrayValue(ShooterPosition.Medium, 10000), 
+        new shooterArrayValue(ShooterPosition.Medium, 12000),
+        new shooterArrayValue(ShooterPosition.High, 13000),
+        new shooterArrayValue(ShooterPosition.Low, 1400),
+        new shooterArrayValue(ShooterPosition.Low, 1500),
+        new shooterArrayValue(ShooterPosition.Low, 1600),
+        new shooterArrayValue(ShooterPosition.Low, 1800),
+        new shooterArrayValue(ShooterPosition.Low, 1900),
+    };
+
 
     public static void init() {
         shooterMotor.restoreFactoryDefaults();
@@ -100,13 +126,11 @@ public class Shooter {
         if (!isInitialized) 
             return;
 
-        shooterVelocityTarget = SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
-
             if (isEnabled) {
                 shooterPID.setReference(shooterVelocityTarget, ControlType.kVelocity);
                 feederPID.setReference(SmartDashboard.getNumber("Feeder Setpoint", Calibration.FEEDER_DEFAULT_SPEED), ControlType.kVelocity);
-
-                if (SmartDashboard.getBoolean("Shooter TUNE", true)) {
+                calibrationMode = SmartDashboard.getBoolean("Shooter TUNE", true);
+                if (calibrationMode) {
                     shooterPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
                     shooterPID.setP(SmartDashboard.getNumber("Shoot P", 0));
                     shooterPID.setD(SmartDashboard.getNumber("Shoot D", 0));
@@ -114,6 +138,10 @@ public class Shooter {
                     feederPID.setFF(SmartDashboard.getNumber("Shoot F", 0));
                     feederPID.setP(SmartDashboard.getNumber("Shoot P", 0));
                     feederPID.setD(SmartDashboard.getNumber("Shoot D", 0));
+                    int dist = (int)Math.round(Vision.getDistanceFromTarget());
+                    SmartDashboard.putNumber("Distance to Target", dist);
+                    shooterVelocityTarget = SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
+
                }
 
                 SmartDashboard.putNumber("SHOOTER VELOCITY", shooterMotor.getEncoder().getVelocity());
@@ -126,7 +154,11 @@ public class Shooter {
                     setBallLiftUp();
                     if (timer >= 25) {
                         setBallLiftDown();
-                        StopShooter();
+                        if (!calibrationMode) {
+                            StopShooter();
+                        } else {
+                            oneShot = false;
+                        }
                         resetTimer();
                         manualVisionOverride = false;
                     }
@@ -197,13 +229,29 @@ public class Shooter {
         else
             return (getShooterSpeed() > 0 && Math.abs(getShooterSpeed() - targetSpeed) < 300);
     }
-
-    public static void oneShot () {
+    
+    public static void oneShotAuto(){
+        isEnabled = true;
         oneShot = true;
         continuousShooting = false;
     }
 
+    public static void oneShotTeleOp () {
+        isEnabled = true;
+        oneShot = true;
+        continuousShooting = false;
+        if (calibrationMode) {
+            manualVisionOverride = false;
+        }
+        if (!manualVisionOverride) {
+            AutoBaseClass mAutoProgram;
+            mAutoProgram = new AutoAlign();
+            mAutoProgram.start(true);
+        } 
+    }
+
     public static void continuousShooting () {
+        isEnabled = true;
         continuousShooting = true;
         oneShot = false;
     }
@@ -289,7 +337,10 @@ public class Shooter {
     }
 
     public static void setupShooterAuto() {
-
+        int dis = (int)Math.round(Vision.getDistanceFromTarget());
+        ShooterPosition pos = shooterArray[dis].position;
+        double pow = shooterArray[dis].speed;
+        setShooterPosition(pos);
+        setShooterVelocity(pow);
     }
-
 }
