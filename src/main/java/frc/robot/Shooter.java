@@ -236,7 +236,7 @@ public class Shooter {
         continuousShooting = false;
     }
 
-    public static void oneShotTeleOp () {
+    public static void alignAndShoot () {
         isEnabled = true;
         oneShot = true;
         continuousShooting = false;
