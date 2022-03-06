@@ -12,9 +12,11 @@ import java.math.RoundingMode;
 
 import javax.lang.model.util.ElementScanner6;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,7 +35,8 @@ public class Robot extends TimedRobot {
     Gamepad gamepad1;
     Gamepad gamepad2;
     SwerveTurnTest swtest;
-
+    Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
+        
     AutoBaseClass mAutoProgram;
 
     final String autoCalibrator = "Auto Calibrator";
@@ -56,7 +59,10 @@ public class Robot extends TimedRobot {
         gamepad1 = new Gamepad(0);
         gamepad2 = new Gamepad(1);
 
+        compressor.enableAnalog(100, 120);
+
         Intake.init();
+        Shooter.init();
         RobotGyro.init();
         Calibration.loadSwerveCalibration();
         
