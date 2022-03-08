@@ -61,17 +61,17 @@ public class Shooter {
         }
     }
     private static shooterArrayValue[] shooterArray =  {
-        new shooterArrayValue(ShooterPosition.Medium, 7000),
-        new shooterArrayValue(ShooterPosition.Medium, 8000), 
-        new shooterArrayValue(ShooterPosition.Medium, 9000),
-        new shooterArrayValue(ShooterPosition.Medium, 10000), 
-        new shooterArrayValue(ShooterPosition.Medium, 12000),
-        new shooterArrayValue(ShooterPosition.High, 13000),
-        new shooterArrayValue(ShooterPosition.Low, 1400),
-        new shooterArrayValue(ShooterPosition.Low, 1500),
-        new shooterArrayValue(ShooterPosition.Low, 1600),
-        new shooterArrayValue(ShooterPosition.Low, 1800),
-        new shooterArrayValue(ShooterPosition.Low, 1900),
+        new shooterArrayValue(ShooterPosition.Low, 7000),
+        new shooterArrayValue(ShooterPosition.Low, 8000), 
+        new shooterArrayValue(ShooterPosition.Low, 9000),
+        new shooterArrayValue(ShooterPosition.Low, 10000), 
+        new shooterArrayValue(ShooterPosition.Low, 12000),
+        new shooterArrayValue(ShooterPosition.Medium, 13000),
+        new shooterArrayValue(ShooterPosition.Medium, 1400),
+        new shooterArrayValue(ShooterPosition.Medium, 1500),
+        new shooterArrayValue(ShooterPosition.Medium, 1600),
+        new shooterArrayValue(ShooterPosition.Medium, 1800),
+        new shooterArrayValue(ShooterPosition.Medium, 1900),
     };
 
 
@@ -271,11 +271,11 @@ public class Shooter {
     public static void setShooterPosition(ShooterPosition position) {
         switch (position) {
             case Low:
-                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kReverse);
+                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kForward);
                 shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
                 break;
             case Medium:
-                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kForward);
+                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kReverse);
                 shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
                 break;
             case  High:
@@ -315,7 +315,7 @@ public class Shooter {
     }
 
     public static void setManualPresets(ManualShotPreset position) {
-        setShooterPosition(ShooterPosition.Medium);
+        setShooterPosition(ShooterPosition.Low);
         switch(position) {
             case SuperCloseLowShot:
                 setShooterVelocity(5000);

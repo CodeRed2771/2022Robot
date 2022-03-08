@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch Robot",
+      "request": "launch",
+      "mainClass": "frc.robot.Robot",
+      "projectName": "2022Robot"
+    },
+    {
+      "type": "java",
+      "name": "Launch GamepadButtons",
+      "request": "launch",
+      "mainClass": "frc.robot.GamepadButtons",
+      "projectName": "2022Robot"
+    },
+    {
+      "type": "java",
       "name": "Launch TurnPosition",
       "request": "launch",
       "mainClass": "frc.robot.TurnPosition",

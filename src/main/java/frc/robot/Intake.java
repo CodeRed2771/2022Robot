@@ -23,6 +23,13 @@ public class Intake {
     public static CurrentBreaker currentBreaker;
     private static boolean running = false;
     private static DoubleSolenoid intakeDeploy;
+    private static double position;
+    private static boolean curPosition;
+
+    private static boolean Up(boolean pos) {
+        curPosition = pos;
+        return pos;
+    }
     public static void init() {
        
         intakeDeploy = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.INTAKE_DEPLOY_FORWARD, Wiring.INTAKE_DEPLOY_REVERSE);
@@ -42,10 +49,12 @@ public class Intake {
 
     public static void deployIntake() {
      intakeDeploy.set(DoubleSolenoid.Value.kForward);
+    Up(false);
     }
 
     public static void retractIntake() {
         intakeDeploy.set(DoubleSolenoid.Value.kReverse);
+        Up(true);
     }
 
     public static void startIntake() {
@@ -68,5 +77,7 @@ public class Intake {
     public static boolean isRunning() {
         return running;
     }
-
+    public static boolean getIntakePosition() {
+        return curPosition;
+    }
 }

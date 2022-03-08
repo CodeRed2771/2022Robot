@@ -24,7 +24,7 @@ import frc.robot.libs.HID.Gamepad;
 import pabeles.concurrency.IntOperatorTask.Max;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot { 
 
     SendableChooser<String> autoChooser;
     SendableChooser<String> positionChooser;
@@ -107,9 +107,7 @@ public class Robot extends TimedRobot {
        
         if (gamepad1.getAButton()) {
             Shooter.StartShooter();
-        }
-        if (gamepad1.getBButton()) {
-            Shooter.StopShooter();
+            
         }
 
         if (gamepad1.getLeftTriggerAxis() > 0 || gamepad2.getLeftTriggerAxis() > 0) {
@@ -120,9 +118,10 @@ public class Robot extends TimedRobot {
         if (gamepad2.getLeftBumper()) {
             Intake.reverseIntake();
         }
-        if (gamepad2.getDPadUp()) {
+
+        if (gamepad2.getDPadUp() && !Intake.getIntakePosition()) {
             Intake.deployIntake();
-         } else if (gamepad2.getDPadDown()) {
+         } else if (gamepad2.getDPadDown() && Intake.getIntakePosition()) {
              Intake.retractIntake();
          }
         SmartDashboard.putNumber("D pad", gamepad1.getPOV(1));
