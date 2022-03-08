@@ -9,6 +9,7 @@ package frc.robot;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Map;
 
 import javax.lang.model.util.ElementScanner6;
 
@@ -132,7 +133,7 @@ public class Robot extends TimedRobot {
          }
         SmartDashboard.putNumber("D pad", gamepad1.getPOV(1));
 
-        if (gamepad1.getRightBumper()) {
+        if (gamepad1.getLeftBumper() && !mAutoProgram.isRunning()) {
             mAutoProgram = new AutoAlign();
             mAutoProgram.start(false);
         }
@@ -220,7 +221,7 @@ public class Robot extends TimedRobot {
             }
         }
 
-        if (Math.abs(driveFWDAmount) > .5) {
+        if (Math.abs(driveFWDAmount) > .5 || Math.abs(driveRotAmount) > .5) {
             if (mAutoProgram.isRunning())
                 mAutoProgram.stop();
         }
