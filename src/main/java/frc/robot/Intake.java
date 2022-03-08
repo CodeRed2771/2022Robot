@@ -59,13 +59,13 @@ public class Intake {
 
     public static void startIntake() {
         deployIntake();
-        intakeMotor.set(.5);
+        intakeMotor.set(1);
         running = true; 
     }
     
     public static void reverseIntake() {
         deployIntake();
-        intakeMotor.set(-.5);
+        intakeMotor.set(-1);
         running = true; 
     }
 

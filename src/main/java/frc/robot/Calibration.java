@@ -37,19 +37,19 @@ public class Calibration {
     private final static double DT_C_ABS_ZERO_INITIAL = .443; 
     private final static double DT_D_ABS_ZERO_INITIAL = .098; 
     
-    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .684; // NEW BOT
-    public final static double DT_NEW_B_ABS_ZERO_INITIAL = .983; 
-    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .040; 
-    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .276; 
+    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .572; // .684; // NEW BOT
+    public final static double DT_NEW_B_ABS_ZERO_INITIAL = .414; //.983; 
+    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .224; //.040; 
+    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .507; // 276; 
 
     public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
     
-    public static final double SHOOTER_P = 0.00063;
-    public static final double SHOOTER_I = 0.0; // not used
-    public static final double SHOOTER_D = 0.05;
-    public static final double SHOOTER_F = 0.000190;
-    public static final int SHOOTER_DEFAULT_SPEED = 2000;
-    public static final int FEEDER_DEFAULT_SPEED = 3800;
+    public static final double SHOOTER_P = 0.5;
+    public static final double SHOOTER_I = 0.0;
+    public static final double SHOOTER_D = 0;
+    public static final double SHOOTER_F = 0.0525;
+    public static final int SHOOTER_DEFAULT_SPEED = 13000;
+    public static final int FEEDER_DEFAULT_SPEED = 13000;
 
     public final static double VISION_FWD_P = 0.05;
     public final static double VISION_FWD_I = 0;
