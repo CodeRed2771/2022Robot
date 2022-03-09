@@ -358,18 +358,22 @@ public class Shooter {
                 break;
             case BackOfTarmac:
                 setShooterPosition(ShooterPosition.Low);
-                shooterVelocityTarget = 6000;
+                shooterVelocityTarget = 6400;
                 break;
             case TarmacLine:
                 setShooterPosition(ShooterPosition.Low);
-                shooterVelocityTarget = 6000;
+                shooterVelocityTarget = 6400;
                 break;
             case Backwards:
                 setShooterPosition(ShooterPosition.Backwards);
-                shooterVelocityTarget = 6000;
+                shooterVelocityTarget = 6400;
                 break;
         }
+
+        SmartDashboard.putNumber("Shoot Setpoint",shooterVelocityTarget);
+        
         StartShooter();
+        
         manualVisionOverride = true;
         
     }
