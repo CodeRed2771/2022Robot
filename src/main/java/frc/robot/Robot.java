@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
             
         }
 
-        if (gamepad1.getLeftTriggerAxis() > 0 || gamepad2.getLeftTriggerAxis() > 0) {
+        if (gamepad1.getRightTriggerAxis() > 0 || gamepad2.getRightTriggerAxis() > 0) {
             Intake.startIntake();
         } else {
             Intake.stopIntake();
@@ -138,13 +138,15 @@ public class Robot extends TimedRobot {
             mAutoProgram.start(false);
         }
         
-        if (gamepad2.getRightTriggerAxis() > 0 ||gamepad1.getRightTriggerAxis() > 0) {
+        if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
             Shooter.alignAndShoot();
         }
         if (gamepad2.getAButton()) {
             Shooter.setManualPresets(ManualShotPreset.SuperCloseLowShot);
         } else if (gamepad2.getBButton()) {
             Shooter.setManualPresets(ManualShotPreset.TarmacLine);
+        } else if (gamepad2.getYButton()) {
+            Shooter.setManualPresets(ManualShotPreset.Backwards);
         }
 
 

@@ -45,7 +45,8 @@ public class Shooter {
     public static enum ManualShotPreset {
         SuperCloseLowShot,
         BackOfTarmac,
-        TarmacLine
+        TarmacLine,
+        Backwards,
     }
     public static ManualShotPreset curManualShotPreset;
     private static boolean manualVisionOverride = false;
@@ -87,7 +88,7 @@ public class Shooter {
 		shooterMotor.configNominalOutputForward(0, 0);
 		shooterMotor.configNominalOutputReverse(0, 0);
 		shooterMotor.configPeakOutputForward(1, 0);
-		shooterMotor.configPeakOutputReverse(-1, 0);
+		shooterMotor.configPeakOutputReverse(0, 0);
 		shooterMotor.setNeutralMode(NeutralMode.Coast);
         shooterMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, kPIDLoopIdx, 0);
 
@@ -116,7 +117,7 @@ public class Shooter {
 		feederMotor.configNominalOutputForward(0, 0);
 		feederMotor.configNominalOutputReverse(0, 0);
 		feederMotor.configPeakOutputForward(1, 0);
-		feederMotor.configPeakOutputReverse(-1, 0);
+		feederMotor.configPeakOutputReverse(0, 0);
 		feederMotor.setNeutralMode(NeutralMode.Coast);
         feederMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, kPIDLoopIdx, 0);
 
@@ -349,17 +350,22 @@ public class Shooter {
     }
 
     public static void setManualPresets(ManualShotPreset position) {
-
-        setShooterPosition(ShooterPosition.Medium);
         
         switch(position) {
             case SuperCloseLowShot:
+                setShooterPosition(ShooterPosition.Low);
                 shooterVelocityTarget = 5000;
                 break;
             case BackOfTarmac:
+                setShooterPosition(ShooterPosition.Low);
                 shooterVelocityTarget = 6000;
                 break;
             case TarmacLine:
+                setShooterPosition(ShooterPosition.Low);
+                shooterVelocityTarget = 6000;
+                break;
+            case Backwards:
+                setShooterPosition(ShooterPosition.Backwards);
                 shooterVelocityTarget = 6000;
                 break;
         }

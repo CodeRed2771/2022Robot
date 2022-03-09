@@ -15,8 +15,8 @@ public class Wiring {
 	public static final int EXTEND_MOTOR_ID = 16;
 
 	// PCM Ports
-	public static final int SHOOTERPOSITION_STAGE1_REVERSE = 0;
-	public static final int SHOOTERPOSITION_STAGE1_FOWARD = 1;
+	public static final int SHOOTERPOSITION_STAGE1_REVERSE = 1;
+	public static final int SHOOTERPOSITION_STAGE1_FOWARD = 0;
 	public static final int SHOOTERPOSITION_STAGE2_REVERSE = 2;
 	public static final int SHOOTERPOSITION_STAGE2_FOWARD = 3;
 	public static final int BALLLIFT_REVERSE = 4;
