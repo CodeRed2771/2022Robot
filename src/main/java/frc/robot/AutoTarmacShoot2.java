@@ -19,8 +19,9 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
                 case 0://segment 1 
-                    driveInches(44, 0, 0.75);
+                    driveInches(40, 0, 0.75);
                     Shooter.setManualPresets(ManualShotPreset.BackOfTarmac);
+                    Intake.deployIntake();
                     setTimerAndAdvanceStep(3000);
                     break;
                 case 1:
@@ -32,7 +33,6 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
                 case 3:
                     break;
                 case 4:
-                    Intake.deployIntake();
                     Intake.startIntake();
                     advanceStep();
                     break;
@@ -44,17 +44,35 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
                     if(driveCompleted()) {
                         advanceStep();
                     }
+                    break;
                 case 8:
                     Intake.stopIntake();
-                    Intake.retractIntake();
                     advanceStep();
                     break;
-                case 9:
-                    Shooter.alignAndShoot();
-                    setTimerAndAdvanceStep(1000);
-                case 10:
+                case 9: 
+                    driveInches(-38,0,.75);
+                    setTimerAndAdvanceStep(2000);
                     break;
-                case 11://stop
+                case 10: 
+                    if(driveCompleted()) {
+                        advanceStep();
+                    }
+                    break;
+                case 11:
+                    Shooter.oneShotAuto();
+                    setTimerAndAdvanceStep(1000);
+                case 12:
+                    break;
+                case 13: 
+                    driveInches(38, 0, .75);
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 14:
+                    if(driveCompleted()) {
+                        advanceStep();
+                    }
+                    break;
+                case 15://stop
                     stop();
                     break;
             } 
