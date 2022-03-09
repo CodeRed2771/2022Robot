@@ -44,10 +44,10 @@ public class Calibration {
 
     public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
     
-    public static final double SHOOTER_P = 0.5;
+    public static final double SHOOTER_P = 0.3;
     public static final double SHOOTER_I = 0.0;
     public static final double SHOOTER_D = 0;
-    public static final double SHOOTER_F = 0.0525;
+    public static final double SHOOTER_F = 0.0505;
     public static final int SHOOTER_DEFAULT_SPEED = 13000;
     public static final int FEEDER_DEFAULT_SPEED = 13000;
 

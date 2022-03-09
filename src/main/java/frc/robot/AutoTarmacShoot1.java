@@ -50,6 +50,9 @@ public class AutoTarmacShoot1 extends AutoBaseClass {
                     break;
                 case 6://stop
                     stop();
+                    advanceStep();
+                    break;
+                case 7:
                     break;
             } 
         }
