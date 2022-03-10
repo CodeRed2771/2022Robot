@@ -19,7 +19,7 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
                 case 0://segment 1 
-                    driveInches(40, 0, 0.75);
+                    driveInches(64, 0, 0.75);
                     Shooter.setManualPresets(ManualShotPreset.BackOfTarmac);
                     Intake.deployIntake();
                     setTimerAndAdvanceStep(3000);
@@ -27,7 +27,7 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
                 case 1:
                     break;
                 case 2://segment 2
-                    Shooter.alignAndShoot();
+                    Shooter.oneShotAuto();
                     setTimerAndAdvanceStep(1000);
                     break;
                 case 3:
@@ -36,43 +36,57 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
                     Intake.startIntake();
                     advanceStep();
                     break;
+                case 5:
+                    driveInches(40, 0, 0.75);
+                    setTimerAndAdvanceStep(3000);
+                    break;
                 case 6:
-                    driveInches(38, 0, 0.75);
-                    setTimerAndAdvanceStep(2000);
+                    if(driveCompleted()) {
+                        advanceStep();
+                    }
                     break;
                 case 7:
-                    if(driveCompleted()) {
-                        advanceStep();
-                    }
-                    break;
-                case 8:
-                    Intake.stopIntake();
                     advanceStep();
                     break;
+                case 8: 
+                    driveInches(-50,0,.75);
+                    setTimerAndAdvanceStep(3000);
+                    break;
                 case 9: 
-                    driveInches(-38,0,.75);
-                    setTimerAndAdvanceStep(2000);
+                    if(driveCompleted()) {
+                        advanceStep();
+                    }
                     break;
                 case 10: 
-                    if(driveCompleted()) {
-                        advanceStep();
-                    }
-                    break;
-                case 11:
-                    Shooter.oneShotAuto();
-                    setTimerAndAdvanceStep(1000);
-                case 12:
-                    break;
-                case 13: 
-                    driveInches(38, 0, .75);
+                    driveInches(10,0,.75);
                     setTimerAndAdvanceStep(2000);
                     break;
-                case 14:
+                case 11: 
                     if(driveCompleted()) {
                         advanceStep();
                     }
                     break;
-                case 15://stop
+                case 12:
+                    Intake.stopIntake();
+                    setTimerAndAdvanceStep(1000); // give ball time to settle
+                    break;
+                case 13:
+                    break;
+                case 14:
+                    Shooter.oneShotAuto();
+                    setTimerAndAdvanceStep(1500);
+                case 15:
+                    break;
+                case 16: 
+                    driveInches(38, 0, .75);
+                    setTimerAndAdvanceStep(3000);
+                    break;
+                case 17:
+                    if(driveCompleted()) {
+                        advanceStep();
+                    }
+                    break;
+                case 18://stop
                     stop();
                     break;
             } 

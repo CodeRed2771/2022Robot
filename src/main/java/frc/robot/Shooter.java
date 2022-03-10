@@ -138,7 +138,7 @@ public class Shooter {
         SmartDashboard.putNumber("Shoot F", Calibration.SHOOTER_F);
         SmartDashboard.putNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
         SmartDashboard.putNumber("Feeder Setpoint", Calibration.FEEDER_DEFAULT_SPEED);
-        SmartDashboard.putBoolean("Shooter TUNE", true);
+        SmartDashboard.putBoolean("Shooter TUNE", false);
 
         isInitialized = true;
 

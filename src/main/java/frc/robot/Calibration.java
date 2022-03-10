@@ -172,7 +172,7 @@ public class Calibration {
     public final static double DT_ROT_PID_D = .000;
     public final static double DT_ROT_PID_IZONE = 18;
 
-	public final static int DT_MM_ACCEL = 10000;
+	public final static int DT_MM_ACCEL = 8000;
 	public final static int DT_MM_VELOCITY = 20000;
 	
 	// COMPETIION AND PRACTICE

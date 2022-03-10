@@ -277,7 +277,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
 
-        RobotGyro.reset();
+        // RobotGyro.reset();
 
         DriveTrain.stopDriveAndTurnMotors();
         DriveTrain.allowTurnEncoderReset();
