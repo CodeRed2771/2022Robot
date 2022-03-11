@@ -182,7 +182,7 @@ public class Shooter {
                 SmartDashboard.putNumber("SHOOTER VELOCITY", shooterMotor.getSelectedSensorVelocity());
                 SmartDashboard.putNumber("SHOOTER ERROR", shooterVelocityTarget - shooterMotor.getSelectedSensorVelocity());
                 
-                System.out.println(timer);
+                // System.out.println(timer);
 
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
@@ -190,7 +190,7 @@ public class Shooter {
                     if (timer >= 25) {
                         setBallLiftDown();
                         if (!calibrationMode) {
-                            StopShooter();
+                            // StopShooter();
                         } else {
                             oneShot = false;
                         }
@@ -358,15 +358,15 @@ public class Shooter {
                 break;
             case BackOfTarmac:
                 setShooterPosition(ShooterPosition.Low);
-                shooterVelocityTarget = 6400;
+                shooterVelocityTarget = 5900;
                 break;
             case TarmacLine:
                 setShooterPosition(ShooterPosition.Low);
-                shooterVelocityTarget = 6400;
+                shooterVelocityTarget = 5900;
                 break;
             case Backwards:
                 setShooterPosition(ShooterPosition.Backwards);
-                shooterVelocityTarget = 6400;
+                shooterVelocityTarget = 5900;
                 break;
         }
 
