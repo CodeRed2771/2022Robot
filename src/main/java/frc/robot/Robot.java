@@ -166,6 +166,10 @@ public class Robot extends TimedRobot {
         if (gamepad2.getRightBumper() || gamepad1.getRightBumper()) {
             Shooter.StopShooter();
         }
+
+        if (gamepad2.getLeftStickButtonPressed()) {
+            Shooter.setBallLiftDown();
+        }
         
         // --------------------------------------------------
         // RESET - allow manual reset of systems by pressing Start
