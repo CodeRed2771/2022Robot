@@ -290,6 +290,9 @@ public class Robot extends TimedRobot {
         char robotPosition = selectedPos.toCharArray()[0];
         System.out.println("Robot position: " + robotPosition);
 
+        Shooter.setShooterPosition(ShooterPosition.Medium); // releases the starting position block
+        Intake.startIntake(); // releases the intake strap
+        
         autoSelected = (String) autoChooser.getSelected();
         SmartDashboard.putString("Auto Selected: ", autoSelected);
 
