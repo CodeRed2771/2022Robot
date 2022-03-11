@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
 
-        RobotGyro.reset();
+        // RobotGyro.reset();
 
         SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
@@ -292,7 +292,7 @@ public class Robot extends TimedRobot {
 
         Shooter.setShooterPosition(ShooterPosition.Medium); // releases the starting position block
         Intake.startIntake(); // releases the intake strap
-        
+
         autoSelected = (String) autoChooser.getSelected();
         SmartDashboard.putString("Auto Selected: ", autoSelected);
 
