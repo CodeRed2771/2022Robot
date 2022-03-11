@@ -36,6 +36,7 @@ public class Shooter {
     private static DoubleSolenoid ballLiftSolenoid;
     private static DoubleSolenoid shooterPositionSolenoid_Stage1;
     private static DoubleSolenoid shooterPositionSolenoid_Stage2;
+    private static boolean reverse = false;
     public static enum ShooterPosition {
         Low,
         Medium,
@@ -172,9 +173,13 @@ public class Shooter {
                     // shooterVelocityTarget = SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
                     
                }
-               
-               shooterMotor.set(ControlMode.Velocity, shooterVelocityTarget);
-               feederMotor.set(ControlMode.Velocity, shooterVelocityTarget);
+               if (reverse) {
+                    shooterMotor.set(ControlMode.PercentOutput, -0.5);
+                    feederMotor.set(ControlMode.PercentOutput, -0.5);
+               } else {
+                shooterMotor.set(ControlMode.Velocity, shooterVelocityTarget);
+                feederMotor.set(ControlMode.Velocity, shooterVelocityTarget);
+               }
 
                calibrationMode = SmartDashboard.getBoolean("Shooter TUNE", false);
               
@@ -186,14 +191,12 @@ public class Shooter {
 
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    setBallLiftUp();
+                    if (timer < 5) {
+                        setBallLiftUp();
+                    }
                     if (timer >= 25) {
                         setBallLiftDown();
-                        if (!calibrationMode) {
-                            // StopShooter();
-                        } else {
-                            oneShot = false;
-                        }
+                        oneShot = false;
                         resetTimer();
                         manualVisionOverride = false;
                     }
@@ -369,7 +372,7 @@ public class Shooter {
                 shooterVelocityTarget = 5900;
                 break;
         }
-
+        
         SmartDashboard.putNumber("Shoot Setpoint",shooterVelocityTarget);
         
         StartShooter();
@@ -377,7 +380,12 @@ public class Shooter {
         manualVisionOverride = true;
         
     }
-
+    public static void reverseShooter(){
+        reverse = true;
+    }
+    public static void endReverseShooter() {
+        reverse = false;
+    }
     public static void setupShooterAuto() {
         int dis = (int)Math.round(Vision.getDistanceFromTarget());
         setShooterPosition(shooterArray[dis].position);
