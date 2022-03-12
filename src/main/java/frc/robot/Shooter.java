@@ -174,11 +174,15 @@ public class Shooter {
                     
                }
                if (reverse) {
-                    shooterMotor.set(ControlMode.PercentOutput, -0.5);
-                    feederMotor.set(ControlMode.PercentOutput, -0.5);
+                    shooterMotor.configPeakOutputReverse(-1, 0);
+                    feederMotor.configPeakOutputReverse(-1, 0);
+                    shooterMotor.set(ControlMode.PercentOutput, -0.2);
+                    feederMotor.set(ControlMode.PercentOutput, -0.2);
                } else {
-                shooterMotor.set(ControlMode.Velocity, shooterVelocityTarget);
-                feederMotor.set(ControlMode.Velocity, shooterVelocityTarget);
+                    shooterMotor.configPeakOutputReverse(0, 0);
+                    feederMotor.configPeakOutputReverse(0, 0);
+                    shooterMotor.set(ControlMode.Velocity, shooterVelocityTarget);
+                    feederMotor.set(ControlMode.Velocity, shooterVelocityTarget);
                }
 
                calibrationMode = SmartDashboard.getBoolean("Shooter TUNE", false);
