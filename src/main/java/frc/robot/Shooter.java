@@ -28,7 +28,8 @@ public class Shooter {
     private static boolean isGateOpen = false;
     private static boolean oneShot = false;
     private static boolean continuousShooting = false;
-    private static double shooterVelocityTarget = 0;
+    private static double shooterMotorVelocityTarget = 0;
+    private static double feederMotorVelocityTarget = 0;
     private static int timer = 0;
     private static final int kPIDLoopIdx = 0;
     private static double targetSpeed = Calibration.SHOOTER_DEFAULT_SPEED;
@@ -36,6 +37,7 @@ public class Shooter {
     private static DoubleSolenoid ballLiftSolenoid;
     private static DoubleSolenoid shooterPositionSolenoid_Stage1;
     private static DoubleSolenoid shooterPositionSolenoid_Stage2;
+    private static boolean reverse = false;
     public static enum ShooterPosition {
         Low,
         Medium,
@@ -172,28 +174,36 @@ public class Shooter {
                     // shooterVelocityTarget = SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
                     
                }
-               
-               shooterMotor.set(ControlMode.Velocity, shooterVelocityTarget);
-               feederMotor.set(ControlMode.Velocity, shooterVelocityTarget);
+               if (reverse) {
+                    shooterMotor.configPeakOutputReverse(-1, 0);
+                    feederMotor.configPeakOutputReverse(-1, 0);
+                    shooterMotor.set(ControlMode.PercentOutput, -0.2);
+                    feederMotor.set(ControlMode.PercentOutput, -0.2);
+               } else {
+                    shooterMotor.configPeakOutputReverse(0, 0);
+                    feederMotor.configPeakOutputReverse(0, 0);
+                    shooterMotor.set(ControlMode.Velocity, shooterMotorVelocityTarget);
+                    feederMotor.set(ControlMode.Velocity, feederMotorVelocityTarget);
+               }
 
                calibrationMode = SmartDashboard.getBoolean("Shooter TUNE", false);
               
 
                 SmartDashboard.putNumber("SHOOTER VELOCITY", shooterMotor.getSelectedSensorVelocity());
-                SmartDashboard.putNumber("SHOOTER ERROR", shooterVelocityTarget - shooterMotor.getSelectedSensorVelocity());
+                SmartDashboard.putNumber("SHOOTER ERROR", shooterMotorVelocityTarget - shooterMotor.getSelectedSensorVelocity());
                 
-                System.out.println(timer);
+                // System.out.println(timer);
 
                 if (oneShot) {
                     timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    setBallLiftUp();
-                    if (timer >= 25) {
+                    if (timer < 5) {
+                        setBallLiftUp();
+                    }
+                    if (timer == 25) {
                         setBallLiftDown();
-                        if (!calibrationMode) {
-                            StopShooter();
-                        } else {
-                            oneShot = false;
-                        }
+                    } else if (timer >=50) {
+                        setShooterPosition(ShooterPosition.Low);
+                        oneShot = false;
                         resetTimer();
                         manualVisionOverride = false;
                     }
@@ -353,34 +363,43 @@ public class Shooter {
         
         switch(position) {
             case SuperCloseLowShot:
-                setShooterPosition(ShooterPosition.Low);
-                shooterVelocityTarget = 5000;
+                setShooterPosition(ShooterPosition.Medium);
+                feederMotorVelocityTarget = 5000;
+                shooterMotorVelocityTarget = 4800;
                 break;
             case BackOfTarmac:
                 setShooterPosition(ShooterPosition.Low);
-                shooterVelocityTarget = 6400;
+                feederMotorVelocityTarget = 6100;
+                shooterMotorVelocityTarget = 5900;
                 break;
             case TarmacLine:
                 setShooterPosition(ShooterPosition.Low);
-                shooterVelocityTarget = 6400;
+                feederMotorVelocityTarget = 6100;
+                shooterMotorVelocityTarget = 5900;
                 break;
             case Backwards:
                 setShooterPosition(ShooterPosition.Backwards);
-                shooterVelocityTarget = 6400;
+                feederMotorVelocityTarget = 5000;
+                shooterMotorVelocityTarget = 4800;
                 break;
         }
-
-        SmartDashboard.putNumber("Shoot Setpoint",shooterVelocityTarget);
+        
+        SmartDashboard.putNumber("Shoot Setpoint",shooterMotorVelocityTarget);
         
         StartShooter();
         
         manualVisionOverride = true;
         
     }
-
+    public static void reverseShooter(){
+        reverse = true;
+    }
+    public static void endReverseShooter() {
+        reverse = false;
+    }
     public static void setupShooterAuto() {
         int dis = (int)Math.round(Vision.getDistanceFromTarget());
         setShooterPosition(shooterArray[dis].position);
-        shooterVelocityTarget = shooterArray[dis].speed;
+        shooterMotorVelocityTarget = shooterArray[dis].speed;
     }
 }

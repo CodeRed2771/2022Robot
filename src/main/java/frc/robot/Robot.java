@@ -31,12 +31,14 @@ public class Robot extends TimedRobot {
 
     SendableChooser<String> autoChooser;
     SendableChooser<String> positionChooser;
+    //SendableChooser<String> positionAllianceChooser;
     SendableChooser<String> driveChooser;
     String autoSelected;
     Gamepad gamepad1;
     Gamepad gamepad2;
     SwerveTurnTest swtest;
     Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
+    boolean reverseShooter = false;
         
     AutoBaseClass mAutoProgram;
 
@@ -84,7 +86,7 @@ public class Robot extends TimedRobot {
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
 
-        RobotGyro.reset();
+        // RobotGyro.reset();
 
         SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
@@ -148,7 +150,11 @@ public class Robot extends TimedRobot {
         } else if (gamepad2.getYButton()) {
             Shooter.setManualPresets(ManualShotPreset.Backwards);
         }
-
+        if (gamepad2.getStartButton()) {
+            Shooter.reverseShooter();
+        } else {
+            Shooter.endReverseShooter();
+        }
 
         if (gamepad2.getXButton()) {
             
@@ -165,6 +171,10 @@ public class Robot extends TimedRobot {
 
         if (gamepad2.getRightBumper() || gamepad1.getRightBumper()) {
             Shooter.StopShooter();
+        }
+
+        if (gamepad2.getLeftStickButtonPressed()) {
+            Shooter.setBallLiftDown();
         }
         
         // --------------------------------------------------
@@ -290,9 +300,12 @@ public class Robot extends TimedRobot {
         char robotPosition = selectedPos.toCharArray()[0];
         System.out.println("Robot position: " + robotPosition);
 
+        Shooter.setShooterPosition(ShooterPosition.Medium); // releases the starting position block
+        Intake.startIntake(); // releases the intake strap
+
         autoSelected = (String) autoChooser.getSelected();
         SmartDashboard.putString("Auto Selected: ", autoSelected);
-
+        String postionAllianceSelected = (String) autoChooser.getSelected();
         mAutoProgram = new AutoDoNothing();
         mAutoProgram.start();
 
@@ -326,6 +339,28 @@ public class Robot extends TimedRobot {
             mAutoProgram.start();
             break;
         }
+        // double degreesOffset;
+        // switch (postionAllianceSelected) {
+        //     case "Red 1":
+        //         degreesOffset = 15;
+        //         break;
+        //     case "Red 2":
+        //         degreesOffset = 0;
+        //         break;
+        //     case "Red 3":
+        //         degreesOffset = -15;
+        //         break;
+        //     case "Blue 1":
+        //         degreesOffset = 15;
+        //         break;
+        //     case "Blue 2":
+        //         degreesOffset = 0;
+        //         break;
+        //     case "Blue 3":
+        //         degreesOffset = -15; 
+        //         break;
+        // }
+
     }
 
     private void setupAutoChoices() {
@@ -346,6 +381,15 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(AutoTarmacShoot2, AutoTarmacShoot2);
 
         SmartDashboard.putData("Auto Chose:", autoChooser);
+
+        // Position Chooser 2
+        // positionAllianceChooser = new SendableChooser<String>();
+        // positionAllianceChooser.addOption("Red 1", "Red 1");
+        // positionAllianceChooser.addOption("Red 2", "Red 2");
+        // positionAllianceChooser.addOption("Red 3", "Red 3");
+        // positionAllianceChooser.addOption("Blue 1", "Blue 1");
+        // positionAllianceChooser.addOption("Blue 2", "Blue 2");
+        // positionAllianceChooser.addOption("Blue 3", "Blue 3");
     }
 
     /**

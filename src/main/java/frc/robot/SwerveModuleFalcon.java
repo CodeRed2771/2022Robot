@@ -1,5 +1,8 @@
 package frc.robot;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import javax.lang.model.util.ElementScanner6;
 
 import com.ctre.phoenix.motorcontrol.*;
@@ -276,10 +279,12 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 	
 	public double getTurnPositionWithInRotation() {
+		double rawPos = 0;
 		if (turnEncoder.getPosition() >= 0) {
 			return turnEncoder.getPosition() - (int) turnEncoder.getPosition();	
 		} else
-		return turnEncoder.getPosition() + (int) turnEncoder.getPosition();
+		rawPos =  turnEncoder.getPosition() + (int) turnEncoder.getPosition();
+		return round(rawPos, 3);
 	}
 
     public double getCurrentDriveSetpoint() {
@@ -336,6 +341,8 @@ public class SwerveModuleFalcon implements SwerveModule {
 		// I think it would be best to adjust our requested position first so that it  
 		// is compatible with our modules zero offset.  Then all calculations after that
 		// will be in actual encoder positions.
+
+		reqPosition = round(reqPosition,3);
 
 		//reqPosition += turnZeroPos;  
 		if (reqPosition > 0.99999) // we went past the rotation point
@@ -394,6 +401,8 @@ public class SwerveModuleFalcon implements SwerveModule {
 
         newTargetPosition = (newRevolutions >= 0 ? newRevolutions + nearestPosInRotation : newRevolutions - nearestPosInRotation);
         
+		newTargetPosition = round(newTargetPosition,3);
+
 		// Set drive inversion if needed
 		isReversed = invertDrive; // invert
 
@@ -555,5 +564,9 @@ public class SwerveModuleFalcon implements SwerveModule {
 	public double getTurnZero() {
 		return turnZeroPos;
 	}
+
+	public static Double round(Double val, int scale) {
+        return new BigDecimal(val.toString()).setScale(scale, RoundingMode.HALF_UP).doubleValue();
+    }
 
 }
