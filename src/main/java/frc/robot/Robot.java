@@ -81,12 +81,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Current Position", 0);
         SmartDashboard.putNumber("New Position", 0);
 
-       // Shooter.init();
         VisionShooter.init(); // Limelight shooter vision tracking
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
-
-        // RobotGyro.reset();
 
         SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
@@ -116,7 +113,6 @@ public class Robot extends TimedRobot {
        
         if (gamepad1.getAButton()) {
             Shooter.StartShooter();
-            
         }
 
         if (gamepad1.getRightTriggerAxis() > 0 || gamepad2.getRightTriggerAxis() > 0) {
@@ -225,12 +221,12 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Best Position", TurnPosition.getBestPosition());
         
         if (VisionBall.ballInView()) {
-            if (Intake.isRunning()) {
-                if (ballLaneAssist > 0.05) 
-                    driveStrafeAmount += .2;
-                else if (ballLaneAssist < -0.05) 
-                    driveStrafeAmount -= .2;
-            }
+            // if (Intake.isRunning()) {
+            //     if (ballLaneAssist > 0.05) 
+            //         driveStrafeAmount += .2;
+            //     else if (ballLaneAssist < -0.05) 
+            //         driveStrafeAmount -= .2;
+            // }
         }
 
         if (Math.abs(driveFWDAmount) > .5 || Math.abs(driveRotAmount) > .5) {
@@ -245,7 +241,6 @@ public class Robot extends TimedRobot {
                 DriveTrain.fieldCentricDrive(driveFWDAmount, driveStrafeAmount, driveRotAmount);
             }
         }
-
 
         showDashboardInfo();
     }
