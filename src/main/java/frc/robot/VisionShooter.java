@@ -6,7 +6,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Vision {
+public class VisionShooter {
 
     private static double CameraHeight = 21.625;
     private static double TargetHeight = 89.75; 
