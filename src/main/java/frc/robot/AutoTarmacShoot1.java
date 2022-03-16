@@ -24,7 +24,7 @@ public class AutoTarmacShoot1 extends AutoBaseClass {
     @Override
     public void tick() {
         if (isRunning()) {
-            Vision.setTargetForShooting();
+            VisionShooter.setTargetForShooting();
             DriveAuto.tick();
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             

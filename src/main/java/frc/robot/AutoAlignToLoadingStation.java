@@ -23,8 +23,8 @@ public class AutoAlignToLoadingStation extends AutoBaseClass {
 
     public void start() {
         super.start();
-        Vision.setVisionTrackingMode();
-        Vision.setTargetForShooting();
+        VisionShooter.setVisionTrackingMode();
+        VisionShooter.setTargetForShooting();
     }
 
     public void stop() {
@@ -38,9 +38,9 @@ public class AutoAlignToLoadingStation extends AutoBaseClass {
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
                 case 0:
-                    Vision.setTargetForShooting();
-                    distance = Vision.getDistanceFromTarget();
-                    angleOffset = Vision.getDistanceAdjustedAngle();
+                    VisionShooter.setTargetForShooting();
+                    distance = VisionShooter.getDistanceFromTarget();
+                    angleOffset = VisionShooter.getDistanceAdjustedAngle();
                     robotCurrentAngle = RobotGyro.getRelativeAngle();
                     advanceStep();
                     break;

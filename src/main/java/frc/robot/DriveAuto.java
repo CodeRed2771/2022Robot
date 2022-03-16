@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.libs.CurrentBreaker;
 
@@ -23,6 +25,19 @@ public class DriveAuto {
     public static enum DriveSpeed {
         VERY_LOW_SPEED, LOW_SPEED, MED_SPEED, HIGH_SPEED
     };
+
+    public static class Position {
+        double x;
+        double y;
+        double orientation;
+        public Position(double x, double y, double orientation) {
+            this.x=x;
+            this.y=y;
+            this.orientation=orientation;
+        }
+    }
+
+    public static Position currrentPosition; 
 
     public static void init() {
         System.out.println("START OF DRIVEAUTO INIT");
@@ -47,9 +62,40 @@ public class DriveAuto {
         SmartDashboard.updateValues();
 
         System.out.println("END OF DRIVEAUTO INIT");
-
+        if (DriverStation.getAlliance() == Alliance.Red) {
+            if (DriverStation.getLocation() == 1) {
+                currrentPosition = new Position(-5, -3, 15);
+            } else if (DriverStation.getLocation() == 2) {
+                currrentPosition = new Position(0, -3, 0);
+            } else {
+                currrentPosition = new Position(5, -3, -15);
+            }
+        } else {
+            if (DriverStation.getLocation() == 1) {
+                currrentPosition = new Position(-5, 3, 15);
+            } else if (DriverStation.getLocation() == 2) {
+                currrentPosition = new Position(0, 3, 0);
+            } else {
+                currrentPosition = new Position(5, 3, -15);
+            }
+        }
 	}
-	
+
+    private static void calculateNewDrivePosition(double distance, double angle) {
+        double slope;
+        if (distance > 0) {
+            slope = Math.tan(angle);
+        } else {
+            slope = Math.tan(-angle);
+        }
+        double x =1;
+        double y = slope*(x+currrentPosition.x) - currrentPosition.y;
+    }
+
+    private static void calcualteNewTurnPosition(double degrees) {
+        currrentPosition.orientation = currrentPosition.orientation + degrees;
+    }
+
 	public static void driveInches(double inches, double angle, double speedFactor, boolean followTarget) {
 		driveInches(inches, angle, speedFactor, followTarget, false);
 	}
@@ -103,7 +149,7 @@ public class DriveAuto {
 
         // set the new drive distance setpoint
         DriveTrain.addToAllDrivePositions(convertToTicks(inches));
-
+        calculateNewDrivePosition(inches, angle);
     }
 
     public static void driveInches(double inches, double angle, double speedFactor) {
@@ -197,6 +243,7 @@ public class DriveAuto {
         double turnInches = degreesToInches(-degrees);
         SmartDashboard.putNumber("Turn Inches", turnInches);
         DriveTrain.addToAllDrivePositions(convertToTicks(turnInches));
+        calcualteNewTurnPosition(degrees);
     }
 
     public static void continuousDrive(double inches, double maxPower) {

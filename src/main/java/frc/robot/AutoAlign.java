@@ -40,14 +40,14 @@ public class AutoAlign extends AutoBaseClass {
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
             case 0:
-                Vision.setVisionTrackingMode();
-                Vision.setTargetForShooting();
+                VisionShooter.setVisionTrackingMode();
+                VisionShooter.setTargetForShooting();
                 // Intake.moveIntakeDown();
                 advanceStep();
                 break;
             case 1:
-                angleOffset = Vision.getDistanceAdjustedAngle();
-                if (Vision.seesTarget()) {
+                angleOffset = VisionShooter.getDistanceAdjustedAngle();
+                if (VisionShooter.seesTarget()) {
                     advanceStep();
                 }
                 // SmartDashboard.putNumber("Adj Angle Offset", angleOffset);

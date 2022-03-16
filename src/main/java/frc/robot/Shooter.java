@@ -169,7 +169,7 @@ public class Shooter {
                     feederMotor.config_kI(kPIDLoopIdx, SmartDashboard.getNumber("Shoot I", 0), 0);
                     feederMotor.config_kD(kPIDLoopIdx, SmartDashboard.getNumber("Shoot D", 0), 0);
 
-                    int dist = (int)Math.round(Vision.getDistanceFromTarget());
+                    int dist = (int)Math.round(VisionShooter.getDistanceFromTarget());
                     SmartDashboard.putNumber("Distance to Target", dist);
                     // shooterVelocityTarget = SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
                     
@@ -398,7 +398,7 @@ public class Shooter {
         reverse = false;
     }
     public static void setupShooterAuto() {
-        int dis = (int)Math.round(Vision.getDistanceFromTarget());
+        int dis = (int)Math.round(VisionShooter.getDistanceFromTarget());
         setShooterPosition(shooterArray[dis].position);
         shooterMotorVelocityTarget = shooterArray[dis].speed;
     }

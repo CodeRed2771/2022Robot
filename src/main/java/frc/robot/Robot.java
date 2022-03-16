@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("New Position", 0);
 
        // Shooter.init();
-        Vision.init(); // Limelight shooter vision tracking
+        VisionShooter.init(); // Limelight shooter vision tracking
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
 
@@ -102,13 +102,13 @@ public class Robot extends TimedRobot {
         DriveTrain.resetTurnEncoders();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
         
-        // VisionBall.init(); // Ball vision tracking setup
-        // VisionBall.start(); // Start the vision thread
+        VisionBall.init(); // Ball vision tracking setup
+        VisionBall.start(); // Start the vision thread
     }
 
     @Override
     public void teleopPeriodic() {
-        SmartDashboard.putNumber("DIST", Vision.getDistanceFromTarget());
+        SmartDashboard.putNumber("DIST", VisionShooter.getDistanceFromTarget());
         // SmartDashboard.putNumber("Ball # Selected" , VisionBall.getClosestBallIndex());
         // SmartDashboard.putNumber("Y Offset", VisionBall.getBallYOffset());
         // SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
@@ -200,7 +200,7 @@ public class Robot extends TimedRobot {
         double driveFWDAmount = -gamepad1.getLeftY();
         double driveStrafeAmount = -gamepad1.getLeftX();
 
-        // double ballLaneAssist = VisionBall.getBallXOffset();
+        double ballLaneAssist = VisionBall.getBallXOffset();
 
         // if (Math.abs(driveRotAmount)>.1) {
         //     swtest.move(driveRotAmount);
@@ -224,14 +224,14 @@ public class Robot extends TimedRobot {
         driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
         SmartDashboard.putNumber("Best Position", TurnPosition.getBestPosition());
         
-        // if (VisionBall.ballInView()) {
-        //     if (Intake.isRunning()) {
-        //         if (ballLaneAssist > 0.05) 
-        //             driveStrafeAmount += .2;
-        //         else if (ballLaneAssist < -0.05) 
-        //             driveStrafeAmount -= .2;
-        //     }
-        // }
+        if (VisionBall.ballInView()) {
+            if (Intake.isRunning()) {
+                if (ballLaneAssist > 0.05) 
+                    driveStrafeAmount += .2;
+                else if (ballLaneAssist < -0.05) 
+                    driveStrafeAmount -= .2;
+            }
+        }
 
         if (Math.abs(driveFWDAmount) > .5 || Math.abs(driveRotAmount) > .5) {
             if (mAutoProgram.isRunning())
@@ -259,7 +259,7 @@ public class Robot extends TimedRobot {
         DriveAuto.tick();
 
         // SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
-        SmartDashboard.putNumber("Distance to Target", Vision.getDistanceFromTarget());
+        SmartDashboard.putNumber("Distance to Target", VisionShooter.getDistanceFromTarget());
 
         SmartDashboard.putNumber("Gyro", RobotGyro.getAngle());
 
@@ -413,12 +413,12 @@ public class Robot extends TimedRobot {
         
         Calibration.initializeSmartDashboard();
 
-        Vision.setLED(false);
+        VisionShooter.setLED(false);
     }
 
     public void disabledPeriodic() {
         showDashboardInfo();
-        SmartDashboard.putNumber("DIST", Vision.getDistanceFromTarget());
+        SmartDashboard.putNumber("DIST", VisionShooter.getDistanceFromTarget());
         SmartDashboard.putBoolean("COMP BOT", !Calibration.isPracticeBot());
         if (Calibration.shouldCalibrateSwerve()) {
             double[] pos = DriveTrain.getAllAbsoluteTurnOrientations();
