@@ -33,7 +33,7 @@ public class VisionBallPipelineRed implements VisionPipeline {
 	@Override	public void process(Mat source0) {
 		// Step HSL_Threshold0:
 		Mat hslThresholdInput = source0;
-		double[] hslThresholdHue = {0.0, 27.0};
+		double[] hslThresholdHue = {164.0, 180.0};
 		double[] hslThresholdSaturation = {89.0, 255.0};
 		double[] hslThresholdLuminance = {25.0, 255.0};
 		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
