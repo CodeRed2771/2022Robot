@@ -56,9 +56,9 @@ public class AutoAlign extends AutoBaseClass {
                 if (VisionShooter.seesTarget()) {
                     advanceStep();
                 }
-                // SmartDashboard.putNumber("Adj Angle Offset", angleOffset);
-                // SmartDashboard.putNumber("Angle Offset", Vision.getAngleOffset());
-                // SmartDashboard.putBoolean("Sees Target", Vision.seesTarget());
+                SmartDashboard.putNumber("Adj Angle Offset", angleOffset);
+                 SmartDashboard.putNumber("Angle Offset", VisionShooter.getAngleOffset());
+                SmartDashboard.putBoolean("Sees Target", VisionShooter.seesTarget());
                 break;
             case 2:
                 if (Math.abs(angleOffset) > 1) {
@@ -85,7 +85,8 @@ public class AutoAlign extends AutoBaseClass {
                 advanceStep();
                 break;
             case 5: 
-                Shooter.setupShooterAuto();
+                //Shooter.setupShooterAuto();
+                advanceStep();
                 break;
             case 6:
                 if (autoShoot()){

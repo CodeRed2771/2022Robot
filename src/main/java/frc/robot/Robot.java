@@ -85,6 +85,7 @@ public class Robot extends TimedRobot {
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
 
+
         SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
         SmartDashboard.putString("Alliance R or B", "R");
@@ -113,6 +114,7 @@ public class Robot extends TimedRobot {
        
         if (gamepad1.getAButton()) {
             Shooter.StartShooter();
+            
         }
 
         if (gamepad1.getRightTriggerAxis() > 0 || gamepad2.getRightTriggerAxis() > 0) {
@@ -131,20 +133,23 @@ public class Robot extends TimedRobot {
          }
         SmartDashboard.putNumber("D pad", gamepad1.getPOV(1));
 
-        if (gamepad1.getLeftBumper() && !mAutoProgram.isRunning()) {
+        if (gamepad1.getLeftBumper() && !mAutoProgram.isRunning() && !AutoAlign.getAllignment()) {
             mAutoProgram = new AutoAlign();
-            mAutoProgram.start(false);
+            mAutoProgram.start(true);
+        } else if (gamepad1.getLeftBumper() && AutoAlign.getAllignment()) {
+            Shooter.alignAndShoot();
         }
         
         if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
             Shooter.alignAndShoot();
         }
         if (gamepad2.getAButton()) {
-            Shooter.setManualPresets(ManualShotPreset.SuperCloseLowShot);
+            Shooter.setManualPresets(ManualShotPreset.LowGoal);
         } else if (gamepad2.getBButton()) {
             Shooter.setManualPresets(ManualShotPreset.TarmacLine);
         } else if (gamepad2.getYButton()) {
-            Shooter.setManualPresets(ManualShotPreset.Backwards);
+            // Shooter.setManualPresets(ManualShotPreset.Backwards);
+            Shooter.setManualPresets(ManualShotPreset.SafeZone);
         }
         if (gamepad2.getStartButton()) {
             Shooter.reverseShooter();
@@ -237,10 +242,13 @@ public class Robot extends TimedRobot {
         if (!mAutoProgram.isRunning()) {
             if (gamepad1.getBackButton()) {
                 DriveTrain.humanDrive(driveFWDAmount, driveStrafeAmount, driveRotAmount);
+                AutoAlign.setAllignment(false);
             } else {
                 DriveTrain.fieldCentricDrive(driveFWDAmount, driveStrafeAmount, driveRotAmount);
+                AutoAlign.setAllignment(false);
             }
         }
+
 
         showDashboardInfo();
     }
@@ -413,7 +421,6 @@ public class Robot extends TimedRobot {
 
     public void disabledPeriodic() {
         showDashboardInfo();
-        SmartDashboard.putNumber("DIST", VisionShooter.getDistanceFromTarget());
         SmartDashboard.putBoolean("COMP BOT", !Calibration.isPracticeBot());
         if (Calibration.shouldCalibrateSwerve()) {
             double[] pos = DriveTrain.getAllAbsoluteTurnOrientations();

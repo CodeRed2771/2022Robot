@@ -49,6 +49,7 @@ public class Shooter {
         BackOfTarmac,
         TarmacLine,
         Backwards,
+        LowGoal, SafeZone,
     }
     public static ManualShotPreset curManualShotPreset;
     private static boolean manualVisionOverride = false;
@@ -195,18 +196,19 @@ public class Shooter {
                 // System.out.println(timer);
 
                 if (oneShot) {
-                    timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
-                    if (timer < 5) {
-                        setBallLiftUp();
-                    }
-                    if (timer == 25) {
-                        setBallLiftDown();
-                    } else if (timer >=50) {
-                        setShooterPosition(ShooterPosition.Low);
-                        oneShot = false;
-                        resetTimer();
-                        manualVisionOverride = false;
-                    }
+                        timer += 1; // ONE TIMER UNIT EQUALS ABOUT 20 MILLISECONDS
+                        if (timer < 5) {
+                            setBallLiftUp();
+                        }
+                        if (timer == 25) {
+                            setBallLiftDown();
+                        } else if (timer >=50) {
+                            setShooterPosition(ShooterPosition.Low);
+                            oneShot = false;
+                            resetTimer();
+                            manualVisionOverride = false;
+                            AutoAlign.setAllignment(false);
+                        }
                }
  
                 if (continuousShooting) {
@@ -370,17 +372,27 @@ public class Shooter {
             case BackOfTarmac:
                 setShooterPosition(ShooterPosition.Low);
                 feederMotorVelocityTarget = 6100;
-                shooterMotorVelocityTarget = 5900;
+                shooterMotorVelocityTarget = 6200;
                 break;
             case TarmacLine:
                 setShooterPosition(ShooterPosition.Low);
                 feederMotorVelocityTarget = 6100;
-                shooterMotorVelocityTarget = 5900;
+                shooterMotorVelocityTarget = 6200;
                 break;
             case Backwards:
                 setShooterPosition(ShooterPosition.Backwards);
                 feederMotorVelocityTarget = 5000;
                 shooterMotorVelocityTarget = 4800;
+                break;
+            case LowGoal:
+                setShooterPosition(ShooterPosition.Low);
+                feederMotorVelocityTarget = 5000;
+                shooterMotorVelocityTarget = 4800;
+                break;
+            case SafeZone:
+                setShooterPosition(ShooterPosition.Low);
+                feederMotorVelocityTarget = 7100;
+                shooterMotorVelocityTarget = 8000;
                 break;
         }
         
@@ -399,7 +411,10 @@ public class Shooter {
     }
     public static void setupShooterAuto() {
         int dis = (int)Math.round(VisionShooter.getDistanceFromTarget());
-        setShooterPosition(shooterArray[dis].position);
-        shooterMotorVelocityTarget = shooterArray[dis].speed;
+        dis = dis/12;
+        if (dis <= shooterArray.length) {
+            setShooterPosition(shooterArray[dis].position);
+            shooterMotorVelocityTarget = shooterArray[dis].speed;
+        }
     }
 }
