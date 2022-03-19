@@ -10,6 +10,7 @@ public class AutoAlign extends AutoBaseClass {
 
     private double angleOffset = 0;
     private boolean wasAligned = false;
+    private static boolean alingnedComplete = false;
 
     public AutoAlign () {
         
@@ -32,7 +33,12 @@ public class AutoAlign extends AutoBaseClass {
     public boolean wasAligned() {
         return wasAligned;
     }
-
+    public static boolean getAllignment() {
+        return alingnedComplete;
+    }
+    public static void setAllignment(boolean allignment) {
+        alingnedComplete = allignment;
+    }
     @Override
     public void tick() {
         if (isRunning()) {
@@ -85,6 +91,7 @@ public class AutoAlign extends AutoBaseClass {
                 if (autoShoot()){
                     Shooter.oneShotAuto();
                 }
+                alingnedComplete = true;
                 stop();
                 break;
             }

@@ -292,7 +292,7 @@ public class Shooter {
             AutoBaseClass mAutoProgram;
             mAutoProgram = new AutoAlign();
             mAutoProgram.start(true);
-        } 
+        }
     }
 
     public static void continuousShooting () {
