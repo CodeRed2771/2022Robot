@@ -409,6 +409,14 @@ public class SwerveModuleFalcon implements SwerveModule {
         // TURN
         turnPID.setReference(newTargetPosition, ControlType.kPosition );
 
+		if (mModuleID=='C') {
+			SmartDashboard.putNumber("MC Cur Pos", round(turnEncoder.getPosition(),3));
+			SmartDashboard.putNumber("MC Req Pos", round(reqPosition, 3));
+			SmartDashboard.putNumber("MC Nearest", round(nearestPosInRotation,3));
+			SmartDashboard.putNumber("MC NewTarget", round(newTargetPosition,3));
+			SmartDashboard.putBoolean("MC Reversed", isReversed);
+		}
+
         // System.out.println("");
         // System.out.println("Current Rotations:" + currentRevolutions);
         // System.out.println("Current Position: " + currentPosInRotation);
