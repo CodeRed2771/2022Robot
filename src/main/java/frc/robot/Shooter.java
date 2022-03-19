@@ -45,7 +45,7 @@ public class Shooter {
     }
     private static ShooterPosition curShooterPosition;
     public static enum ManualShotPreset {
-        SuperCloseLowShot,
+        SuperCloseHighShot,
         BackOfTarmac,
         TarmacLine,
         Backwards,
@@ -64,17 +64,23 @@ public class Shooter {
         }
     }
     private static shooterArrayValue[] shooterArray =  {
-        new shooterArrayValue(ShooterPosition.Low, 7000),
-        new shooterArrayValue(ShooterPosition.Low, 8000), 
-        new shooterArrayValue(ShooterPosition.Low, 9000),
-        new shooterArrayValue(ShooterPosition.Low, 10000), 
-        new shooterArrayValue(ShooterPosition.Low, 12000),
-        new shooterArrayValue(ShooterPosition.Low, 13000),
-        new shooterArrayValue(ShooterPosition.Medium, 2000),
-        new shooterArrayValue(ShooterPosition.Medium, 2500),
-        new shooterArrayValue(ShooterPosition.Medium, 3600),
-        new shooterArrayValue(ShooterPosition.Medium, 4800),
-        new shooterArrayValue(ShooterPosition.Medium, 5900),
+        new shooterArrayValue(ShooterPosition.Medium, 6200), // 0
+        new shooterArrayValue(ShooterPosition.Medium, 6200),  // 1
+        new shooterArrayValue(ShooterPosition.Medium, 6200), // 2
+        new shooterArrayValue(ShooterPosition.Medium, 6200), // 3
+        new shooterArrayValue(ShooterPosition.Low, 4850), // 4
+        new shooterArrayValue(ShooterPosition.Low, 5300), // 5
+        new shooterArrayValue(ShooterPosition.Low, 5750), // 6
+        new shooterArrayValue(ShooterPosition.Low, 6200), // 7
+        new shooterArrayValue(ShooterPosition.Low, 6650), // 8
+        new shooterArrayValue(ShooterPosition.Low, 7100), // 9
+        new shooterArrayValue(ShooterPosition.Low, 7550),// 10
+        new shooterArrayValue(ShooterPosition.Low, 8000), // 11
+        new shooterArrayValue(ShooterPosition.Low, 8450), // 12
+        new shooterArrayValue(ShooterPosition.Low, 8900), // 13
+        new shooterArrayValue(ShooterPosition.Low, 9350), // 14
+        new shooterArrayValue(ShooterPosition.Low, 9800), //15
+        new shooterArrayValue(ShooterPosition.Low, 10250), // 16
     };
 
 
@@ -171,6 +177,7 @@ public class Shooter {
                     feederMotor.config_kD(kPIDLoopIdx, SmartDashboard.getNumber("Shoot D", 0), 0);
 
                     int dist = (int)Math.round(VisionShooter.getDistanceFromTarget());
+                    dist = dist/12;
                     SmartDashboard.putNumber("Distance to Target", dist);
                     // shooterVelocityTarget = SmartDashboard.getNumber("Shoot Setpoint", Calibration.SHOOTER_DEFAULT_SPEED);
                     
@@ -183,8 +190,9 @@ public class Shooter {
                } else {
                     shooterMotor.configPeakOutputReverse(0, 0);
                     feederMotor.configPeakOutputReverse(0, 0);
+                    feederMotorVelocityTarget = shooterMotorVelocityTarget;
                     shooterMotor.set(ControlMode.Velocity, shooterMotorVelocityTarget);
-                    feederMotor.set(ControlMode.Velocity, feederMotorVelocityTarget);
+                    feederMotor.set(ControlMode.Velocity, shooterMotorVelocityTarget);
                }
 
                calibrationMode = SmartDashboard.getBoolean("Shooter TUNE", false);
@@ -314,6 +322,9 @@ public class Shooter {
     public static void stopTimer () {
         
     }
+    public static boolean getManualOveride() {
+        return manualVisionOverride;
+    }
 
     public static void setShooterPosition(ShooterPosition position) {
         switch (position) {
@@ -362,36 +373,30 @@ public class Shooter {
     }
 
     public static void setManualPresets(ManualShotPreset position) {
-        
+        manualVisionOverride = true;
         switch(position) {
-            case SuperCloseLowShot:
+            case SuperCloseHighShot:
                 setShooterPosition(ShooterPosition.Medium);
-                feederMotorVelocityTarget = 5000;
-                shooterMotorVelocityTarget = 4800;
+                shooterMotorVelocityTarget = 6200;
                 break;
             case BackOfTarmac:
                 setShooterPosition(ShooterPosition.Low);
-                feederMotorVelocityTarget = 6100;
                 shooterMotorVelocityTarget = 6200;
                 break;
             case TarmacLine:
                 setShooterPosition(ShooterPosition.Low);
-                feederMotorVelocityTarget = 6100;
                 shooterMotorVelocityTarget = 6200;
                 break;
             case Backwards:
                 setShooterPosition(ShooterPosition.Backwards);
-                feederMotorVelocityTarget = 5000;
                 shooterMotorVelocityTarget = 4800;
                 break;
             case LowGoal:
                 setShooterPosition(ShooterPosition.Low);
-                feederMotorVelocityTarget = 5000;
-                shooterMotorVelocityTarget = 4800;
+                shooterMotorVelocityTarget = 3800;
                 break;
             case SafeZone:
                 setShooterPosition(ShooterPosition.Low);
-                feederMotorVelocityTarget = 7100;
                 shooterMotorVelocityTarget = 8000;
                 break;
         }

@@ -150,25 +150,15 @@ public class Robot extends TimedRobot {
         } else if (gamepad2.getYButton()) {
             // Shooter.setManualPresets(ManualShotPreset.Backwards);
             Shooter.setManualPresets(ManualShotPreset.SafeZone);
+        } else if (gamepad2.getXButton()) {
+            Shooter.setManualPresets(ManualShotPreset.SuperCloseHighShot);
         }
         if (gamepad2.getStartButton()) {
             Shooter.reverseShooter();
         } else {
             Shooter.endReverseShooter();
         }
-
-        if (gamepad2.getXButton()) {
             
-            if (!intakeKeyAlreadyPressed) {
-                if (isIntakeUpPosition) {
-
-                } else if (!isIntakeUpPosition) {
-
-                }
-                intakeKeyAlreadyPressed = true;
-            }
-        } else
-            intakeKeyAlreadyPressed = false;
 
         if (gamepad2.getRightBumper() || gamepad1.getRightBumper()) {
             Shooter.StopShooter();
@@ -192,6 +182,12 @@ public class Robot extends TimedRobot {
         // DRIVE
         if (mAutoProgram.isRunning()) {
             mAutoProgram.tick();
+        }
+
+        if (gamepad1.getXButton()) {
+            VisionShooter.setLED(true);
+        } else if (gamepad1.getYButton()) {
+            VisionShooter.setLED(false);
         }
 
         // DRIVER CONTROL MODE
@@ -233,7 +229,6 @@ public class Robot extends TimedRobot {
             //         driveStrafeAmount -= .2;
             // }
         }
-
         if (Math.abs(driveFWDAmount) > .5 || Math.abs(driveRotAmount) > .5) {
             if (mAutoProgram.isRunning())
                 mAutoProgram.stop();

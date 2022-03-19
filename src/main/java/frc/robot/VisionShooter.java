@@ -89,7 +89,6 @@ public class VisionShooter {
     public static void setLED(boolean turnOn) {
         table.getEntry("ledMode").forceSetNumber(turnOn ? 3 : 1); // 3 - on, 1 = off, 2 - blink
     }
-
     public static void flashLED() {
         table.getEntry("ledMode").forceSetNumber(2);
 

@@ -85,7 +85,11 @@ public class AutoAlign extends AutoBaseClass {
                 advanceStep();
                 break;
             case 5: 
-                //Shooter.setupShooterAuto();
+                if (autoShoot()){
+                    if (!Shooter.getManualOveride()) {
+                        Shooter.setupShooterAuto();
+                    }
+                }
                 advanceStep();
                 break;
             case 6:
