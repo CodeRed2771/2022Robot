@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
     final String AutoLeaveTarmac = "Auto Leave Tarmac";
     final String AutoTarmacShoot1 = "Auto Tarmac Shoot 1";
     final String AutoTarmacShoot2 = "Auto Tarmac Shoot 2";
-    final String AutoTarmacShoot2 = "Auto Tarmac Shoot 2 Vision";
+    final String AutoTarmacShoot2Vision = "Auto Tarmac Shoot 2 Vision";
 
     private boolean isIntakeUpPosition = true;
     private boolean intakeKeyAlreadyPressed = false;
