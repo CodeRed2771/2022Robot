@@ -384,6 +384,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(AutoLeaveTarmac, AutoLeaveTarmac);
         autoChooser.addOption(AutoTarmacShoot1, AutoTarmacShoot1);
         autoChooser.addOption(AutoTarmacShoot2, AutoTarmacShoot2);
+        autoChooser.addOption(AutoTarmacShoot2Vision, AutoTarmacShoot2Vision);
 
         SmartDashboard.putData("Auto Chose:", autoChooser);
 
