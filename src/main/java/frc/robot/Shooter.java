@@ -247,6 +247,7 @@ public class Shooter {
         isEnabled = true;
         oneShot = false;
         continuousShooting = false;
+        setSpeed(6000);
     }
 
     public static boolean isShooterEnabled () {
@@ -413,6 +414,9 @@ public class Shooter {
     }
     public static void endReverseShooter() {
         reverse = false;
+    }
+    public static void setSpeed(double speed) {
+        shooterMotorVelocityTarget= speed;
     }
     public static void setupShooterAuto() {
         int dis = (int)Math.round(VisionShooter.getDistanceFromTarget());
