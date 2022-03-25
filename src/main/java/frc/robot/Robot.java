@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
     final String AutoLeaveTarmac = "Auto Leave Tarmac";
     final String AutoTarmacShoot1 = "Auto Tarmac Shoot 1";
     final String AutoTarmacShoot2 = "Auto Tarmac Shoot 2";
+    final String AutoTarmacShoot2 = "Auto Tarmac Shoot 2 Vision";
 
     private boolean isIntakeUpPosition = true;
     private boolean intakeKeyAlreadyPressed = false;
@@ -336,6 +337,10 @@ public class Robot extends TimedRobot {
             break;
         case AutoTarmacShoot2:
             mAutoProgram = new AutoTarmacShoot2();
+            mAutoProgram.start();
+            break;
+        case AutoTarmacShoot2Vision:
+            mAutoProgram = new AutoTarmacShoot2Vision();
             mAutoProgram.start();
             break;
         }
