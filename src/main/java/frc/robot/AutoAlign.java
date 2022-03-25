@@ -90,9 +90,11 @@ public class AutoAlign extends AutoBaseClass {
                         Shooter.setupShooterAuto();
                     }
                 }
-                advanceStep();
+                setTimerAndAdvanceStep(500);
                 break;
             case 6:
+                break;
+            case 7:
                 if (autoShoot()){
                     Shooter.oneShotAuto();
                 }

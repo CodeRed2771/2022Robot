@@ -102,6 +102,7 @@ public class Robot extends TimedRobot {
         
         VisionBall.init(); // Ball vision tracking setup
         VisionBall.start(); // Start the vision thread
+        Shooter.StartShooter();
     }
 
     @Override
