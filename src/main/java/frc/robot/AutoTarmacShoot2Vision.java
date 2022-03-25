@@ -29,7 +29,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass{
                     }
                     break;
                 case 2:
-                    AutoAlign.ticks();
+                    Shooter.alignAndShoot();
                     setTimerAndAdvanceStep(1000);
                 case 3:
                     break;
@@ -62,7 +62,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass{
                 case 9:
                     break;
                 case 10:
-                    AutoAlign.ticks();
+                    Shooter.alignAndShoot();
                     setTimerAndAdvanceStep(1000);
                 case 11:
                     break;
