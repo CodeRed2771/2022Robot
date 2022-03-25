@@ -230,7 +230,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		currentPos = getTurnAbsolutePosition();
 		
 		positionToSet = calculatePositionDifference(currentPos, turnZeroPos);
-		setEncPos(positionToSet);
+		setEncPos(100 + positionToSet);
 		// setEncPos(0.95);
 	}
 
