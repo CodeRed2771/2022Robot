@@ -11,6 +11,7 @@ public class AutoAlign extends AutoBaseClass {
     private double angleOffset = 0;
     private boolean wasAligned = false;
     private static boolean alingnedComplete = false;
+    private static double timer = 0;
 
     public AutoAlign () {
         
@@ -61,6 +62,7 @@ public class AutoAlign extends AutoBaseClass {
                 SmartDashboard.putBoolean("Sees Target", VisionShooter.seesTarget());
                 break;
             case 2:
+                timer ++;
                 if (Math.abs(angleOffset) > 1) {
                     DriveAuto.turnDegrees(angleOffset, 1);
                     setTimerAndAdvanceStep(8500);
@@ -71,6 +73,9 @@ public class AutoAlign extends AutoBaseClass {
                     if (!Shooter.isShooterEnabled()) {
                         Shooter.StartShooter();
                     }
+                }
+                if (timer > 750) {
+                    setStep(5);
                 }
                 break;
             case 3:

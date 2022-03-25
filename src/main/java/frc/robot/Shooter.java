@@ -247,7 +247,6 @@ public class Shooter {
         isEnabled = true;
         oneShot = false;
         continuousShooting = false;
-        setSpeed(6000);
     }
 
     public static boolean isShooterEnabled () {
@@ -404,7 +403,9 @@ public class Shooter {
         
         SmartDashboard.putNumber("Shoot Setpoint",shooterMotorVelocityTarget);
         
-        StartShooter();
+        isEnabled = true;
+        oneShot = false;
+        continuousShooting = false;
         
         manualVisionOverride = true;
         
@@ -421,7 +422,7 @@ public class Shooter {
     public static void setupShooterAuto() {
         int dis = (int)Math.round(VisionShooter.getDistanceFromTarget());
         dis = dis/12;
-        if (dis <= shooterArray.length) {
+        if (dis < shooterArray.length) {
             setShooterPosition(shooterArray[dis].position);
             shooterMotorVelocityTarget = shooterArray[dis].speed;
         }
