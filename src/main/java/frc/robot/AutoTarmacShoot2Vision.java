@@ -28,10 +28,9 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass{
                         advanceStep();
                     }
                     break;
-                case 2: 
-                    Shooter.setManualPresets(ManualShotPreset.BackOfTarmac);
-                    setTimerAndAdvanceStep(3000);
-                    break;
+                case 2:
+                    AutoAlign.ticks();
+                    setTimerAndAdvanceStep(1000);
                 case 3:
                     break;
                 case 4:
@@ -61,6 +60,14 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass{
                     }
                     break;
                 case 9:
+                    break;
+                case 10:
+                    AutoAlign.ticks();
+                    setTimerAndAdvanceStep(1000);
+                case 11:
+                    break;
+                case 12:
+                    stop();
                     break;
             } 
         }
