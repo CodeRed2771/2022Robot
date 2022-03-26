@@ -90,7 +90,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                     double ballDistance = VisionBall.distanceToBall();
                     if(ballDistance > 36)
                         ballDistance = 36;
-                    driveInches(VisionBall.distanceToBall(), VisionBall.degreesToBall(), .8);
+                    driveInches(ballDistance, VisionBall.degreesToBall(), .8);
                     setTimerAndAdvanceStep(7000);
                     break;
                 case 21: 
