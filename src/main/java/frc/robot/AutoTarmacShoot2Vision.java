@@ -20,6 +20,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
             double degrees = 0;
             switch (getCurrentStep()) {
                 case 0:
+                    VisionShooter.setLED(true);
                     driveInches(64, 0, .8);
                     setTimerAndAdvanceStep(6000);
                     break;
@@ -38,24 +39,16 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                     advanceStep();
                     break;
                 case 5:
-                    if (VisionBall.ballInView()) {
-                        setStep(20);
-                    } else {
-                        turnDegrees(30, .8);
-                        setTimerAndAdvanceStep(1500);
-                    }
+                    setTimerAndAdvanceStep(1000);
                     break;
                 case 6:
-                    if (turnCompleted()) {
-                        advanceStep();
-                    }
                     break;
                 case 7:
                     if (VisionBall.ballInView()) {
                         setStep(20);
                     } else {
-                        turnDegrees(-60, .8);
-                        setTimerAndAdvanceStep(2500);
+                        turnDegrees(25, .8);
+                        setTimerAndAdvanceStep(1500);
                     }
                     break;
                 case 8:
@@ -64,10 +57,33 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                     }
                     break;
                 case 9:
+                    setTimerAndAdvanceStep(1000);
+                    break;
+                case 10:
+                    break;
+                case 11:
                     if (VisionBall.ballInView()) {
                         setStep(20);
                     } else {
-                        setStep(26);
+                        turnDegrees(-50, .8);
+                        setTimerAndAdvanceStep(2500);
+                    }
+                    break;
+                case 12:
+                    if (turnCompleted()) {
+                        advanceStep();
+                    }
+                    break;
+                case 13:
+                    setTimerAndAdvanceStep(1000);
+                    break;
+                case 14:
+                    break;
+                case 15:
+                    if (VisionBall.ballInView()) {
+                        setStep(20);
+                    } else {
+                        setStep(24);
                     }
                     break;
                 case 20:
