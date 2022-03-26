@@ -25,6 +25,14 @@ public class Wiring {
 	public static final int INTAKE_DEPLOY_REVERSE = 7;
 	public static final int INTAKE_DEPLOY = 8; 
 
+	public static final int CLIMBER_MOTOR_1 = 9;
+	public static final int CLIMBER_MOTOR_2 = 10;
+	public static final int CLIMBER1_SOLENOID_FORWARD = 11;
+	public static final int CLIMBER1_SOLENOID_REVERSE = 12;
+	public static final int CLIMBER2_SOLENOID_FORWARD = 11;
+	public static final int CLIMBER2_SOLENOID_REVERSE = 12;
+	//DoubleSolenoid
+
 	/**
 	 * DIO ID PORTS
 	 */

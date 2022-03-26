@@ -201,6 +201,8 @@ public class Robot extends TimedRobot {
         double driveStrafeAmount = -gamepad1.getLeftX();
 
         double ballLaneAssist = VisionBall.getBallXOffset();
+        double ballLaneAssistRot;
+        double ballLaneAssistFWD;
 
         // if (Math.abs(driveRotAmount)>.1) {
         //     swtest.move(driveRotAmount);
@@ -231,6 +233,14 @@ public class Robot extends TimedRobot {
             //     else if (ballLaneAssist < -0.05) 
             //         driveStrafeAmount -= .2;
             // }
+            if (Intake.isRunning()) {
+                if (RobotGyro.getAngle() == 0 || RobotGyro.getAngle() == 180) {
+                    
+                } 
+                else {
+                    
+                }
+            }
         }
         if (Math.abs(driveFWDAmount) > .5 || Math.abs(driveRotAmount) > .5) {
             if (mAutoProgram.isRunning())
