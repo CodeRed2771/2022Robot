@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Shooter.ManualShotPreset;
 
-public class AutoTarmacShoot2Vision extends AutoBaseClass {
+public class AutoTarmacShoot3Vision extends AutoBaseClass {
 
 	public void start() {
 		super.start();
