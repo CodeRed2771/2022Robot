@@ -91,6 +91,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Show Encoders", true);
         SmartDashboard.putBoolean("Tune Drive-Turn PIDs", false);
         SmartDashboard.putString("Alliance R or B", "R");
+        
+        VisionBall.init(); // Ball vision tracking setup
     }
 
     @Override
@@ -101,8 +103,6 @@ public class Robot extends TimedRobot {
         DriveTrain.allowTurnEncoderReset();
         DriveTrain.resetTurnEncoders();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
-        
-        VisionBall.init(); // Ball vision tracking setup
         VisionBall.start(); // Start the vision thread
         Shooter.StartShooter();
         Shooter.setSpeed(6000);
@@ -308,7 +308,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Distance to Target", VisionShooter.getDistanceFromTarget());
 
         SmartDashboard.putNumber("Gyro", RobotGyro.getAngle());
-
          // Sets the PID values based on input from the SmartDashboard
         // This is only needed during tuning
         if (SmartDashboard.getBoolean("Tune Drive-Turn PIDs", false)) {
