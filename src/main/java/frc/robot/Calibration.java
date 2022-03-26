@@ -63,9 +63,9 @@ public class Calibration {
     public final static double VISION_ROT_I = 0;
     public final static double VISION_ROT_D = 0;
 
-    public final static double VISION_DISTANCE_A = 0.92959;
-    public final static double VISION_DISTANCE_B = -82.295;
-    public final static double VISION_DISTANCE_C = 12.5873;
+    public final static double VISION_DISTANCE_A = 0.935049;
+    public final static double VISION_DISTANCE_B = -90.5271;
+    public final static double VISION_DISTANCE_C = 0.563257;
 
     public static double getTurnP() { 
         if (isPracticeBot())

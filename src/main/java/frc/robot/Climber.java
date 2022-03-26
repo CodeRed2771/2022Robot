@@ -20,7 +20,7 @@ public class Climber {
 	private static CANSparkMax climberMotor2;
 	private static DoubleSolenoid climberSolenoid1;
 	private static DoubleSolenoid climberSolenoid2;
-	private static enum ClimberPosition {
+	public static enum ClimberPosition {
 		Straight, 
 		OffCenter
 	}
@@ -42,6 +42,7 @@ public class Climber {
         climberMotor.setIdleMode(IdleMode.kBrake);
 		climberMotor2 = new CANSparkMax(Wiring.CLIMBER_MOTOR_2, MotorType.kBrushless);
 		climberMotor2.follow(climberMotor);
+		
 		climberSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.CLIMBER1_SOLENOID_FORWARD, Wiring.CLIMBER1_SOLENOID_REVERSE);
 		climberSolenoid1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.CLIMBER2_SOLENOID_FORWARD, Wiring.CLIMBER2_SOLENOID_REVERSE);
 	}
@@ -68,7 +69,13 @@ public class Climber {
 	}
 
 	public static void climber(double speed){
-		climberMotor.set(speed);
+		if (climberMotor.getEncoder().getPosition() > 500 && speed > 0) {
+			climberMotor.set(0);
+		} else if (climberMotor.getEncoder().getPosition() <= 0 && speed < 0) {
+			climberMotor.set(0);
+		} else {
+			climberMotor.set(speed);
+		}
 	}
 	
 	public static void climberStop() {
