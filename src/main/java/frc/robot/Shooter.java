@@ -69,13 +69,13 @@ public class Shooter {
         new shooterArrayValue(ShooterPosition.Medium, 6200), // 2
         new shooterArrayValue(ShooterPosition.Medium, 6200), // 3
         new shooterArrayValue(ShooterPosition.Low, 4850), // 4
-        new shooterArrayValue(ShooterPosition.Low, 5300), // 5
+        new shooterArrayValue(ShooterPosition.Low, 5300), // 5.
         new shooterArrayValue(ShooterPosition.Low, 5750), // 6
         new shooterArrayValue(ShooterPosition.Low, 6200), // 7
-        new shooterArrayValue(ShooterPosition.Low, 6650), // 8
-        new shooterArrayValue(ShooterPosition.Low, 7100), // 9
-        new shooterArrayValue(ShooterPosition.Low, 7550),// 10
-        new shooterArrayValue(ShooterPosition.Low, 8000), // 11
+        new shooterArrayValue(ShooterPosition.Low, 6800), // 8
+        new shooterArrayValue(ShooterPosition.Low, 7400), // 9
+        new shooterArrayValue(ShooterPosition.Low, 8000),// 10 8000
+        new shooterArrayValue(ShooterPosition.Low, 8600), // 11
         new shooterArrayValue(ShooterPosition.Low, 8450), // 12
         new shooterArrayValue(ShooterPosition.Low, 8900), // 13
         new shooterArrayValue(ShooterPosition.Low, 9350), // 14
@@ -426,5 +426,6 @@ public class Shooter {
             setShooterPosition(shooterArray[dis].position);
             shooterMotorVelocityTarget = shooterArray[dis].speed;
         }
+        SmartDashboard.putNumber("Distance Feet ", dis);
     }
 }

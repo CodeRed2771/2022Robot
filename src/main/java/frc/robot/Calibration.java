@@ -37,10 +37,10 @@ public class Calibration {
     private final static double DT_C_ABS_ZERO_INITIAL = .443; 
     private final static double DT_D_ABS_ZERO_INITIAL = .098; 
     
-    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .577; // .684; // NEW BOT
-    public final static double DT_NEW_B_ABS_ZERO_INITIAL = .344; //.983; 
-    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .368; //.040; 
-    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .327; // 276; 
+    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .576; // .684; // NEW BOT
+    public final static double DT_NEW_B_ABS_ZERO_INITIAL = .343; //.983; 
+    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .335; //.040; 
+    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .298; // 276; 
 
     public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
     
@@ -63,9 +63,9 @@ public class Calibration {
     public final static double VISION_ROT_I = 0;
     public final static double VISION_ROT_D = 0;
 
-    public final static double VISION_DISTANCE_A = 0.92959;
-    public final static double VISION_DISTANCE_B = -82.295;
-    public final static double VISION_DISTANCE_C = 12.5873;
+    public final static double VISION_DISTANCE_A = 0.935049;
+    public final static double VISION_DISTANCE_B = -90.5271;
+    public final static double VISION_DISTANCE_C = 0.563257;
 
     public static double getTurnP() { 
         if (isPracticeBot())
