@@ -18,7 +18,6 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
         if (isRunning()) {
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             double degrees = 0;
-            int sawBallStep = 0;
             switch (getCurrentStep()) {
                 case 0:
                     VisionShooter.setLED(true);
@@ -47,7 +46,6 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                 case 7:
                     if (VisionBall.ballInView()) {
                         setStep(20);
-                        sawBallStep = 1;
                     } else {
                         turnDegrees(25, .8);
                         setTimerAndAdvanceStep(1500);
@@ -66,7 +64,6 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                 case 11:
                     if (VisionBall.ballInView()) {
                         setStep(20);
-                        sawBallStep = 2;
                     } else {
                         turnDegrees(-50, .8);
                         setTimerAndAdvanceStep(2500);
@@ -85,7 +82,6 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                 case 15:
                     if (VisionBall.ballInView()) {
                         setStep(20);
-                        sawBallStep = 3;
                     } else {
                         setStep(24);
                     }
@@ -110,7 +106,6 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                     if(driveCompleted()) {
                         advanceStep();
                     }
-                
                 case 24:
                     Shooter.alignAndShoot();
                     setTimerAndAdvanceStep(1000);
