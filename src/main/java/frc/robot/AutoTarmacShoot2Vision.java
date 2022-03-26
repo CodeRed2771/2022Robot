@@ -36,11 +36,12 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                 case 4:
                     Intake.startIntake();
                     advanceStep();
+                    break;
                 case 5:
                     if (VisionBall.ballInView()) {
                         setStep(20);
                     } else {
-                        turnDegrees(50, .8);
+                        turnDegrees(30, .8);
                         setTimerAndAdvanceStep(1500);
                     }
                     break;
@@ -53,7 +54,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                     if (VisionBall.ballInView()) {
                         setStep(20);
                     } else {
-                        turnDegrees(-100, .8);
+                        turnDegrees(-60, .8);
                         setTimerAndAdvanceStep(2500);
                     }
                     break;
@@ -62,7 +63,17 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                         advanceStep();
                     }
                     break;
-                case 20: 
+                case 9:
+                    if (VisionBall.ballInView()) {
+                        setStep(20);
+                    } else {
+                        setStep(26);
+                    }
+                    break;
+                case 20:
+                    double ballDistance = VisionBall.distanceToBall();
+                    if(ballDistance > 36)
+                        ballDistance = 36;
                     driveInches(VisionBall.distanceToBall(), VisionBall.degreesToBall(), .8);
                     setTimerAndAdvanceStep(7000);
                     break;
