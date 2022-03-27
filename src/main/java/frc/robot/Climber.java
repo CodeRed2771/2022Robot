@@ -43,13 +43,13 @@ public class Climber {
         climberMotor = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
         climberMotor.restoreFactoryDefaults(); 
         climberMotor.setClosedLoopRampRate(0.5);
-        climberMotor.setSmartCurrentLimit(20);
+        // climberMotor.setSmartCurrentLimit(20);
         climberMotor.setIdleMode(IdleMode.kBrake);
 
 		climberMotor2 = new CANSparkMax(Wiring.CLIMBER_MOTOR_2, MotorType.kBrushless);
 		climberMotor2.restoreFactoryDefaults();
 		climberMotor2.setClosedLoopRampRate(0.5);
-        climberMotor2.setSmartCurrentLimit(20);
+        // climberMotor2.setSmartCurrentLimit(20);
 		climberMotor2.setIdleMode(IdleMode.kBrake);
 		climberMotor2.setInverted(true);
 
