@@ -11,8 +11,8 @@ public class Wiring {
 	public static final int SHOOTER_MOTOR_ID = 10;
 	public static final int FEEDER_MOTOR_ID = 9;
 	public static final int INTAKE_MOTOR_ID = 11;
-	public static final int LIFT_MOTOR_ID = 15;
-	public static final int EXTEND_MOTOR_ID = 16;
+	public static final int CLIMBER_MOTOR_1 = 12;
+	public static final int CLIMBER_MOTOR_2 = 13;
 
 	// PCM Ports
 	public static final int SHOOTERPOSITION_STAGE1_REVERSE = 1;
@@ -21,17 +21,9 @@ public class Wiring {
 	public static final int SHOOTERPOSITION_STAGE2_FOWARD = 3;
 	public static final int BALLLIFT_REVERSE = 4;
 	public static final int BALLLIFT_FOWARD = 5;
-	public static final int INTAKE_DEPLOY_FORWARD = 6 ;
-	public static final int INTAKE_DEPLOY_REVERSE = 7;
-	public static final int INTAKE_DEPLOY = 8; 
+	public static final int CLIMBER_SOLENOID_FORWARD = 6 ;
+	public static final int CLIMBER_SOLENOID_REVERSE = 7;
 
-	public static final int CLIMBER_MOTOR_1 = 9;
-	public static final int CLIMBER_MOTOR_2 = 10;
-	public static final int CLIMBER1_SOLENOID_FORWARD = 11;
-	public static final int CLIMBER1_SOLENOID_REVERSE = 12;
-	public static final int CLIMBER2_SOLENOID_FORWARD = 11;
-	public static final int CLIMBER2_SOLENOID_REVERSE = 12;
-	//DoubleSolenoid
 
 	/**
 	 * DIO ID PORTS

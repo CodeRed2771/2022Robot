@@ -70,7 +70,8 @@ public class Robot extends TimedRobot {
         Shooter.init();
         RobotGyro.init();
         Calibration.loadSwerveCalibration();
-        
+        Climber.init();
+
         // swtest = new SwerveTurnTest();
 
         if (Calibration.isPracticeBot()) 
@@ -103,10 +104,10 @@ public class Robot extends TimedRobot {
         DriveTrain.allowTurnEncoderReset();
         DriveTrain.resetTurnEncoders();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
-        VisionBall.start(); // Start the vision thread
+        // VisionBall.start(); // (3/26/22 - this crashes the program when run a second time)
         Shooter.StartShooter();
         Shooter.setSpeed(6000);
-        //Climber.init();
+        Climber.resetEncoder();
     }
 
     @Override
@@ -195,15 +196,16 @@ public class Robot extends TimedRobot {
             VisionShooter.setLED(false);
         }
 
-        // if (gamepad2.getRightX() > 0.05) {
-        //     Climber.climber(gamepad2.r);
-        // }
-        // Climber.climber(gamepad2.getRightX());
-        // if (gamepad2.getLeftY() > 0.5) {
-        //     Climber.climberPosition(ClimberPosition.OffCenter);
-        // } else if (gamepad2.getLeftY() > -0.5) {
-        //     Climber.climberPosition(ClimberPosition.Straight);
-        // }
+        if (Math.abs(gamepad2.getRightY()) > 0.05) {
+            Climber.move(gamepad2.getRightY());
+        } else
+        Climber.move(0);
+
+        if (gamepad2.getLeftY() > 0.5) {
+            Climber.climberPosition(ClimberPosition.OffCenter);
+        } else if (gamepad2.getLeftY() < -0.5) {
+            Climber.climberPosition(ClimberPosition.Straight);
+        }
 
         // DRIVER CONTROL MODE
         // Issue the drive command using the parameters from
@@ -295,7 +297,6 @@ public class Robot extends TimedRobot {
         showDashboardInfo();
     }
 
-
     @Override
     public void robotPeriodic() {
         SmartDashboard.updateValues();
@@ -303,6 +304,7 @@ public class Robot extends TimedRobot {
         Shooter.tick();
         Intake.tick();
         DriveAuto.tick();
+        Climber.tick();
 
         // SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
         SmartDashboard.putNumber("Distance to Target", VisionShooter.getDistanceFromTarget());
@@ -507,6 +509,7 @@ public class Robot extends TimedRobot {
 
     private double forwardAdjust(double fwd, boolean normalDrive) {
         final double maxFWDchange = .02;
+        final double maxSTOPPINGchange = .04;
         double adjustedFWD = 0;
 
         if (normalDrive) {
@@ -516,15 +519,28 @@ public class Robot extends TimedRobot {
         }
         // ramp in non zero direction only
         if (adjustedFWD >= 0) {
-            if (adjustedFWD > lastFWDvalue && adjustedFWD > .2) // speeding up so control it
+            if (adjustedFWD > lastFWDvalue && adjustedFWD > .2) { // speeding up so control it
                 if (adjustedFWD >  lastFWDvalue + maxFWDchange) {
                     adjustedFWD = lastFWDvalue + maxFWDchange;
                 } 
+            } else if (adjustedFWD < lastFWDvalue) { 
+                // see if we're slowing down too fast
+                if (adjustedFWD < lastFWDvalue - maxSTOPPINGchange) {
+                    adjustedFWD = lastFWDvalue - maxSTOPPINGchange;
+                }
+            }
         } else {
-            if (adjustedFWD < lastFWDvalue && adjustedFWD < -.2) // speeding up in reverse
+            if (adjustedFWD < lastFWDvalue && adjustedFWD < -.2) { // speeding up in reverse
                 if (adjustedFWD < lastFWDvalue - maxFWDchange) {
                     adjustedFWD = lastFWDvalue - maxFWDchange;
+                
                 }
+            } else if (adjustedFWD > lastFWDvalue) {
+                // see if we're slowing down too fast
+                if (adjustedFWD > lastFWDvalue + maxSTOPPINGchange) {
+                    adjustedFWD = lastFWDvalue + maxSTOPPINGchange;
+                }
+            }
         }
 
         lastFWDvalue = adjustedFWD;

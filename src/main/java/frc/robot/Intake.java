@@ -32,7 +32,7 @@ public class Intake {
     }
     public static void init() {
        
-        intakeDeploy = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.INTAKE_DEPLOY_FORWARD, Wiring.INTAKE_DEPLOY_REVERSE);
+        // intakeDeploy = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.INTAKE_DEPLOY_FORWARD, Wiring.INTAKE_DEPLOY_REVERSE);
 
         intakeMotor = new CANSparkMax(Wiring.INTAKE_MOTOR_ID, MotorType.kBrushless);
         intakeMotor.restoreFactoryDefaults(); 
@@ -48,12 +48,12 @@ public class Intake {
     }
 
     public static void deployIntake() {
-     intakeDeploy.set(DoubleSolenoid.Value.kForward);
+    //  intakeDeploy.set(DoubleSolenoid.Value.kForward);
     Up(false);
     }
 
     public static void retractIntake() {
-        intakeDeploy.set(DoubleSolenoid.Value.kReverse);
+        // intakeDeploy.set(DoubleSolenoid.Value.kReverse);
         Up(true);
     }
 
