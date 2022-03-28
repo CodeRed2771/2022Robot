@@ -9,9 +9,9 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -337,6 +337,7 @@ public class SwerveModuleFalcon implements SwerveModule {
         boolean invertDrive = false;
         double nearestPosInRotation = 0;
         double newTargetPosition = 0;
+		double currentPosition = turnEncoder.getPosition();
 
 		// I think it would be best to adjust our requested position first so that it  
 		// is compatible with our modules zero offset.  Then all calculations after that
@@ -415,6 +416,11 @@ public class SwerveModuleFalcon implements SwerveModule {
 			SmartDashboard.putNumber("MC Nearest", round(nearestPosInRotation,3));
 			SmartDashboard.putNumber("MC NewTarget", round(newTargetPosition,3));
 			SmartDashboard.putBoolean("MC Reversed", isReversed);
+		}
+
+		// look for error
+		if (Math.abs(currentPosition - newTargetPosition) > .250) {
+			SmartDashboard.putString("MOD " + mModuleID + " CALC ERROR", "Cur: " + round(currentPosition,3) + " New: " + round(newTargetPosition,3));
 		}
 
         // System.out.println("");

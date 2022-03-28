@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -21,8 +22,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Climber {
 	private static CANSparkMax climberMotor;
 	private static CANSparkMax climberMotor2;
-	private static SparkMaxPIDController climberPID;
+	private static SparkMaxPIDController climber1PID;
+	private static SparkMaxPIDController climber2PID;
 	private static DoubleSolenoid climberSolenoid;
+	private final static double MAX_EXTENSION = 75;
 	
 	public static enum ClimberPosition {
 		Straight, 
@@ -38,58 +41,93 @@ public class Climber {
 	private static boolean climbRung;
 	private static double timer;
 	private static double timeToClimb;
-	
+	private static double lastPositionRequested = 0;
+
 	public static void init() {
         climberMotor = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
         climberMotor.restoreFactoryDefaults(); 
         climberMotor.setClosedLoopRampRate(0.5);
         // climberMotor.setSmartCurrentLimit(20);
         climberMotor.setIdleMode(IdleMode.kBrake);
+		climberMotor.setInverted(true);
 
 		climberMotor2 = new CANSparkMax(Wiring.CLIMBER_MOTOR_2, MotorType.kBrushless);
 		climberMotor2.restoreFactoryDefaults();
 		climberMotor2.setClosedLoopRampRate(0.5);
         // climberMotor2.setSmartCurrentLimit(20);
 		climberMotor2.setIdleMode(IdleMode.kBrake);
-		climberMotor2.setInverted(true);
+		climberMotor2.setInverted(false);
 
 		
-		climberPID = climberMotor.getPIDController();
-		climberPID.setP(Calibration.CLIMBER_MOTOR_P);
-		climberPID.setI(Calibration.CLIMBER_MOTOR_I);
-		climberPID.setD(Calibration.CLIMBER_MOTOR_D);
-		climberPID.setIZone(Calibration.CLIMBER_MOTOR_IZONE);
-		climberPID.setOutputRange(0, 50);
+		climber1PID = climberMotor.getPIDController();
+		climber2PID = climberMotor.getPIDController();
+		
+		climber1PID.setP(Calibration.CLIMBER_MOTOR_P);
+		climber1PID.setI(Calibration.CLIMBER_MOTOR_I);
+		climber1PID.setD(Calibration.CLIMBER_MOTOR_D);
+		climber1PID.setIZone(Calibration.CLIMBER_MOTOR_IZONE);
+		
+		climber2PID.setP(Calibration.CLIMBER_MOTOR_P);
+		climber2PID.setI(Calibration.CLIMBER_MOTOR_I);
+		climber2PID.setD(Calibration.CLIMBER_MOTOR_D);
+		climber2PID.setIZone(Calibration.CLIMBER_MOTOR_IZONE);
 
-		climberPID.setSmartMotionMaxVelocity(2000, 0);
-		climberPID.setSmartMotionMinOutputVelocity(0, 0);
-		climberPID.setSmartMotionMaxAccel(1500, 0);
-		climberPID.setSmartMotionAllowedClosedLoopError(0.5, 0);
+		climber1PID.setOutputRange(-1, 1);
+		climber2PID.setOutputRange(-1, 1);
+
+		climber1PID.setSmartMotionMaxVelocity(20, 0);
+		climber2PID.setSmartMotionMaxVelocity(20, 0);
+
+		climber1PID.setSmartMotionMinOutputVelocity(0, 0);
+		climber2PID.setSmartMotionMinOutputVelocity(0, 0);
+
+		climber1PID.setSmartMotionMaxAccel(10, 0);
+		climber2PID.setSmartMotionMaxAccel(10, 0);
+
+		climber1PID.setSmartMotionAllowedClosedLoopError(0.5, 0);
+		climber2PID.setSmartMotionAllowedClosedLoopError(0.5, 0);
 
 		climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.CLIMBER_SOLENOID_FORWARD, Wiring.CLIMBER_SOLENOID_REVERSE);
 	}
 
 	public static void tick() {
-		SmartDashboard.putNumber("Climber Position", climberMotor.getEncoder().getPosition());
+		SmartDashboard.putNumber("Climber Position Actual", climberMotor.getEncoder().getPosition());
 	}
 
 	public static void move(double speed){
-		if (climberMotor.getEncoder().getPosition() >= 0  && speed > 0.2) {
-			climberMotor.set(.05); // allow them to very slowly retract to allow for manual pull in 
+		if (climberMotor.getEncoder().getPosition() <= 0  && speed > 0.2) {
+			climberMotor.set(-.05); // allow them to very slowly retract to allow for manual pull in 
 			                       // after powering off in the extended position
-			climberMotor2.set(.05);
+			climberMotor2.set(-.05);
 		}
-		else if ((climberMotor.getEncoder().getPosition() >= 0  && speed > 0)) {
+		else if ((climberMotor.getEncoder().getPosition() <= 0  && speed > 0)) {
 			climberMotor.set(0);
 			climberMotor2.set(0);
 		}
-		else if (climberMotor.getEncoder().getPosition() <= -75 && speed < 0) {
+		else if (climberMotor.getEncoder().getPosition() >= MAX_EXTENSION && speed < 0) {
 			climberMotor.set(0);
 			climberMotor2.set(0);
 		} else {
-			climberMotor.set(speed);
-			climberMotor2.set(speed);
+			climberMotor.set(-speed);
+			climberMotor2.set(-speed);
 		}
+	}
+
+	public static void moveV2(double direction) {
+		// direction is between -1 and 1 indicating the direction to manually move
+		double movementFactor = .1;
+
+		double newPosition = lastPositionRequested + (movementFactor * direction);
+		
+		if (newPosition < 0) {
+			newPosition = 0;
+		} else if (newPosition > MAX_EXTENSION) {
+			newPosition = MAX_EXTENSION;
+		}
+		lastPositionRequested = newPosition;
+		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
+		climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kSmartMotion);
+		climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kSmartMotion);
 	}
 	
 	public static void climberStop() {
@@ -120,16 +158,20 @@ public class Climber {
 		double power = 0;
 		switch(rung) {
 			case LowRung:
-				climberPID.setReference(400, CANSparkMax.ControlType.kSmartMotion);
+				climber1PID.setReference(50, CANSparkMax.ControlType.kSmartMotion);
+				climber2PID.setReference(50, CANSparkMax.ControlType.kSmartMotion);
 				break;
 			case MediumRung:
-				climberPID.setReference(500, CANSparkMax.ControlType.kSmartMotion);
+				climber1PID.setReference(60, CANSparkMax.ControlType.kSmartMotion);
+				climber2PID.setReference(60, CANSparkMax.ControlType.kSmartMotion);
 				break;
 			case ExtendToNextRung:
-				climberPID.setReference(500, CANSparkMax.ControlType.kSmartMotion);
+				climber1PID.setReference(70, CANSparkMax.ControlType.kSmartMotion);
+				climber2PID.setReference(70, CANSparkMax.ControlType.kSmartMotion);
 				break;
 			case Retract:
-				climberPID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
+				climber1PID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
+				climber2PID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
 				break;
 		}
 	}

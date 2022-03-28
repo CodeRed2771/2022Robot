@@ -97,11 +97,11 @@ public class Shooter {
 		shooterMotor.configNominalOutputForward(0, 0);
 		shooterMotor.configNominalOutputReverse(0, 0);
 		shooterMotor.configPeakOutputForward(1, 0);
-		shooterMotor.configPeakOutputReverse(0, 0);
+		shooterMotor.configPeakOutputReverse(.2, 0); // put in .2 instead of 0 on 3/28 to keep from over spinning
 		shooterMotor.setNeutralMode(NeutralMode.Coast);
         shooterMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, kPIDLoopIdx, 0);
 
-		shooterMotor.configClosedloopRamp(.45, 0);
+		shooterMotor.configClosedloopRamp(.45, 0);  // .45 seconds from 0 to full
 		/* set closed loop gains in slot0 - see documentation */
         shooterMotor.selectProfileSlot(0, 0);
 
@@ -126,7 +126,7 @@ public class Shooter {
 		feederMotor.configNominalOutputForward(0, 0);
 		feederMotor.configNominalOutputReverse(0, 0);
 		feederMotor.configPeakOutputForward(1, 0);
-		feederMotor.configPeakOutputReverse(0, 0);
+		feederMotor.configPeakOutputReverse(.2, 0);
 		feederMotor.setNeutralMode(NeutralMode.Coast);
         feederMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, kPIDLoopIdx, 0);
 

@@ -1,5 +1,8 @@
 package frc.robot.libs;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -84,6 +87,10 @@ public class Timer {
     	
     	SmartDashboard.putNumber("Timer Step", step);
     	SmartDashboard.putBoolean("Timer Is Running", timerRunning);
-    	SmartDashboard.putNumber("Timer Remaining MS",  getTimeRemainingSeconds());
+    	SmartDashboard.putNumber("Timer Remaining",  round(getTimeRemainingSeconds(),2));
+    }
+
+    private Double round(Double val, int scale) {
+        return new BigDecimal(val.toString()).setScale(scale, RoundingMode.HALF_UP).doubleValue();
     }
 }

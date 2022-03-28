@@ -109,10 +109,10 @@ public class DriveTrain {
         moduleC.setTurnOrientation(modCPosition, optimizeTurn);
         moduleD.setTurnOrientation(modDPosition, optimizeTurn);
 
-        SmartDashboard.putNumber("A pos call", modAPosition);
-        SmartDashboard.putNumber("B pos call", modBPosition);
-        SmartDashboard.putNumber("C pos call", modCPosition);
-        SmartDashboard.putNumber("D pos call", modDPosition);
+        SmartDashboard.putNumber("A pos call", round(modAPosition,3));
+        SmartDashboard.putNumber("B pos call", round(modBPosition,3));
+        SmartDashboard.putNumber("C pos call", round(modCPosition,3));
+        SmartDashboard.putNumber("D pos call", round(modDPosition,3));
     }
 
     public static void setAllTurnOrientation(double position) {
@@ -281,15 +281,15 @@ public class DriveTrain {
     }
 
     public static void showDriveEncodersOnDash() {
-        SmartDashboard.putNumber("Mod A Drive Enc", moduleA.getDriveEnc());
-        SmartDashboard.putNumber("Mod B Drive Enc", moduleB.getDriveEnc());
-        SmartDashboard.putNumber("Mod C Drive Enc", moduleC.getDriveEnc());
-        SmartDashboard.putNumber("Mod D Drive Enc", moduleD.getDriveEnc());
+        SmartDashboard.putNumber("Mod A Drive Enc", (int)moduleA.getDriveEnc());
+        SmartDashboard.putNumber("Mod B Drive Enc", (int)moduleB.getDriveEnc());
+        SmartDashboard.putNumber("Mod C Drive Enc", (int)moduleC.getDriveEnc());
+        SmartDashboard.putNumber("Mod D Drive Enc", (int)moduleD.getDriveEnc());
 
-        SmartDashboard.putNumber("Mod A Drive Setpt", moduleA.getCurrentDriveSetpoint());
-        SmartDashboard.putNumber("Mod B Drive Setpt", moduleB.getCurrentDriveSetpoint());
-        SmartDashboard.putNumber("Mod C Drive Setpt", moduleC.getCurrentDriveSetpoint());
-        SmartDashboard.putNumber("Mod D Drive Setpt", moduleD.getCurrentDriveSetpoint());
+        SmartDashboard.putNumber("Mod A Drive Setpt", (int)moduleA.getCurrentDriveSetpoint());
+        SmartDashboard.putNumber("Mod B Drive Setpt", (int)moduleB.getCurrentDriveSetpoint());
+        SmartDashboard.putNumber("Mod C Drive Setpt", (int)moduleC.getCurrentDriveSetpoint());
+        SmartDashboard.putNumber("Mod D Drive Setpt", (int)moduleD.getCurrentDriveSetpoint());
     }
 
     public static void showTurnEncodersOnDash() {
@@ -298,10 +298,10 @@ public class DriveTrain {
         SmartDashboard.putNumber("TURN C RAW", round(moduleC.getTurnAbsolutePosition(), 3));
         SmartDashboard.putNumber("TURN D RAW", round(moduleD.getTurnAbsolutePosition(), 3));
 
-        SmartDashboard.putNumber("TURN A ENC", round(moduleA.getTurnRelativePosition(),2));
-        SmartDashboard.putNumber("TURN B ENC", moduleB.getTurnRelativePosition());
-        SmartDashboard.putNumber("TURN C ENC", moduleC.getTurnRelativePosition());
-        SmartDashboard.putNumber("TURN D ENC", moduleD.getTurnRelativePosition());
+        SmartDashboard.putNumber("TURN A ENC", round(moduleA.getTurnRelativePosition(),3));
+        SmartDashboard.putNumber("TURN B ENC", round(moduleB.getTurnRelativePosition(),3));
+        SmartDashboard.putNumber("TURN C ENC", round(moduleC.getTurnRelativePosition(),3));
+        SmartDashboard.putNumber("TURN D ENC", round(moduleD.getTurnRelativePosition(),3));
 
         SmartDashboard.putNumber("TURN A POS", round(moduleA.getTurnPosition(), 2));
         SmartDashboard.putNumber("TURN B POS", round(moduleB.getTurnPosition(), 2));
@@ -313,10 +313,10 @@ public class DriveTrain {
         SmartDashboard.putNumber("TURN C ANGLE", round(moduleC.getTurnAngle(), 0));
         SmartDashboard.putNumber("TURN D ANGLE", round(moduleD.getTurnAngle(), 0));
 
-        SmartDashboard.putNumber("TURN A ERR", moduleA.getTurnError());
-        SmartDashboard.putNumber("TURN B ERR", moduleB.getTurnError());
-        SmartDashboard.putNumber("TURN C ERR", moduleC.getTurnError());
-		SmartDashboard.putNumber("TURN D ERR", moduleD.getTurnError());
+        SmartDashboard.putNumber("TURN A ERR", round(moduleA.getTurnError(),2));
+        SmartDashboard.putNumber("TURN B ERR", round(moduleB.getTurnError(),2));
+        SmartDashboard.putNumber("TURN C ERR", round(moduleC.getTurnError(),2));
+		SmartDashboard.putNumber("TURN D ERR", round(moduleD.getTurnError(),2));
 
         SmartDashboard.putNumber("TURN A ZERO", moduleA.getTurnZero());
         SmartDashboard.putNumber("TURN B ZERO", moduleB.getTurnZero());
