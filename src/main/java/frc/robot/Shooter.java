@@ -214,7 +214,7 @@ public class Shooter {
                             setShooterPosition(ShooterPosition.Low);
                             oneShot = false;
                             resetTimer();
-                            manualVisionOverride = false;
+                            // manualVisionOverride = false;
                             AutoAlign.setAllignment(false);
                         }
                }
@@ -372,6 +372,10 @@ public class Shooter {
         return power; 
     }
 
+    public static void setAutoDistancingMode() {
+        manualVisionOverride = false;
+    }
+
     public static void setManualPresets(ManualShotPreset position) {
         manualVisionOverride = true;
         switch(position) {
@@ -408,8 +412,8 @@ public class Shooter {
         continuousShooting = false;
         
         manualVisionOverride = true;
-        
     }
+
     public static void reverseShooter(){
         reverse = true;
     }

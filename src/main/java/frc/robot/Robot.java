@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
         // VisionBall.start(); // (3/26/22 - this crashes the program when run a second time)
         Shooter.StartShooter();
         Shooter.setSpeed(6000);
-        Climber.resetEncoder();
+        Climber.reset();
     }
 
     @Override
@@ -144,11 +144,9 @@ public class Robot extends TimedRobot {
             Shooter.alignAndShoot();
         }
         
-        if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
-            Shooter.alignAndShoot();
-        }
-        if (gamepad2.getAButton()) {
-            Shooter.setManualPresets(ManualShotPreset.LowGoal);
+         if (gamepad2.getAButton()) {
+             Shooter.setAutoDistancingMode();
+            // Shooter.setManualPresets(ManualShotPreset.LowGoal);
         } else if (gamepad2.getBButton()) {
             Shooter.setManualPresets(ManualShotPreset.TarmacLine);
         } else if (gamepad2.getYButton()) {
@@ -157,6 +155,11 @@ public class Robot extends TimedRobot {
         } else if (gamepad2.getXButton()) {
             Shooter.setManualPresets(ManualShotPreset.SuperCloseHighShot);
         }
+
+        if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
+            Shooter.alignAndShoot();
+        }
+
         if (gamepad2.getStartButton()) {
             Shooter.reverseShooter();
         } else {
@@ -194,13 +197,21 @@ public class Robot extends TimedRobot {
             VisionShooter.setLED(false);
         }
 
-        if (Math.abs(gamepad2.getRightY()) > 0.05) {
-            Climber.move(gamepad2.getRightY());
-        } else
-            Climber.move(0);
+        if (gamepad2.getRightBumper()) {
+            if (Math.abs(gamepad2.getRightY()) > 0.05) {
+                Climber.move(gamepad2.getRightY());
+            } else
+                Climber.move(0);
+        } else {
+            if (Math.abs(gamepad2.getRightY()) > 0.05) {
+                Climber.moveV2(gamepad2.getRightY());
+            } else
+                Climber.moveV2(0);
+        }
+       
 
         if (gamepad2.getLeftY() > 0.5) {
-            Climber.climberPosition(ClimberPosition.OffCenter);
+            Climber.climberPosition(ClimberPosition.Back);
         } else if (gamepad2.getLeftY() < -0.5) {
             Climber.climberPosition(ClimberPosition.Straight);
         }
@@ -234,6 +245,13 @@ public class Robot extends TimedRobot {
         // SmartDashboard.putNumber("ADJUSTED SWERVE ROT AMOUNT", driveRotAmount);
         driveFWDAmount = forwardAdjust(driveFWDAmount, true);
         driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
+
+        if (gamepad1.getRightBumper()) {  // slow mode
+            driveFWDAmount = driveFWDAmount * .3;
+            driveStrafeAmount = driveStrafeAmount * .3;
+            driveRotAmount = driveRotAmount * .3;
+        }
+
         SmartDashboard.putNumber("Best Position", TurnPosition.getBestPosition());
 
         if (ballTrackingTurnedOn && VisionBall.ballInView()) {

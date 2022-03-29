@@ -7,9 +7,12 @@
 
 package frc.robot;
 
+import javax.lang.model.util.ElementScanner6;
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -25,11 +28,12 @@ public class Climber {
 	private static SparkMaxPIDController climber1PID;
 	private static SparkMaxPIDController climber2PID;
 	private static DoubleSolenoid climberSolenoid;
-	private final static double MAX_EXTENSION = 75;
-	
+	private final static double MAX_EXTENSION_VERTICAL = 82;
+	private final static double MAX_EXTENSION_BACK = 100;
+	private static ClimberPosition currentClimberPosition;
 	public static enum ClimberPosition {
 		Straight, 
-		OffCenter
+		Back
 	}
 	private static enum Rung {
 		LowRung, 
@@ -60,7 +64,7 @@ public class Climber {
 
 		
 		climber1PID = climberMotor.getPIDController();
-		climber2PID = climberMotor.getPIDController();
+		climber2PID = climberMotor2.getPIDController();
 		
 		climber1PID.setP(Calibration.CLIMBER_MOTOR_P);
 		climber1PID.setI(Calibration.CLIMBER_MOTOR_I);
@@ -88,23 +92,26 @@ public class Climber {
 		climber2PID.setSmartMotionAllowedClosedLoopError(0.5, 0);
 
 		climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.CLIMBER_SOLENOID_FORWARD, Wiring.CLIMBER_SOLENOID_REVERSE);
+
+		currentClimberPosition = ClimberPosition.Straight;
 	}
 
 	public static void tick() {
-		SmartDashboard.putNumber("Climber Position Actual", climberMotor.getEncoder().getPosition());
+		SmartDashboard.putNumber("Climber1 Position Actual", climberMotor.getEncoder().getPosition());
+		SmartDashboard.putNumber("Climber2 Position Actual", climberMotor2.getEncoder().getPosition());
 	}
 
 	public static void move(double speed){
 		if (climberMotor.getEncoder().getPosition() <= 0  && speed > 0.2) {
-			climberMotor.set(-.05); // allow them to very slowly retract to allow for manual pull in 
+			climberMotor.set(-.15); // allow them to very slowly retract to allow for manual pull in 
 			                       // after powering off in the extended position
-			climberMotor2.set(-.05);
+			climberMotor2.set(-.15);
 		}
 		else if ((climberMotor.getEncoder().getPosition() <= 0  && speed > 0)) {
 			climberMotor.set(0);
 			climberMotor2.set(0);
 		}
-		else if (climberMotor.getEncoder().getPosition() >= MAX_EXTENSION && speed < 0) {
+		else if (climberMotor.getEncoder().getPosition() >= getMaxExtension() && speed < 0) {
 			climberMotor.set(0);
 			climberMotor2.set(0);
 		} else {
@@ -115,19 +122,19 @@ public class Climber {
 
 	public static void moveV2(double direction) {
 		// direction is between -1 and 1 indicating the direction to manually move
-		double movementFactor = .1;
+		double movementFactor = .8;
 
-		double newPosition = lastPositionRequested + (movementFactor * direction);
+		double newPosition = lastPositionRequested + (movementFactor * -direction);
 		
 		if (newPosition < 0) {
 			newPosition = 0;
-		} else if (newPosition > MAX_EXTENSION) {
-			newPosition = MAX_EXTENSION;
+		} else if (newPosition > getMaxExtension()) {
+			newPosition = getMaxExtension();
 		}
 		lastPositionRequested = newPosition;
 		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
-		climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kSmartMotion);
-		climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kSmartMotion);
+		climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
+		climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 	}
 	
 	public static void climberStop() {
@@ -135,20 +142,30 @@ public class Climber {
 		climberMotor2.set(0);
 	}
 
-	public static void resetEncoder() {
+	public static void reset() {
 		climberMotor.getEncoder().setPosition(0);
+		climberMotor2.getEncoder().setPosition(0);
+		lastPositionRequested = 0;
 	}
 
 	public static void climberPosition(ClimberPosition position) {
 		switch(position) {
 			case Straight:
 				climberSolenoid.set(DoubleSolenoid.Value.kReverse);
+				currentClimberPosition = position;
 				break; 
-			case OffCenter:
+			case Back:
 				climberSolenoid.set(DoubleSolenoid.Value.kForward);
-
+				currentClimberPosition = position;
 				break;
 		}
+	}
+
+	private static double getMaxExtension() {
+		if (currentClimberPosition == ClimberPosition.Back) {
+			return MAX_EXTENSION_BACK;
+		} else	
+			return MAX_EXTENSION_VERTICAL;
 	}
 
 	public static void climbTo(Rung rung) { 
