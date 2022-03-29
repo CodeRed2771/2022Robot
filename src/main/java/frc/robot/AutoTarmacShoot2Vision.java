@@ -21,7 +21,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
             switch (getCurrentStep()) {
                 case 0://step 1
                     VisionShooter.setLED(true);
-                    driveInches(44, 0, .8);
+                    driveInches(64, 0, .8);
                     setTimerAndAdvanceStep(6000);
                     break;
                 case 1://step 2
@@ -29,30 +29,21 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                         advanceStep();
                     }
                     break;
-                case 4://step 3
+                case 2://step 3
                     Shooter.alignAndShoot();
                     setTimerAndAdvanceStep(1000);
-                case 5://step 4
+                case 3://step 4
                     break;
-                case 2://finish driving
-                    driveInches(20, 0, .8);
-                    setTimerAndAdvanceStep(6000);
-                    break;
-                case 3://finish driving
-                    if (driveCompleted()) {
-                        advanceStep();
-                    }
-                    break;
-                case 6://step 5
+                case 4://step 5
                     Intake.startIntake();
                     advanceStep();
                     break;
-                case 7://step 6
+                case 5://step 6
                     setTimerAndAdvanceStep(1000);
                     break;
-                case 8://step 7
+                case 6://step 7
                     break;
-                case 9://step 8
+                case 7://step 8
                     if (VisionBall.ballInView()) {
                         setStep(20);
                     } else {
@@ -60,17 +51,17 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                         setTimerAndAdvanceStep(1500);
                     }
                     break;
-                case 10://step 9
+                case 8://step 9
                     if (turnCompleted()) {
                         advanceStep();
                     }
                     break;
-                case 11://step 10
+                case 9://step 10
                     setTimerAndAdvanceStep(1000);
                     break;
-                case 12://step 11
+                case 10://step 11
                     break;
-                case 13://step 12
+                case 11://step 12
                     if (VisionBall.ballInView()) {
                         setStep(20);
                     } else {
@@ -78,17 +69,17 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                         setTimerAndAdvanceStep(2500);
                     }
                     break;
-                case 14://step 13
+                case 12://step 13
                     if (turnCompleted()) {
                         advanceStep();
                     }
                     break;
-                case 15://step 14
+                case 13://step 14
                     setTimerAndAdvanceStep(1000);
                     break;
-                case 16://step 15
+                case 14://step 15
                     break;
-                case 17://step 16
+                case 15://step 16
                     if (VisionBall.ballInView()) {
                         setStep(20);
                     } else {
@@ -109,7 +100,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                     break;
                 case 22://step 19
                     driveInches(12,0,.8);
-                    setTimerAndAdvanceStep(7500);
+                    setTimerAndAdvanceStep(1500);
                     break;
                 case 23://step 20
                     if(driveCompleted()) {
