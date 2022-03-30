@@ -1,9 +1,8 @@
 package frc.robot;
 
-import java.sql.CallableStatement;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Shooter.ManualShotPreset;
+import frc.robot.Shooter.ShooterPosition;
 
 public class AutoTarmacShoot2Vision extends AutoBaseClass {
 
@@ -19,39 +18,66 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
     public void tick() {
         if (isRunning()) {
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
-            double degrees = 0;
+
             switch (getCurrentStep()) {
                 case 0://step 1
                     VisionShooter.setLED(true);
-                    double ballDistance = VisionBall.distanceToBall();
-                    if(ballDistance > 36)
-                        ballDistance = 36;
-                    driveInches(ballDistance, VisionBall.degreesToBall(), .8);
                     Intake.startIntake();
-                    setTimerAndAdvanceStep(7000);
+                    Shooter.StartShooter();
+                    Shooter.setManualPresets(ManualShotPreset.TarmacLine);
+                    driveInches(60, 0, .4); // drive slowly toward 2nd ball
+                    setTimerAndAdvanceStep(5000);
                     break;
                 case 1:
                     if(driveCompleted())
                         advanceStep();
                     break;
                 case 2://step 2
-                    Shooter.alignAndShoot();
-                    setTimerAndAdvanceStep(5000);
+                    driveInches(-20, 0, .4); // drive back up to the line
+                    setTimerAndAdvanceStep(2000);
                     break;
                 case 3:
-                    break;
-                case 4:
-                    driveInches(-10, 0, 0.5);
-                    break;
-                case 5:
                     if(driveCompleted())
                         advanceStep();
-                case 6:
+                    break;
+                case 4:
                     Shooter.alignAndShoot();
                     setTimerAndAdvanceStep(3000);
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    driveInches(20, 0, 0.5); // drive out to jostle the 2nd ball in
+                    Shooter.setManualPresets(ManualShotPreset.TarmacLine); // make sure this is still set
+                    setTimerAndAdvanceStep(3000);
+                    break;
                 case 7:
+                    if(driveCompleted())
+                        advanceStep();
                     break;
                 case 8:
+                    driveInches(-20, 0, .8); // hopefully the ball slides into place
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 9:
+                    if(driveCompleted())
+                        advanceStep();
+                    break;
+                case 10:
+                    Shooter.alignAndShoot();
+                    Intake.stopIntake();
+                    setTimerAndAdvanceStep(3000);
+                    break;
+                case 11:
+                    break;
+                case 12: 
+                    driveInches(12, 0, .8); // make sure we're out of the tarmac
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 13:
+                    break;
+                case 14:
+                    Shooter.StopShooter();
                     stop();
                     break;
 
