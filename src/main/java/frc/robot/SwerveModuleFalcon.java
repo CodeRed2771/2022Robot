@@ -343,7 +343,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		// is compatible with our modules zero offset.  Then all calculations after that
 		// will be in actual encoder positions.
 
-		reqPosition = round(reqPosition,3);
+		// reqPosition = round(reqPosition,3); round was crashing occasionally
 
 		//reqPosition += turnZeroPos;  
 		if (reqPosition > 0.99999) // we went past the rotation point
@@ -402,7 +402,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 
         newTargetPosition = (newRevolutions >= 0 ? newRevolutions + nearestPosInRotation : newRevolutions - nearestPosInRotation);
         
-		newTargetPosition = round(newTargetPosition,3);
+		// newTargetPosition = round(newTargetPosition,3);  round was crashing occasionally
 
 		// Set drive inversion if needed
 		isReversed = invertDrive; // invert
@@ -411,16 +411,16 @@ public class SwerveModuleFalcon implements SwerveModule {
         turnPID.setReference(newTargetPosition, ControlType.kPosition );
 
 		if (mModuleID=='C') {
-			SmartDashboard.putNumber("MC Cur Pos", round(turnEncoder.getPosition(),3));
-			SmartDashboard.putNumber("MC Req Pos", round(reqPosition, 3));
-			SmartDashboard.putNumber("MC Nearest", round(nearestPosInRotation,3));
-			SmartDashboard.putNumber("MC NewTarget", round(newTargetPosition,3));
+			SmartDashboard.putString("MC Cur Pos", String.format("%.3f", turnEncoder.getPosition()));
+			SmartDashboard.putString("MC Req Pos", String.format("%.3f", reqPosition));
+			SmartDashboard.putString("MC Nearest", String.format("%.3f", nearestPosInRotation));
+			SmartDashboard.putString("MC NewTarget", String.format("%.3f", newTargetPosition));
 			SmartDashboard.putBoolean("MC Reversed", isReversed);
 		}
 
 		// look for error
 		if (Math.abs(currentPosition - newTargetPosition) > .250) {
-			SmartDashboard.putString("MOD " + mModuleID + " CALC ERROR", "Cur: " + round(currentPosition,3) + " New: " + round(newTargetPosition,3));
+			SmartDashboard.putString("MOD " + mModuleID + " CALC ERROR", "Cur: " + String.format("%.3f", currentPosition) + " New: " + String.format("%.3f", newTargetPosition));
 		}
 
         // System.out.println("");
