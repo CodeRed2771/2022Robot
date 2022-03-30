@@ -4,8 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Climber.ClimberPosition;
 import frc.robot.Climber.Rung;
 
-//DOES NOTHING
-
 public class AutoTraverse extends AutoBaseClass {
 	public AutoTraverse() {
 		super();
@@ -18,24 +16,24 @@ public class AutoTraverse extends AutoBaseClass {
 
 	public void tick() {
         if (isRunning()) {
-            DriveAuto.tick();
+            // DriveAuto.tick(); this is also in RobotPeriodic
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
                 case 0:
-                    Climber.climbTo(Rung.Retract);
+                    Climber.climbTo(Rung.RetractHard);
                     setTimerAndAdvanceStep(3000);
                     break;
                 case 1:
                     break;
                 case 2:
                     Climber.climbTo(Rung.UpLittle);
-                    setTimerAndAdvanceStep(2000);
+                    setTimerAndAdvanceStep(1500);
                     break;
                 case 3:
                     break;
                 case 4:
                     Climber.climberPosition(ClimberPosition.Back);
-                    setTimerAndAdvanceStep(2000);
+                    setTimerAndAdvanceStep(750);
                     break;
                 case 5:
                     break;
@@ -60,10 +58,13 @@ public class AutoTraverse extends AutoBaseClass {
                     }
                     break;
                 case 11:
-                    Climber.climbTo(Rung.Retract);
-                    setTimerAndAdvanceStep(5000);
+                    Climber.climbTo(Rung.RetractHard);
+                    setTimerAndAdvanceStep(3000);
                     break;
-                case 12:
+                case 12: 
+                    break;
+                case 13:
+                    Climber.climbTo(Rung.Retract);
                     stop();
                     break;
             }
