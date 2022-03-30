@@ -49,6 +49,10 @@ public class Climber {
 	private static double timeToClimb;
 	private static double lastPositionRequested = 0;
 	private static boolean climbStarted = false;
+	public static enum Motor {
+		LeftMotor,
+		RightMotor,
+	}
 
 	public static void init() {
         climberMotor = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
@@ -142,7 +146,32 @@ public class Climber {
 		climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 		climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 	}
-	
+
+	public static void moveV3(double direction, Motor motor) {
+		// direction is between -1 and 1 indicating the direction to manually move
+		double movementFactor = 1.3;
+
+		double newPosition = lastPositionRequested + (movementFactor * -direction);
+		
+		if (newPosition < 0) {
+			newPosition = 0;
+		} else if (newPosition > getMaxExtension()) {
+			newPosition = getMaxExtension();
+		}
+
+		lastPositionRequested = newPosition;
+
+		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
+		switch (motor) {
+			case LeftMotor:
+				climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
+				break;
+			case RightMotor:
+				climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
+				break;
+		}
+	}
+
 	public static void climberStop() {
 		climberMotor.set(0);
 		climberMotor2.set(0);
