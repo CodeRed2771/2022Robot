@@ -25,7 +25,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                     Intake.startIntake();
                     Shooter.StartShooter();
                     Shooter.setManualPresets(ManualShotPreset.TarmacLine);
-                    driveInches(60, 0, .4); // drive slowly toward 2nd ball
+                    driveInches(55, 0, .4); // drive slowly toward 2nd ball
                     setTimerAndAdvanceStep(5000);
                     break;
                 case 1:
@@ -33,7 +33,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                         advanceStep();
                     break;
                 case 2://step 2
-                    driveInches(-20, 0, .4); // drive back up to the line
+                    driveInches(-15, 0, .4); // drive back up to the line
                     setTimerAndAdvanceStep(2000);
                     break;
                 case 3:
@@ -47,7 +47,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                 case 5:
                     break;
                 case 6:
-                    driveInches(20, 0, 0.5); // drive out to jostle the 2nd ball in
+                    driveInches(15, 0, 0.5); // drive out to jostle the 2nd ball in
                     Shooter.setManualPresets(ManualShotPreset.TarmacLine); // make sure this is still set
                     setTimerAndAdvanceStep(3000);
                     break;
@@ -56,7 +56,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                         advanceStep();
                     break;
                 case 8:
-                    driveInches(-20, 0, .8); // hopefully the ball slides into place
+                    driveInches(-15, 0, .8); // hopefully the ball slides into place
                     setTimerAndAdvanceStep(2000);
                     break;
                 case 9:

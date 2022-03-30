@@ -20,7 +20,7 @@ public class AutoTraverse extends AutoBaseClass {
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
                 case 0:
-                    Climber.climbTo(Rung.RetractHard);
+                    Climber.climbTo(Rung.Retract);
                     setTimerAndAdvanceStep(3000);
                     break;
                 case 1:
@@ -58,7 +58,7 @@ public class AutoTraverse extends AutoBaseClass {
                     }
                     break;
                 case 11:
-                    Climber.climbTo(Rung.RetractHard);
+                    Climber.climbTo(Rung.Retract);
                     setTimerAndAdvanceStep(3000);
                     break;
                 case 12: 

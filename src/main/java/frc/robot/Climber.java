@@ -21,6 +21,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Shooter.ShooterPosition;
 
 public class Climber {
 	private static CANSparkMax climberMotor;
@@ -28,8 +29,9 @@ public class Climber {
 	private static SparkMaxPIDController climber1PID;
 	private static SparkMaxPIDController climber2PID;
 	private static DoubleSolenoid climberSolenoid;
-	private final static double MAX_EXTENSION_VERTICAL = 82;
+	private final static double MAX_EXTENSION_VERTICAL = 76.5;
 	private final static double MAX_EXTENSION_BACK = 105;
+	private final static double MAX_RETRACTED = -5;
 	private static ClimberPosition currentClimberPosition;
 	public static enum ClimberPosition {
 		Straight, 
@@ -40,7 +42,6 @@ public class Climber {
 		MediumRung, 
 		ExtendToNextRung,
 		Retract,
-		RetractHard,
 		UpLittle, 
 	}
 	private static Rung rungToClimb;
@@ -110,9 +111,12 @@ public class Climber {
 
 	public static void move(double speed){
 		if (climberMotor.getEncoder().getPosition() <= 0  && speed > 0.2) {
-			climberMotor.set(-.15); // allow them to very slowly retract to allow for manual pull in 
+			climberMotor.set(-.2); // allow them to very slowly retract to allow for manual pull in 
 			                       // after powering off in the extended position
-			climberMotor2.set(-.15);
+			climberMotor2.set(-.2);
+		} else if (climberMotor.getEncoder().getPosition() >= getMaxExtension() && speed < .2) {
+			climberMotor.set(.20);
+			climberMotor2.set(.20);
 		}
 		else if ((climberMotor.getEncoder().getPosition() <= 0  && speed > 0)) {
 			climberMotor.set(0);
@@ -133,8 +137,8 @@ public class Climber {
 
 		double newPosition = lastPositionRequested + (movementFactor * -direction);
 		
-		if (newPosition < 0) {
-			newPosition = 0;
+		if (newPosition < MAX_RETRACTED) {
+			newPosition = MAX_RETRACTED;
 		} else if (newPosition > getMaxExtension()) {
 			newPosition = getMaxExtension();
 		}
@@ -194,6 +198,7 @@ public class Climber {
 				climberSolenoid.set(DoubleSolenoid.Value.kForward);
 				currentClimberPosition = position;
 				climbStarted = true;
+				Shooter.setShooterPosition(ShooterPosition.Medium);
 				break;
 		}
 	}
@@ -210,28 +215,22 @@ public class Climber {
 		// climbRung = true;
 		switch(rung) {
 			case LowRung:
-				climber1PID.setReference(50, CANSparkMax.ControlType.kSmartMotion);
-				climber2PID.setReference(50, CANSparkMax.ControlType.kSmartMotion);
+				lastPositionRequested = 50;
 				break;
 			case MediumRung:
-				climber1PID.setReference(60, CANSparkMax.ControlType.kSmartMotion);
-				climber2PID.setReference(60, CANSparkMax.ControlType.kSmartMotion);
+				lastPositionRequested = 60; // not right
 				break;
 			case ExtendToNextRung:
-				climber1PID.setReference(MAX_EXTENSION_BACK, CANSparkMax.ControlType.kSmartMotion);
-				climber2PID.setReference(MAX_EXTENSION_BACK, CANSparkMax.ControlType.kSmartMotion);
+				lastPositionRequested = MAX_EXTENSION_BACK;
 				break;
 			case Retract:
-				climber1PID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
-				climber2PID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
+				lastPositionRequested = MAX_RETRACTED;
 				break;
-			case RetractHard:
-				climber1PID.setReference(-10, CANSparkMax.ControlType.kSmartMotion);
-				climber2PID.setReference(-10, CANSparkMax.ControlType.kSmartMotion);
-				break;			
 			case UpLittle:
-				climber1PID.setReference(40, CANSparkMax.ControlType.kSmartMotion);
-				climber2PID.setReference(40, CANSparkMax.ControlType.kSmartMotion);
-		}
+				lastPositionRequested = 40;
+			}
+
+		climber1PID.setReference(lastPositionRequested, CANSparkMax.ControlType.kPosition);
+		climber2PID.setReference(lastPositionRequested, CANSparkMax.ControlType.kPosition);
 	}
 }
