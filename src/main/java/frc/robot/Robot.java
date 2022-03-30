@@ -210,21 +210,18 @@ public class Robot extends TimedRobot {
             } else {
                 if (Math.abs(gamepad2.getRightY()) > 0.05) {
                     Climber.moveV2(gamepad2.getRightY());
-                    mAutoProgram.stop();
                 } else 
                     Climber.moveV2(0);
             }
         }
-        if (Math.abs(gamepad2.getRightY()) > 0.05) {
+        if (mAutoProgram.isRunning() && Math.abs(gamepad2.getRightY()) > 0.2) {
             mAutoProgram.stop();
         }
 
         if (gamepad2.getLeftY() > 0.5) {
             Climber.climberPosition(ClimberPosition.Back);
-            mAutoProgram.stop();
         } else if (gamepad2.getLeftY() < -0.5) {
             Climber.climberPosition(ClimberPosition.Straight);
-            mAutoProgram.stop();
         }
 
         // DRIVER CONTROL MODE
