@@ -30,7 +30,7 @@ public class AutoTarmacShoot1 extends AutoBaseClass {
             
             switch (getCurrentStep()) {
                 case 0://segment 1 
-                    driveInches(64, 0, 0.75);
+                    driveInches(24, 0, 0.75);
                     Shooter.setManualPresets(ManualShotPreset.BackOfTarmac);
                     setTimerAndAdvanceStep(3000);
                     break;

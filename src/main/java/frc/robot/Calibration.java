@@ -67,7 +67,7 @@ public class Calibration {
     public final static double VISION_DISTANCE_B = -90.5271;
     public final static double VISION_DISTANCE_C = 0.563257;
 
-    public static final double CLIMBER_MOTOR_P = .2;
+    public static final double CLIMBER_MOTOR_P = .1;
 	public static final double CLIMBER_MOTOR_I = 0;
 	public static final double CLIMBER_MOTOR_D = 0;
 	public static final double CLIMBER_MOTOR_IZONE = 40;

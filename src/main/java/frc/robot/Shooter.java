@@ -64,10 +64,10 @@ public class Shooter {
         }
     }
     private static shooterArrayValue[] shooterArray =  {
-        new shooterArrayValue(ShooterPosition.Medium, 6200), // 0
-        new shooterArrayValue(ShooterPosition.Medium, 6200),  // 1
-        new shooterArrayValue(ShooterPosition.Medium, 6200), // 2
-        new shooterArrayValue(ShooterPosition.Medium, 6200), // 3
+        new shooterArrayValue(ShooterPosition.Low, 6200), // 0
+        new shooterArrayValue(ShooterPosition.Low, 6200),  // 1
+        new shooterArrayValue(ShooterPosition.Low, 6200), // 2
+        new shooterArrayValue(ShooterPosition.Low, 6200), // 3
         new shooterArrayValue(ShooterPosition.Low, 4850), // 4
         new shooterArrayValue(ShooterPosition.Low, 5300), // 5.
         new shooterArrayValue(ShooterPosition.Low, 5750), // 6

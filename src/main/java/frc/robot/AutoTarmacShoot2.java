@@ -24,7 +24,7 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
                 case 1:
                     break;
                 case 2://segment 1 
-                    driveInches(64, 0, 0.75);
+                    driveInches(24, 0, 0.75);
                     Shooter.setManualPresets(ManualShotPreset.BackOfTarmac);
                     Intake.deployIntake();
                     setTimerAndAdvanceStep(3000);
@@ -81,6 +81,7 @@ public class AutoTarmacShoot2 extends AutoBaseClass{
                 case 16:
                     Shooter.oneShotAuto();
                     setTimerAndAdvanceStep(750);
+                    break;
                 case 17:
                     break;
                 case 18: 

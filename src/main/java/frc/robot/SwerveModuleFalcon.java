@@ -580,7 +580,12 @@ public class SwerveModuleFalcon implements SwerveModule {
 	}
 
 	public static Double round(Double val, int scale) {
-        return new BigDecimal(val.toString()).setScale(scale, RoundingMode.HALF_UP).doubleValue();
-    }
+		try {
+			return new BigDecimal(val.toString()).setScale(scale, RoundingMode.HALF_UP).doubleValue();
+		} catch (Exception ex) {
+			return val;
+		}
+
+       }
 
 }

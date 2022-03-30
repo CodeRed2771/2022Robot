@@ -152,9 +152,9 @@ public class Robot extends TimedRobot {
         } else if (gamepad2.getYButton()) {
             // Shooter.setManualPresets(ManualShotPreset.Backwards);
             Shooter.setManualPresets(ManualShotPreset.SafeZone);
-        } else if (gamepad2.getXButton()) {
-            Shooter.setManualPresets(ManualShotPreset.SuperCloseHighShot);
-        }
+        } //else if (gamepad2.getXButton()) {
+        //     Shooter.setManualPresets(ManualShotPreset.SuperCloseHighShot);
+        // }
 
         if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
             Shooter.alignAndShoot();
@@ -164,6 +164,11 @@ public class Robot extends TimedRobot {
             Shooter.reverseShooter();
         } else {
             Shooter.endReverseShooter();
+        }
+
+        if (gamepad2.getRightBumper() && gamepad2.getBackButton() && !mAutoProgram.isRunning() ) {
+            mAutoProgram = new AutoTraverse();
+            mAutoProgram.start();
         }
             
 
@@ -196,24 +201,30 @@ public class Robot extends TimedRobot {
         } else if (gamepad1.getYButton()) {
             VisionShooter.setLED(false);
         }
-
-        if (gamepad2.getRightBumper()) {
-            if (Math.abs(gamepad2.getRightY()) > 0.05) {
-                Climber.move(gamepad2.getRightY());
-            } else
-                Climber.move(0);
-        } else {
-            if (Math.abs(gamepad2.getRightY()) > 0.05) {
-                Climber.moveV2(gamepad2.getRightY());
-            } else
-                Climber.moveV2(0);
+        if (!mAutoProgram.isRunning()) {
+            if (gamepad2.getRightBumper()) {
+                if (Math.abs(gamepad2.getRightY()) > 0.05) {
+                    Climber.move(gamepad2.getRightY());
+                } else
+                    Climber.move(0);
+            } else {
+                if (Math.abs(gamepad2.getRightY()) > 0.05) {
+                    Climber.moveV2(gamepad2.getRightY());
+                    mAutoProgram.stop();
+                } else 
+                    Climber.moveV2(0);
+            }
         }
-       
+        if (Math.abs(gamepad2.getRightY()) > 0.05) {
+            mAutoProgram.stop();
+        }
 
         if (gamepad2.getLeftY() > 0.5) {
             Climber.climberPosition(ClimberPosition.Back);
+            mAutoProgram.stop();
         } else if (gamepad2.getLeftY() < -0.5) {
             Climber.climberPosition(ClimberPosition.Straight);
+            mAutoProgram.stop();
         }
 
         // DRIVER CONTROL MODE
@@ -313,6 +324,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         SmartDashboard.updateValues();
+        SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
 
         Shooter.tick();
         Intake.tick();
@@ -359,7 +371,7 @@ public class Robot extends TimedRobot {
         char robotPosition = selectedPos.toCharArray()[0];
         System.out.println("Robot position: " + robotPosition);
 
-        Shooter.setShooterPosition(ShooterPosition.Medium); // releases the starting position block
+        // Shooter.setShooterPosition(ShooterPosition.Medium); // releases the starting position block
         Intake.startIntake(); // releases the intake strap
 
         autoSelected = (String) autoChooser.getSelected();

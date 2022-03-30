@@ -29,23 +29,25 @@ public class Climber {
 	private static SparkMaxPIDController climber2PID;
 	private static DoubleSolenoid climberSolenoid;
 	private final static double MAX_EXTENSION_VERTICAL = 82;
-	private final static double MAX_EXTENSION_BACK = 100;
+	private final static double MAX_EXTENSION_BACK = 105;
 	private static ClimberPosition currentClimberPosition;
 	public static enum ClimberPosition {
 		Straight, 
 		Back
 	}
-	private static enum Rung {
+	public static enum Rung {
 		LowRung, 
 		MediumRung, 
 		ExtendToNextRung,
 		Retract,
+		UpLittle, 
 	}
 	private static Rung rungToClimb;
 	private static boolean climbRung;
 	private static double timer;
 	private static double timeToClimb;
 	private static double lastPositionRequested = 0;
+	private static boolean climbStarted = false;
 
 	public static void init() {
         climberMotor = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
@@ -122,7 +124,7 @@ public class Climber {
 
 	public static void moveV2(double direction) {
 		// direction is between -1 and 1 indicating the direction to manually move
-		double movementFactor = .8;
+		double movementFactor = 1.3;
 
 		double newPosition = lastPositionRequested + (movementFactor * -direction);
 		
@@ -146,6 +148,7 @@ public class Climber {
 		climberMotor.getEncoder().setPosition(0);
 		climberMotor2.getEncoder().setPosition(0);
 		lastPositionRequested = 0;
+		climbStarted = false;
 	}
 
 	public static void climberPosition(ClimberPosition position) {
@@ -157,12 +160,13 @@ public class Climber {
 			case Back:
 				climberSolenoid.set(DoubleSolenoid.Value.kForward);
 				currentClimberPosition = position;
+				climbStarted = true;
 				break;
 		}
 	}
 
 	private static double getMaxExtension() {
-		if (currentClimberPosition == ClimberPosition.Back) {
+		if (currentClimberPosition == ClimberPosition.Back || climbStarted) {
 			return MAX_EXTENSION_BACK;
 		} else	
 			return MAX_EXTENSION_VERTICAL;
@@ -183,13 +187,16 @@ public class Climber {
 				climber2PID.setReference(60, CANSparkMax.ControlType.kSmartMotion);
 				break;
 			case ExtendToNextRung:
-				climber1PID.setReference(70, CANSparkMax.ControlType.kSmartMotion);
-				climber2PID.setReference(70, CANSparkMax.ControlType.kSmartMotion);
+				climber1PID.setReference(MAX_EXTENSION_BACK, CANSparkMax.ControlType.kSmartMotion);
+				climber2PID.setReference(MAX_EXTENSION_BACK, CANSparkMax.ControlType.kSmartMotion);
 				break;
 			case Retract:
 				climber1PID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
 				climber2PID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
 				break;
+			case UpLittle:
+				climber1PID.setReference(40, CANSparkMax.ControlType.kSmartMotion);
+				climber2PID.setReference(40, CANSparkMax.ControlType.kSmartMotion);
 		}
 	}
 }
