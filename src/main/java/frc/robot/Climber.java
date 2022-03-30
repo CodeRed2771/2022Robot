@@ -40,6 +40,7 @@ public class Climber {
 		MediumRung, 
 		ExtendToNextRung,
 		Retract,
+		RetractHard,
 		UpLittle, 
 	}
 	private static Rung rungToClimb;
@@ -81,8 +82,8 @@ public class Climber {
 		climber1PID.setOutputRange(-1, 1);
 		climber2PID.setOutputRange(-1, 1);
 
-		climber1PID.setSmartMotionMaxVelocity(20, 0);
-		climber2PID.setSmartMotionMaxVelocity(20, 0);
+		climber1PID.setSmartMotionMaxVelocity(25, 0);
+		climber2PID.setSmartMotionMaxVelocity(25, 0);
 
 		climber1PID.setSmartMotionMinOutputVelocity(0, 0);
 		climber2PID.setSmartMotionMinOutputVelocity(0, 0);
@@ -133,8 +134,11 @@ public class Climber {
 		} else if (newPosition > getMaxExtension()) {
 			newPosition = getMaxExtension();
 		}
+
 		lastPositionRequested = newPosition;
+
 		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
+
 		climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 		climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 	}
@@ -175,8 +179,6 @@ public class Climber {
 	public static void climbTo(Rung rung) { 
 		// rungToClimb = rung;
 		// climbRung = true;
-		double encoderDistance = 0;
-		double power = 0;
 		switch(rung) {
 			case LowRung:
 				climber1PID.setReference(50, CANSparkMax.ControlType.kSmartMotion);
@@ -194,6 +196,10 @@ public class Climber {
 				climber1PID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
 				climber2PID.setReference(0, CANSparkMax.ControlType.kSmartMotion);
 				break;
+			case RetractHard:
+				climber1PID.setReference(-10, CANSparkMax.ControlType.kSmartMotion);
+				climber2PID.setReference(-10, CANSparkMax.ControlType.kSmartMotion);
+				break;			
 			case UpLittle:
 				climber1PID.setReference(40, CANSparkMax.ControlType.kSmartMotion);
 				climber2PID.setReference(40, CANSparkMax.ControlType.kSmartMotion);
