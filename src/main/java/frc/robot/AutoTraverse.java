@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Climber.ClimberPosition;
 import frc.robot.Climber.Rung;
+import frc.robot.Shooter.ShooterPosition;
 
 public class AutoTraverse extends AutoBaseClass {
 	public AutoTraverse() {
@@ -20,36 +21,44 @@ public class AutoTraverse extends AutoBaseClass {
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
                 case 0:
-                    Climber.climbTo(Rung.Retract);
-                    setTimerAndAdvanceStep(3000);
+                    Climber.climbTo(Rung.UpLittle);
+                    setTimerAndAdvanceStep(4000);
                     break;
                 case 1:
                     break;
                 case 2:
-                    Climber.climbTo(Rung.UpLittle);
+                    Climber.climbTo(Rung.Retract);
                     setTimerAndAdvanceStep(1500);
                     break;
                 case 3:
                     break;
                 case 4:
-                    Climber.climberPosition(ClimberPosition.Back);
-                    setTimerAndAdvanceStep(750);
+                    Climber.climbTo(Rung.UpLittle);
+                    Shooter.setShooterPosition(ShooterPosition.Medium);
+                    setTimerAndAdvanceStep(1500);
                     break;
                 case 5:
                     break;
                 case 6:
-                    Climber.climbTo(Rung.ExtendToNextRung);
-                    setTimerAndAdvanceStep(3000);
+                    Climber.climberPosition(ClimberPosition.Back);
+                    setTimerAndAdvanceStep(750);
                     break;
                 case 7:
                     break;
                 case 8:
-                    Climber.climberPosition(ClimberPosition.Straight);
+                    Climber.climbTo(Rung.ExtendToNextRung);
                     setTimerAndAdvanceStep(2000);
                     break;
                 case 9:
                     break;
-                case 10: 
+                case 10:
+                    Climber.climberPosition(ClimberPosition.Straight);
+                    Shooter.setShooterPosition(ShooterPosition.Backwards);
+                    setTimerAndAdvanceStep(1000);
+                    break;
+                case 11:
+                    break;
+                case 12: 
                     if (completedTwice) {
                         advanceStep();
                     } else {
@@ -57,14 +66,21 @@ public class AutoTraverse extends AutoBaseClass {
                         completedTwice = true;
                     }
                     break;
-                case 11:
-                    Climber.climbTo(Rung.Retract);
-                    setTimerAndAdvanceStep(3000);
-                    break;
-                case 12: 
-                    break;
                 case 13:
+                    Climber.climbTo(Rung.UpLittle);
+                    setTimerAndAdvanceStep(4000);
+                    break;
+                case 14: 
+                    break;
+                case 15:
                     Climber.climbTo(Rung.Retract);
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 16:
+                    break;
+                case 17:
+                    //limber.climbTo(Rung.UpLittle);
+                    Shooter.setShooterPosition(ShooterPosition.Medium);
                     stop();
                     break;
             }

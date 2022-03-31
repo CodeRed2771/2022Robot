@@ -38,6 +38,8 @@ public class Shooter {
     private static DoubleSolenoid shooterPositionSolenoid_Stage1;
     private static DoubleSolenoid shooterPositionSolenoid_Stage2;
     private static boolean reverse = false;
+    private static boolean alignOnly = true;
+
     public static enum ShooterPosition {
         Low,
         Medium,
@@ -291,14 +293,15 @@ public class Shooter {
         continuousShooting = false;
     }
 
-    public static void alignAndShoot () {
+    public static void alignAndShoot (boolean pAlignOnly) {
+        alignOnly = pAlignOnly;
         isEnabled = true;
         oneShot = true;
         continuousShooting = false;
         if (calibrationMode) {
             manualVisionOverride = true;
         }
-        if (!manualVisionOverride) {
+        if (!manualVisionOverride || alignOnly) {
             AutoBaseClass mAutoProgram;
             mAutoProgram = new AutoAlign();
             mAutoProgram.start(true);
@@ -374,6 +377,14 @@ public class Shooter {
 
     public static void setAutoDistancingMode() {
         manualVisionOverride = false;
+    }
+
+    public static void setAlignOnly(boolean pAlignOnly) {
+        alignOnly = pAlignOnly;
+    }
+
+    public static boolean isAlignOnly() {
+        return alignOnly;
     }
 
     public static void setManualPresets(ManualShotPreset position) {

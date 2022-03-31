@@ -41,7 +41,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                         advanceStep();
                     break;
                 case 4:
-                    Shooter.alignAndShoot();
+                    Shooter.alignAndShoot(true);
                     setTimerAndAdvanceStep(3000);
                     break;
                 case 5:
@@ -64,7 +64,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                         advanceStep();
                     break;
                 case 10:
-                    Shooter.alignAndShoot();
+                    Shooter.alignAndShoot(true);
                     Intake.stopIntake();
                     setTimerAndAdvanceStep(3000);
                     break;

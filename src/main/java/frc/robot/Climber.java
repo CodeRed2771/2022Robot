@@ -227,7 +227,7 @@ public class Climber {
 				lastPositionRequested = MAX_RETRACTED;
 				break;
 			case UpLittle:
-				lastPositionRequested = 40;
+				lastPositionRequested = 20;
 			}
 
 		climber1PID.setReference(lastPositionRequested, CANSparkMax.ControlType.kPosition);

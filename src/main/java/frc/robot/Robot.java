@@ -141,7 +141,7 @@ public class Robot extends TimedRobot {
             mAutoProgram = new AutoAlign();
             mAutoProgram.start(true);
         } else if (gamepad1.getLeftBumper() && AutoAlign.getAllignment()) {
-            Shooter.alignAndShoot();
+            Shooter.alignAndShoot(true);
         }
         
          if (gamepad2.getAButton()) {
@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
         // }
 
         if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
-            Shooter.alignAndShoot();
+            Shooter.alignAndShoot(false);
         }
 
         if (gamepad2.getStartButton()) {

@@ -29,7 +29,7 @@ public class AutoTarmacShoot3Vision extends AutoBaseClass {
                     }
                     break;
                 case 2:
-                    Shooter.alignAndShoot();
+                    Shooter.alignAndShoot(true);
                     setTimerAndAdvanceStep(1000);
                 case 3:
                     break;
@@ -80,7 +80,7 @@ public class AutoTarmacShoot3Vision extends AutoBaseClass {
                         advanceStep();
                     }
                 case 24:
-                    Shooter.alignAndShoot();
+                    Shooter.alignAndShoot(true);
                     setTimerAndAdvanceStep(1000);
                 case 25:
                     break;

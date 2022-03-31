@@ -91,7 +91,7 @@ public class AutoAlign extends AutoBaseClass {
                 break;
             case 5: 
                 if (autoShoot()){
-                    if (!Shooter.getManualOveride()) {
+                    if (!Shooter.getManualOveride() && !Shooter.isAlignOnly()) {
                         Shooter.setupShooterAuto();
                     }
                 }
