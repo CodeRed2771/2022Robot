@@ -39,7 +39,7 @@ public class Shooter {
     private static DoubleSolenoid shooterPositionSolenoid_Stage2;
     private static boolean reverse = false;
     private static boolean alignOnly = true;
-
+    private static AutoBaseClass mAlignProgram;
     public static enum ShooterPosition {
         Low,
         Medium,
@@ -159,9 +159,14 @@ public class Shooter {
         
         setBallLiftDown();
 
+        mAlignProgram = new AutoDoNothing();
+        
     }
 
     public static void tick() {
+        if (mAlignProgram.isRunning()) {
+            mAlignProgram.tick();
+        }
 
         if (!isInitialized) 
             return;
@@ -295,16 +300,15 @@ public class Shooter {
 
     public static void alignAndShoot (boolean pAlignOnly) {
         alignOnly = pAlignOnly;
-        isEnabled = true;
-        oneShot = true;
+        // isEnabled = true;
+        // oneShot = true;
         continuousShooting = false;
         if (calibrationMode) {
             manualVisionOverride = true;
         }
         if (!manualVisionOverride || alignOnly) {
-            AutoBaseClass mAutoProgram;
-            mAutoProgram = new AutoAlign();
-            mAutoProgram.start(true);
+            mAlignProgram = new AutoAlign();
+            mAlignProgram.start(true);
         }
     }
 
