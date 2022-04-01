@@ -51,6 +51,29 @@ public class RobotGyro {
         }
     }
 
+    public static double velocityX() {
+        return mGyro.getVelocityX();
+    }
+
+    public static double velocityY() {
+        return mGyro.getVelocityY();
+    }
+
+    public static double velocityZ() {
+        return mGyro.getVelocityZ();
+    }
+
+    public static double pitch() {
+        return mGyro.getPitch();
+    }
+
+    public static double roll() {
+        return mGyro.getRoll();
+    }
+
+    public static double yaw() {
+        return mGyro.getYaw();
+    }
     /***
      * 
      * @param desiredPosition - desired 0 to 360 position

@@ -351,9 +351,16 @@ public class Robot extends TimedRobot {
             DriveTrain.setDriveMMVelocity(
                     (int) SmartDashboard.getNumber("DRIVE MM VELOCITY", Calibration.DT_MM_VELOCITY));
         }
-        SmartDashboard.putNumber("Position X", RobotGyro.getPosition().x);
-        SmartDashboard.putNumber("Position Y", RobotGyro.getPosition().y);
-        SmartDashboard.putNumber("Position Z", RobotGyro.getPosition().z);
+        RobotGyro.position();
+        // SmartDashboard.putNumber("Position X", RobotGyro.getPosition().x);
+        // SmartDashboard.putNumber("Position Y", RobotGyro.getPosition().y);
+        // SmartDashboard.putNumber("Position Z", RobotGyro.getPosition().z);
+        SmartDashboard.putNumber("Velocity X", RobotGyro.velocityX());
+        SmartDashboard.putNumber("Velocity Y", RobotGyro.velocityY());
+        SmartDashboard.putNumber("Velocity Z", RobotGyro.velocityZ());
+        SmartDashboard.putNumber("Pitch", RobotGyro.pitch());
+        SmartDashboard.putNumber("Roll", RobotGyro.roll());
+        SmartDashboard.putNumber("Yaw", RobotGyro.yaw());
     }
 
     @Override
