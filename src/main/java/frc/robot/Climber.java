@@ -31,7 +31,7 @@ public class Climber {
 	private static DoubleSolenoid climberSolenoid;
 	private final static double MAX_EXTENSION_VERTICAL = 76.5;
 	private final static double MAX_EXTENSION_BACK = 105;
-	private final static double MAX_RETRACTED = -5;
+	private final static double MAX_RETRACTED = -2;
 	private static ClimberPosition currentClimberPosition;
 	public static enum ClimberPosition {
 		Straight, 
@@ -59,14 +59,14 @@ public class Climber {
         climberMotor = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
         climberMotor.restoreFactoryDefaults(); 
         climberMotor.setClosedLoopRampRate(0.5);
-        // climberMotor.setSmartCurrentLimit(20);
+        climberMotor.setSmartCurrentLimit(40);
         climberMotor.setIdleMode(IdleMode.kBrake);
 		climberMotor.setInverted(true);
 
 		climberMotor2 = new CANSparkMax(Wiring.CLIMBER_MOTOR_2, MotorType.kBrushless);
 		climberMotor2.restoreFactoryDefaults();
 		climberMotor2.setClosedLoopRampRate(0.5);
-        // climberMotor2.setSmartCurrentLimit(20);
+        climberMotor2.setSmartCurrentLimit(40);
 		climberMotor2.setIdleMode(IdleMode.kBrake);
 		climberMotor2.setInverted(false);
 
@@ -132,23 +132,27 @@ public class Climber {
 	}
 
 	public static void moveV2(double direction) {
-		// direction is between -1 and 1 indicating the direction to manually move
-		double movementFactor = 1.3;
+		if (Math.abs(direction) < 0.1) {
+			return;
+		} else {
+			// direction is between -1 and 1 indicating the direction to manually move
+			double movementFactor = 1.3;
 
-		double newPosition = lastPositionRequested + (movementFactor * -direction);
-		
-		if (newPosition < MAX_RETRACTED) {
-			newPosition = MAX_RETRACTED;
-		} else if (newPosition > getMaxExtension()) {
-			newPosition = getMaxExtension();
+			double newPosition = lastPositionRequested + (movementFactor * -direction);
+			
+			if (newPosition < MAX_RETRACTED) {
+				newPosition = MAX_RETRACTED;
+			} else if (newPosition > getMaxExtension()) {
+				newPosition = getMaxExtension();
+			}
+
+			lastPositionRequested = newPosition;
+
+			SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
+
+			climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
+			climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 		}
-
-		lastPositionRequested = newPosition;
-
-		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
-
-		climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
-		climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 	}
 
 	public static void moveV3(double direction, Motor motor) {

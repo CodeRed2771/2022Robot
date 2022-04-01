@@ -25,6 +25,7 @@ public class AutoAlign extends AutoBaseClass {
     public void start(boolean autoShoot){
         super.start(autoShoot);
         wasAligned = false;
+        angleOffset = 0;
     }
 
     public void stop() {
@@ -53,15 +54,18 @@ public class AutoAlign extends AutoBaseClass {
                 advanceStep();
                 break;
             case 1:
-                angleOffset = VisionShooter.getDistanceAdjustedAngle();
+                setTimerAndAdvanceStep(1000);
+                break;
+            case 2:
                 if (VisionShooter.seesTarget()) {
+                    angleOffset = VisionShooter.getDistanceAdjustedAngle();
                     advanceStep();
                 }
                 SmartDashboard.putNumber("Adj Angle Offset", angleOffset);
-                 SmartDashboard.putNumber("Angle Offset", VisionShooter.getAngleOffset());
+                SmartDashboard.putNumber("Angle Offset", VisionShooter.getAngleOffset());
                 SmartDashboard.putBoolean("Sees Target", VisionShooter.seesTarget());
                 break;
-            case 2:
+            case 3:
                 timer ++;
                 if (Math.abs(angleOffset) > 1) {
                     DriveAuto.turnDegrees(angleOffset, 1);
@@ -78,18 +82,18 @@ public class AutoAlign extends AutoBaseClass {
                     setStep(5);
                 }
                 break;
-            case 3:
+            case 4:
                 if (driveCompleted()) {
                     advanceStep();
                 }
                 break;
-            case 4:
+            case 5:
                 wasAligned = true;
                 // Vision.flashLED();
                 System.out.println("On Target!");
                 advanceStep();
                 break;
-            case 5: 
+            case 6: 
                 if (autoShoot()){
                     if (!Shooter.getManualOveride() && !Shooter.isAlignOnly()) {
                         Shooter.setupShooterAuto();
@@ -97,9 +101,9 @@ public class AutoAlign extends AutoBaseClass {
                 }
                 setTimerAndAdvanceStep(700);
                 break;
-            case 6:
-                break;
             case 7:
+                break;
+            case 8:
                 if (autoShoot()){
                     Shooter.oneShotAuto();
                 }

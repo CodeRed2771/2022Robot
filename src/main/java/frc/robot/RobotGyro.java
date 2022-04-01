@@ -25,6 +25,19 @@ public class RobotGyro {
         return mGyro.getAngle();
     }
 
+
+    static class Position {
+        double x;
+        double y;
+        double z;
+        public Position(double x, double y, double z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+    }
+    public static Position position = new Position(0, 0, 0);
+    private static final double CYCLE_TIME = 0.02;
     /***
      * ƒ
      * 
@@ -71,9 +84,17 @@ public class RobotGyro {
 
         return adjustedAngle * (Math.PI / 180d);
     }
+    
 
     public double pidGet() {
         return mGyro.getAngle();
     }
-
+    public static void position() {
+        position.x += mGyro.getVelocityX() * CYCLE_TIME;
+        position.y += mGyro.getVelocityY() * CYCLE_TIME;
+        position.x = mGyro.getVelocityZ() * CYCLE_TIME;
+    }
+    public static Position getPosition() {
+        return position;
+    }
 }

@@ -350,6 +350,9 @@ public class Robot extends TimedRobot {
             DriveTrain.setDriveMMVelocity(
                     (int) SmartDashboard.getNumber("DRIVE MM VELOCITY", Calibration.DT_MM_VELOCITY));
         }
+        SmartDashboard.putNumber("Position X", RobotGyro.getPosition().x);
+        SmartDashboard.putNumber("Position Y", RobotGyro.getPosition().y);
+        SmartDashboard.putNumber("Position Z", RobotGyro.getPosition().z);
     }
 
     @Override
@@ -444,14 +447,14 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Position", positionChooser);
 
         autoChooser = new SendableChooser<String>();
-        autoChooser.addOption(autoCalibrator, autoCalibrator);
-        autoChooser.addOption(autoWheelAlign, autoWheelAlign);
+        //autoChooser.addOption(autoCalibrator, autoCalibrator);
+        //autoChooser.addOption(autoWheelAlign, autoWheelAlign);
         autoChooser.addOption(autoAlign, autoAlign);
-        autoChooser.addOption(ballPickUp, ballPickUp);
+        //autoChooser.addOption(ballPickUp, ballPickUp);
         autoChooser.addOption(AutoLeaveTarmac, AutoLeaveTarmac);
         autoChooser.addOption(AutoTarmacShoot1, AutoTarmacShoot1);
         autoChooser.addOption(AutoTarmacShoot2, AutoTarmacShoot2);
-        autoChooser.addOption(AutoTarmacShoot2Vision, AutoTarmacShoot2Vision);
+        autoChooser.setDefaultOption(AutoTarmacShoot2Vision, AutoTarmacShoot2Vision);
 
         SmartDashboard.putData("Auto Chose:", autoChooser);
 
