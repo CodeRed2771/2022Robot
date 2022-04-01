@@ -32,6 +32,7 @@ public class Climber {
 	private final static double MAX_EXTENSION_VERTICAL = 76.5;
 	private final static double MAX_EXTENSION_BACK = 105;
 	private final static double MAX_RETRACTED = -2;
+	private final static double RETRACTED = 0;
 	private static ClimberPosition currentClimberPosition;
 	public static enum ClimberPosition {
 		Straight, 
@@ -133,7 +134,9 @@ public class Climber {
 
 	public static void moveV2(double direction) {
 		if (Math.abs(direction) < 0.1) {
-			return;
+			if (lastPositionRequested < 0) {
+				lastPositionRequested = RETRACTED;
+			}
 		} else {
 			// direction is between -1 and 1 indicating the direction to manually move
 			double movementFactor = 1.3;
@@ -147,12 +150,11 @@ public class Climber {
 			}
 
 			lastPositionRequested = newPosition;
-
-			SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
-
-			climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
-			climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 		}
+		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
+
+		climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
+		climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 	}
 
 	public static void moveV3(double direction, Motor motor) {

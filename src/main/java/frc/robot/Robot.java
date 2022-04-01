@@ -201,8 +201,9 @@ public class Robot extends TimedRobot {
         } else if (gamepad1.getYButton()) {
             VisionShooter.setLED(false);
         }
+
         if (!mAutoProgram.isRunning()) {
-            if (gamepad2.getRightBumper()) {
+            if (gamepad2.getRightBumper()) {  // override mode
                 if (Math.abs(gamepad2.getRightY()) > 0.05) {
                     Climber.move(gamepad2.getRightY());
                 } else
