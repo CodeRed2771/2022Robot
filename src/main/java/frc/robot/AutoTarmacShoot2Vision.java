@@ -17,7 +17,7 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
     @Override
     public void tick() {
         if (isRunning()) {
-            SmartDashboard.putNumber("Auto Step", getCurrentStep());
+            SmartDashboard.putNumber("Auto Auto Step", getCurrentStep());
 
             switch (getCurrentStep()) {
                 case 0://step 1
@@ -71,12 +71,18 @@ public class AutoTarmacShoot2Vision extends AutoBaseClass {
                 case 11:
                     break;
                 case 12: 
+                    Shooter.alignAndShoot(true);
+                    setTimerAndAdvanceStep(2000);
+                    break;
+                case 13: 
+                    break;
+                case 14: 
                     driveInches(12, 0, .8); // make sure we're out of the tarmac
                     setTimerAndAdvanceStep(2000);
                     break;
-                case 13:
+                case 15:
                     break;
-                case 14:
+                case 16:
                     Shooter.StopShooter();
                     stop();
                     break;

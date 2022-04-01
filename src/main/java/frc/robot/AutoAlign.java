@@ -45,7 +45,7 @@ public class AutoAlign extends AutoBaseClass {
     public void tick() {
         if (isRunning()) {
             DriveAuto.tick();
-            SmartDashboard.putNumber("Auto Step", getCurrentStep());
+            SmartDashboard.putNumber("AutoAlighn Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
             case 0:
                 VisionShooter.setVisionTrackingMode();

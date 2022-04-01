@@ -37,10 +37,10 @@ public class Calibration {
     private final static double DT_C_ABS_ZERO_INITIAL = .443; 
     private final static double DT_D_ABS_ZERO_INITIAL = .098; 
     
-    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .543; // .684; // NEW BOT
-    public final static double DT_NEW_B_ABS_ZERO_INITIAL = .308; //.983; 
-    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .668; // replaced encoder 3/31
-    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .385; // 276; 
+    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .567; // .684; // NEW BOT
+    public final static double DT_NEW_B_ABS_ZERO_INITIAL = .289; //.983; 
+    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .656; // replaced encoder 3/31
+    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .367; // 276; 
 
     public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
     
