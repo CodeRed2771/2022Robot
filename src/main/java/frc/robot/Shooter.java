@@ -340,8 +340,8 @@ public class Shooter {
                 shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
                 break;
             case Medium:
-                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kForward);
-                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
+                shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kReverse);
+                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kForward);
                 break;
             case  Backwards:
                 shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kForward);
