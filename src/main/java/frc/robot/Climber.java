@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Shooter.ShooterPosition;
 
 public class Climber {
-	private static CANSparkMax climberMotor;
-	private static CANSparkMax climberMotor2;
+	private static CANSparkMax climberMotorLeft;
+	private static CANSparkMax climberMotorRight;
 	private static SparkMaxPIDController climber1PID;
 	private static SparkMaxPIDController climber2PID;
 	private static DoubleSolenoid climberSolenoid;
@@ -58,23 +58,23 @@ public class Climber {
 	}
 
 	public static void init() {
-        climberMotor = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
-        climberMotor.restoreFactoryDefaults(); 
-        climberMotor.setClosedLoopRampRate(0.5);
-        climberMotor.setSmartCurrentLimit(65);
-        climberMotor.setIdleMode(IdleMode.kBrake);
-		climberMotor.setInverted(true);
+        climberMotorLeft = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
+        climberMotorLeft.restoreFactoryDefaults(); 
+        climberMotorLeft.setClosedLoopRampRate(0.5);
+        climberMotorLeft.setSmartCurrentLimit(65);
+        climberMotorLeft.setIdleMode(IdleMode.kBrake);
+		climberMotorLeft.setInverted(true);
 
-		climberMotor2 = new CANSparkMax(Wiring.CLIMBER_MOTOR_2, MotorType.kBrushless);
-		climberMotor2.restoreFactoryDefaults();
-		climberMotor2.setClosedLoopRampRate(0.5);
-        climberMotor2.setSmartCurrentLimit(65);
-		climberMotor2.setIdleMode(IdleMode.kBrake);
-		climberMotor2.setInverted(false);
+		climberMotorRight = new CANSparkMax(Wiring.CLIMBER_MOTOR_2, MotorType.kBrushless);
+		climberMotorRight.restoreFactoryDefaults();
+		climberMotorRight.setClosedLoopRampRate(0.5);
+        climberMotorRight.setSmartCurrentLimit(65);
+		climberMotorRight.setIdleMode(IdleMode.kBrake);
+		climberMotorRight.setInverted(false);
 
 		
-		climber1PID = climberMotor.getPIDController();
-		climber2PID = climberMotor2.getPIDController();
+		climber1PID = climberMotorLeft.getPIDController();
+		climber2PID = climberMotorRight.getPIDController();
 		
 		climber1PID.setP(Calibration.CLIMBER_MOTOR_P);
 		climber1PID.setI(Calibration.CLIMBER_MOTOR_I);
@@ -107,29 +107,29 @@ public class Climber {
 	}
 
 	public static void tick() {
-		SmartDashboard.putNumber("Climber1 Position Actual", climberMotor.getEncoder().getPosition());
-		SmartDashboard.putNumber("Climber2 Position Actual", climberMotor2.getEncoder().getPosition());
+		SmartDashboard.putNumber("Climber1 Position Actual", climberMotorLeft.getEncoder().getPosition());
+		SmartDashboard.putNumber("Climber2 Position Actual", climberMotorRight.getEncoder().getPosition());
 	}
 
 	public static void move(double speed){
-		if (climberMotor.getEncoder().getPosition() <= 0  && speed > 0.2) {
-			climberMotor.set(-.2); // allow them to very slowly retract to allow for manual pull in 
+		if (climberMotorLeft.getEncoder().getPosition() <= 0  && speed > 0.2) {
+			climberMotorLeft.set(-.2); // allow them to very slowly retract to allow for manual pull in 
 			                       // after powering off in the extended position
-			climberMotor2.set(-.2);
-		} else if (climberMotor.getEncoder().getPosition() >= getMaxExtension() && speed < .2) {
-			climberMotor.set(.20);
-			climberMotor2.set(.20);
+			climberMotorRight.set(-.2);
+		} else if (climberMotorLeft.getEncoder().getPosition() >= getMaxExtension() && speed < .2) {
+			climberMotorLeft.set(.20);
+			climberMotorRight.set(.20);
 		}
-		else if ((climberMotor.getEncoder().getPosition() <= 0  && speed > 0)) {
-			climberMotor.set(0);
-			climberMotor2.set(0);
+		else if ((climberMotorLeft.getEncoder().getPosition() <= 0  && speed > 0)) {
+			climberMotorLeft.set(0);
+			climberMotorRight.set(0);
 		}
-		else if (climberMotor.getEncoder().getPosition() >= getMaxExtension() && speed < 0) {
-			climberMotor.set(0);
-			climberMotor2.set(0);
+		else if (climberMotorLeft.getEncoder().getPosition() >= getMaxExtension() && speed < 0) {
+			climberMotorLeft.set(0);
+			climberMotorRight.set(0);
 		} else {
-			climberMotor.set(-speed);
-			climberMotor2.set(-speed);
+			climberMotorLeft.set(-speed);
+			climberMotorRight.set(-speed);
 		}
 	}
 
@@ -154,9 +154,9 @@ public class Climber {
 		}
 		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
 
-		climberMotor.getPIDController().setReference(lastPositionRequested * EXTENSION_OFFSET, ControlType.kPosition);
+		climberMotorLeft.getPIDController().setReference(lastPositionRequested * EXTENSION_OFFSET, ControlType.kPosition);
 		// climberMotor2.getPIDController().setReference(lastPositionRequested , ControlType.kPosition);
-		climberMotor2.getPIDController().setReference(lastPositionRequested , ControlType.kPosition);
+		climberMotorRight.getPIDController().setReference(lastPositionRequested , ControlType.kPosition);
 	}
 
 	public static void moveV3(double direction, Motor motor) {
@@ -176,22 +176,22 @@ public class Climber {
 		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
 		switch (motor) {
 			case LeftMotor:
-				climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
+				climberMotorLeft.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 				break;
 			case RightMotor:
-				climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
+				climberMotorRight.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
 				break;
 		}
 	}
 
 	public static void climberStop() {
-		climberMotor.set(0);
-		climberMotor2.set(0);
+		climberMotorLeft.set(0);
+		climberMotorRight.set(0);
 	}
 
 	public static void reset() {
-		climberMotor.getEncoder().setPosition(0);
-		climberMotor2.getEncoder().setPosition(0);
+		climberMotorLeft.getEncoder().setPosition(0);
+		climberMotorRight.getEncoder().setPosition(0);
 		lastPositionRequested = 0;
 		climbStarted = false;
 	}
