@@ -33,6 +33,7 @@ public class Climber {
 	private final static double MAX_EXTENSION_BACK = 106;
 	private final static double MAX_RETRACTED = -2;
 	private final static double RETRACTED = 0;
+	private static final double EXTENSION_OFFSET = 1.037; 
 	private static ClimberPosition currentClimberPosition;
 	public static enum ClimberPosition {
 		Straight, 
@@ -60,14 +61,14 @@ public class Climber {
         climberMotor = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
         climberMotor.restoreFactoryDefaults(); 
         climberMotor.setClosedLoopRampRate(0.5);
-        climberMotor.setSmartCurrentLimit(60);
+        climberMotor.setSmartCurrentLimit(65);
         climberMotor.setIdleMode(IdleMode.kBrake);
 		climberMotor.setInverted(true);
 
 		climberMotor2 = new CANSparkMax(Wiring.CLIMBER_MOTOR_2, MotorType.kBrushless);
 		climberMotor2.restoreFactoryDefaults();
 		climberMotor2.setClosedLoopRampRate(0.5);
-        climberMotor2.setSmartCurrentLimit(60);
+        climberMotor2.setSmartCurrentLimit(65);
 		climberMotor2.setIdleMode(IdleMode.kBrake);
 		climberMotor2.setInverted(false);
 
@@ -153,8 +154,9 @@ public class Climber {
 		}
 		SmartDashboard.putNumber("Climber Position Requested", lastPositionRequested);
 
-		climberMotor.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
-		climberMotor2.getPIDController().setReference(lastPositionRequested, ControlType.kPosition);
+		climberMotor.getPIDController().setReference(lastPositionRequested * EXTENSION_OFFSET, ControlType.kPosition);
+		// climberMotor2.getPIDController().setReference(lastPositionRequested , ControlType.kPosition);
+		climberMotor2.getPIDController().setReference(lastPositionRequested , ControlType.kPosition);
 	}
 
 	public static void moveV3(double direction, Motor motor) {
