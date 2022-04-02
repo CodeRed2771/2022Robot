@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
         // }
 
         if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
-            Shooter.alignAndShoot(false);
+            Shooter.oneShotAuto();
         }
 
         if (gamepad2.getStartButton()) {
