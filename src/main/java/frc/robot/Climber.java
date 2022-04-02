@@ -31,6 +31,7 @@ public class Climber {
 	private static DoubleSolenoid climberSolenoid;
 	private final static double MAX_EXTENSION_VERTICAL = 76.5;
 	private final static double MAX_EXTENSION_BACK = 106;
+	private static final double MAX_EXTENSION_BACK_BEFORE_BAR = 78;
 	private final static double MAX_RETRACTED = -2;
 	private final static double RETRACTED = 0;
 	private static final double EXTENSION_OFFSET = 1.037; 
@@ -56,6 +57,8 @@ public class Climber {
 		LeftMotor,
 		RightMotor,
 	}
+	private static double startExtentionTime;
+	private static double extensionTimerDifference;
 
 	public static void init() {
         climberMotorLeft = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
@@ -207,14 +210,20 @@ public class Climber {
 				currentClimberPosition = position;
 				climbStarted = true;
 				Shooter.setShooterPosition(ShooterPosition.Medium);
+				startExtentionTime = System.currentTimeMillis();
 				break;
 		}
 	}
 
 	private static double getMaxExtension() {
+		extensionTimerDifference = System.currentTimeMillis() - startExtentionTime;
 		if (currentClimberPosition == ClimberPosition.Back || climbStarted) {
-			return MAX_EXTENSION_BACK;
-		} else	
+			if (extensionTimerDifference > 1750) {
+				return MAX_EXTENSION_BACK;
+			} else {
+				return MAX_EXTENSION_BACK_BEFORE_BAR;
+			}
+		} else
 			return MAX_EXTENSION_VERTICAL;
 	}
 
