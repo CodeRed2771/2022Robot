@@ -37,10 +37,10 @@ public class Calibration {
     private final static double DT_C_ABS_ZERO_INITIAL = .443; 
     private final static double DT_D_ABS_ZERO_INITIAL = .098; 
     
-    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .567; // .684; // NEW BOT
+    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .621; // .684; // NEW BOT
     public final static double DT_NEW_B_ABS_ZERO_INITIAL = .289; //.983; 
     public final static double DT_NEW_C_ABS_ZERO_INITIAL = .656; // replaced encoder 3/31
-    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .367; // 276; 
+    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .390; // 276; 
 
     public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
     
@@ -67,7 +67,7 @@ public class Calibration {
     public final static double VISION_DISTANCE_B = -90.5271;
     public final static double VISION_DISTANCE_C = 0.563257;
 
-    public static final double CLIMBER_MOTOR_P = .1;
+    public static final double CLIMBER_MOTOR_P = .07;
 	public static final double CLIMBER_MOTOR_I = 0;
 	public static final double CLIMBER_MOTOR_D = 0;
 	public static final double CLIMBER_MOTOR_IZONE = 40;
