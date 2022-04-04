@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Shooter.ManualShotPreset;
 
@@ -17,74 +18,104 @@ public class AutoTarmacShoot3Vision extends AutoBaseClass {
     public void tick() {
         if (isRunning()) {
             SmartDashboard.putNumber("Auto Step", getCurrentStep());
-            double degrees = 0;
             switch (getCurrentStep()) {
-                case 0:
-                    driveInches(64, 0, .8);
-                    setTimerAndAdvanceStep(6000);
+                case 0://step 1
+                    VisionShooter.setLED(true);
+                    Intake.startIntake();
+                    Shooter.StartShooter();
+                    Shooter.setManualPresets(ManualShotPreset.TarmacLine);
+                    driveInches(55, 0, .4); // drive slowly toward 2nd ball
+                    setTimerAndAdvanceStep(5000);
                     break;
                 case 1:
-                    if (driveCompleted()) {
+                    if(driveCompleted())
                         advanceStep();
-                    }
                     break;
-                case 2:
-                    Shooter.alignAndShoot(true);
-                    setTimerAndAdvanceStep(1000);
+                case 2://step 2
+                    driveInches(-15, 0, .4); // drive back up to the line
+                    setTimerAndAdvanceStep(2000);
+                    break;
                 case 3:
+                    if(driveCompleted())
+                        advanceStep();
                     break;
                 case 4:
-                    Intake.startIntake();
-                    advanceStep();
+                    break;
                 case 5:
-                    if (VisionBall.ballInView()) {
-                        setStep(20);
-                    } else {
-                        turnDegrees(50, .8);
-                        setTimerAndAdvanceStep(1500);
-                    }
+                    Shooter.alignAndShoot(true);
+                    setTimerAndAdvanceStep(3000);
                     break;
                 case 6:
-                    if (turnCompleted()) {
-                        advanceStep();
-                    }
                     break;
-                case 7:
-                    if (VisionBall.ballInView()) {
-                        setStep(20);
-                    } else {
-                        turnDegrees(-100, .8);
-                        setTimerAndAdvanceStep(2500);
-                    }
-                    break;
-                case 8:
-                    if (turnCompleted()) {
-                        advanceStep();
-                    }
-                    break;
-                case 20: 
-                    driveInches(VisionBall.distanceToBall(), VisionBall.degreesToBall(), .8);
-                    setTimerAndAdvanceStep(7000);
-                    break;
-                case 21: 
-                    if (driveCompleted()){
-                        advanceStep();
-                    }
-                    break;
-                case 22:
-                    driveInches(12,0,.8);
-                    setTimerAndAdvanceStep(7500);
-                    break;
-                case 23:
-                    if(driveCompleted()) {
-                        advanceStep();
-                    }
-                case 24:
-                    Shooter.alignAndShoot(true);
+                case 7: 
+                    Shooter.oneShotAuto();
                     setTimerAndAdvanceStep(1000);
-                case 25:
                     break;
-                case 26:
+                case 8: 
+                    break;
+                case 9: 
+                    Intake.stopIntake();
+                    if (DriverStation.getLocation() ==1) {
+                        driveInches(10, 0, .8);
+                        setTimerAndAdvanceStep(3000);
+                    } else if (DriverStation.getLocation() ==2) {
+                        driveInches(10, -10, .8);
+                        setTimerAndAdvanceStep(3000);
+                    } else {
+                        driveInches(20, -20, .8);
+                        setTimerAndAdvanceStep(3000);
+                    }
+                    break;
+                case 10:
+                    if(driveCompleted())
+                        advanceStep();
+                    break;
+                case 11:
+                    if (DriverStation.getLocation() ==1) {
+                        driveInches(20, -10, .8);
+                        setTimerAndAdvanceStep(3000);
+                    } else {
+                        setStep(13);
+                    }
+                case 12:
+                    if (driveCompleted())
+                        advanceStep();
+                    break;
+                case 13:
+                    Intake.startIntake();
+                    Shooter.setManualPresets(ManualShotPreset.HumanPlayerStation);
+                    if(VisionShooter.seeTarget() && DriverStation.getLocation() == 1) {
+                        turnDegrees(50, .8);
+                        setTimerAndAdvanceStep(3000);
+                    } else if(VisionShooter.seeTarget() && DriverStation.getLocation() == 2) {
+                        turnDegrees(20, .8);
+                        setTimerAndAdvanceStep(2000);
+                    } else if (VisionShooter.seeTarget() && DriverStation.getLocation() == 3) {
+                        turnDegrees(-50, .8);
+                        setTimerAndAdvanceStep(2000);
+                    } else {
+                        setStep(15);
+                    }
+                    break;
+                case 14:
+                    if(turnCompleted()) {
+                        advanceStep();
+                    } 
+                    break;
+                case 15:
+                    Shooter.alignAndShoot(true);
+                    setTimerAndAdvanceStep(3000);
+                    break;
+                case 16:
+                    break;
+                case 17:
+                    Shooter.oneShotAuto();
+                    setTimerAndAdvanceStep(1000);
+                    break;
+                case 18: 
+                    break;
+                case 19:
+                    Intake.stopIntake();
                     stop();
                     break;
             } 

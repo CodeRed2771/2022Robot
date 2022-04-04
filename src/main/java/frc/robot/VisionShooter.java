@@ -131,4 +131,13 @@ public class VisionShooter {
     public static void setTargetForFuelCell() {
         table.getEntry("pipeline").forceSetNumber(1);
     }
+
+    public static boolean seeTarget() {
+        double t = table.getEntry("ty").getDouble(0);
+        if (t != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

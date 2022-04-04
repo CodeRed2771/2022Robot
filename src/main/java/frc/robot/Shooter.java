@@ -52,6 +52,7 @@ public class Shooter {
         TarmacLine,
         Backwards,
         LowGoal, SafeZone,
+        HumanPlayerStation,
     }
     public static ManualShotPreset curManualShotPreset;
     private static boolean manualVisionOverride = false;
@@ -418,6 +419,10 @@ public class Shooter {
                 setShooterPosition(ShooterPosition.Low);
                 shooterMotorVelocityTarget = 8000;
                 break;
+            case HumanPlayerStation:
+                setShooterPosition(ShooterPosition.Low);
+                shooterMotorVelocityTarget = 9000;
+                break;  
         }
         
         SmartDashboard.putNumber("Shoot Setpoint",shooterMotorVelocityTarget);
