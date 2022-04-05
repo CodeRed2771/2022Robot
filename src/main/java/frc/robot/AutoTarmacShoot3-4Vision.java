@@ -5,9 +5,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Shooter.ManualShotPreset;
 
 public class AutoTarmacShoot3Vision extends AutoBaseClass {
-
-	public void start() {
+    boolean fourBall;
+	public void start(boolean ball) {
 		super.start();
+        fourBall = ball;
 	}
     
     public void stop() {
@@ -83,6 +84,15 @@ public class AutoTarmacShoot3Vision extends AutoBaseClass {
                     break;
                 case 13:
                     Intake.startIntake();
+                    if (fourBall) {
+                        setTimerAndAdvanceStep(4000);
+                    } else {
+                        setStep(15);
+                    }
+                    break;
+                case 14: 
+                    break;
+                case 15:
                     Shooter.setManualPresets(ManualShotPreset.HumanPlayerStation);
                     if(VisionShooter.seeTarget() && DriverStation.getLocation() == 1) {
                         turnDegrees(50, .8);
@@ -97,24 +107,28 @@ public class AutoTarmacShoot3Vision extends AutoBaseClass {
                         setStep(15);
                     }
                     break;
-                case 14:
+                case 16:
                     if(turnCompleted()) {
                         advanceStep();
                     } 
                     break;
-                case 15:
+                case 17:
                     Shooter.alignAndShoot(true);
                     setTimerAndAdvanceStep(3000);
                     break;
-                case 16:
-                    break;
-                case 17:
-                    Shooter.oneShotAuto();
-                    setTimerAndAdvanceStep(1000);
-                    break;
-                case 18: 
+                case 18:
                     break;
                 case 19:
+                    if (fourBall) {
+                        Shooter.oneShotAuto();
+                        setTimerAndAdvanceStep(1000);
+                    } else {
+                        setStep(21);
+                    }
+                    break;
+                case 20: 
+                    break;
+                case 21:
                     Intake.stopIntake();
                     stop();
                     break;
