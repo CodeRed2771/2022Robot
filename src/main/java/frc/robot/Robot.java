@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
     final String AutoTarmacShoot1 = "Auto Tarmac Shoot 1";
     final String AutoTarmacShoot2 = "Auto Tarmac Shoot 2";
     final String AutoTarmacShoot2Vision = "Auto Tarmac Shoot 2 Vision";
+    final String AutoTarmacShoot3Vision = "Auto Tarmac Shoot 3 Vision";
 
     private boolean isIntakeUpPosition = true;
     private boolean intakeKeyAlreadyPressed = false;
@@ -152,9 +153,9 @@ public class Robot extends TimedRobot {
         } else if (gamepad2.getYButton()) {
             // Shooter.setManualPresets(ManualShotPreset.Backwards);
             Shooter.setManualPresets(ManualShotPreset.SafeZone);
-        } //else if (gamepad2.getXButton()) {
-        //     Shooter.setManualPresets(ManualShotPreset.SuperCloseHighShot);
-        // }
+        } else if (gamepad2.getXButton()) {
+            Shooter.setManualPresets(ManualShotPreset.HumanPlayerStation);
+        }
 
         if (gamepad2.getLeftTriggerAxis() > 0 ||gamepad1.getLeftTriggerAxis() > 0) {
             Shooter.oneShotAuto();
@@ -421,6 +422,10 @@ public class Robot extends TimedRobot {
             mAutoProgram = new AutoTarmacShoot2Vision();
             mAutoProgram.start();
             break;
+        case AutoTarmacShoot3Vision:
+            mAutoProgram = new AutoTarmacShoot3Vision();
+            mAutoProgram.start(true);
+            break;
         }
         // double degreesOffset;
         // switch (postionAllianceSelected) {
@@ -463,6 +468,7 @@ public class Robot extends TimedRobot {
         autoChooser.addOption(AutoTarmacShoot1, AutoTarmacShoot1);
         autoChooser.addOption(AutoTarmacShoot2, AutoTarmacShoot2);
         autoChooser.setDefaultOption(AutoTarmacShoot2Vision, AutoTarmacShoot2Vision);
+        autoChooser.addOption(AutoTarmacShoot3Vision, AutoTarmacShoot3Vision);
 
         SmartDashboard.putData("Auto Chose:", autoChooser);
 
