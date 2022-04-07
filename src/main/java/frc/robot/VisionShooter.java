@@ -46,7 +46,7 @@ public class VisionShooter {
             distance = upperVal;
         }
 
-        if (distance != upperVal) {
+        if (distance <= upperVal) {
             adjustFactorOne = VisionCalibration.turnAdjustmentArray[(int) distance];
             adjustFactorTwo = VisionCalibration.turnAdjustmentArray[(int) upperVal];
             averageAdjustFactorPerInch = (adjustFactorTwo - adjustFactorOne) / 12;
