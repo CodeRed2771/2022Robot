@@ -30,7 +30,7 @@ public class Climber {
 	private static SparkMaxPIDController climber2PID;
 	private static DoubleSolenoid climberSolenoid;
 	private final static double MAX_EXTENSION_VERTICAL = 76.5;
-	private final static double MAX_EXTENSION_BACK = 106;
+	private final static double MAX_EXTENSION_BACK = 96; // was 106 on 4/7/22
 	private static final double MAX_EXTENSION_BACK_BEFORE_BAR = 78;
 	private final static double MAX_RETRACTED = -2;
 	private final static double RETRACTED = 0;
