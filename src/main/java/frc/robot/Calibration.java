@@ -202,6 +202,9 @@ public class Calibration {
 
     public static final DigitalInput botIndicator = new DigitalInput(Wiring.PRACTICE_BOT_INDICATOR);
 
+    // Loads the calibration numbers from the stored file which overrides the programmed values
+    // This is read during robotInit, so if you make changes to the stored calibration, either
+    // reboot the robot, or do a restart Code.
     public static void loadSwerveCalibration() {
         File calibrationFile = new File("/home/lvuser/swerve.calibration");
         if (calibrationFile.exists()) {
@@ -274,8 +277,8 @@ public class Calibration {
     public static void checkIfShouldResetCalibration() {
         boolean deleteCalibration = SmartDashboard.getBoolean("Reset Swerve Calibration", false);
         if (deleteCalibration) {
-            SmartDashboard.putBoolean("Reset Swerve Calibration", false);
-            resetSwerveDriveCalibration();
+            SmartDashboard.putBoolean("Reset Swerve Calibration", false); // turn switch back off
+            resetSwerveDriveCalibration();  
         }
     }
 

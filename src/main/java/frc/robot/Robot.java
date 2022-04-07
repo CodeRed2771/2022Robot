@@ -501,7 +501,7 @@ public class Robot extends TimedRobot {
 
         Shooter.StopShooter();
         
-        Calibration.initializeSmartDashboard();
+        Calibration.initializeSmartDashboard(); 
 
         VisionShooter.setLED(false);
     }
@@ -509,11 +509,18 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
         showDashboardInfo();
         SmartDashboard.putBoolean("COMP BOT", !Calibration.isPracticeBot());
+
+        // Check if we are calling for a 'save' of the current wheel positions
+        // as the new calibration values.
+        // This is triggered by setting "Calibrate Swerve" to true on the Dashboard
         if (Calibration.shouldCalibrateSwerve()) {
             double[] pos = DriveTrain.getAllAbsoluteTurnOrientations();
             Calibration.saveSwerveCalibration(pos[0], pos[1], pos[2], pos[3]);
         }
 
+        // see if we want to reset the calibration to whatever is in the program
+        // basically setting "Reset Swerve Calibration" to true will trigger
+        // this, which deletes the calibration file.
         Calibration.checkIfShouldResetCalibration();
     }
 
