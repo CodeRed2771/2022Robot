@@ -250,19 +250,9 @@ public class Calibration {
         DT_D_ABS_ZERO = dt_d;
     }
 
-    public static void resetSwerveDriveCalibration() {
-        DT_A_ABS_ZERO = DT_A_ABS_ZERO_INITIAL;
-        DT_B_ABS_ZERO = DT_B_ABS_ZERO_INITIAL;
-        DT_C_ABS_ZERO = DT_C_ABS_ZERO_INITIAL;
-        DT_D_ABS_ZERO = DT_D_ABS_ZERO_INITIAL;
-
-        File calibrationFile = new File("/home/lvuser/swerve.calibration");
-        calibrationFile.delete();
-    }
-
     public static void initializeSmartDashboard() {
         SmartDashboard.putBoolean("Calibrate Swerve", false);
-        SmartDashboard.putBoolean("Reset Swerve Calibration", false);
+        SmartDashboard.putBoolean("Delete Swerve Calibration", false);
     }
 
     public static boolean shouldCalibrateSwerve() {
@@ -274,12 +264,22 @@ public class Calibration {
         return false;
     }
 
-    public static void checkIfShouldResetCalibration() {
-        boolean deleteCalibration = SmartDashboard.getBoolean("Reset Swerve Calibration", false);
+    public static void checkIfShouldDeleteCalibration() {
+        boolean deleteCalibration = SmartDashboard.getBoolean("Delete Swerve Calibration", false);
         if (deleteCalibration) {
-            SmartDashboard.putBoolean("Reset Swerve Calibration", false); // turn switch back off
-            resetSwerveDriveCalibration();  
+            SmartDashboard.putBoolean("Delete Swerve Calibration", false); // turn switch back off
+            deleteSwerveDriveCalibration();  
         }
+    }
+
+    public static void deleteSwerveDriveCalibration() {
+        DT_A_ABS_ZERO = DT_A_ABS_ZERO_INITIAL;
+        DT_B_ABS_ZERO = DT_B_ABS_ZERO_INITIAL;
+        DT_C_ABS_ZERO = DT_C_ABS_ZERO_INITIAL;
+        DT_D_ABS_ZERO = DT_D_ABS_ZERO_INITIAL;
+
+        File calibrationFile = new File("/home/lvuser/swerve.calibration");
+        calibrationFile.delete();
     }
 
     public static boolean isPracticeBot() {

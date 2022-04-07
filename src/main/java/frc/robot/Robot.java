@@ -519,9 +519,9 @@ public class Robot extends TimedRobot {
         }
 
         // see if we want to reset the calibration to whatever is in the program
-        // basically setting "Reset Swerve Calibration" to true will trigger
+        // basically setting "Delete Swerve Calibration" to true will trigger
         // this, which deletes the calibration file.
-        Calibration.checkIfShouldResetCalibration();
+        Calibration.checkIfShouldDeleteCalibration();
     }
 
     /**
