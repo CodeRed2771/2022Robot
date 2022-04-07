@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class VisionShooter {
 
     private static double CameraHeight = 21.625;
-    private static double TargetHeight = 89.75; 
+    private static double TargetHeight = 104; 
     private static double cameraDistanceFromCenterOfRobot = 4.875; 
     private static double CameraAngle = 29.5;
     private static NetworkTable table = null;
@@ -78,6 +78,12 @@ public class VisionShooter {
         distance = Math.pow(Calibration.VISION_DISTANCE_A, power);
         SmartDashboard.putNumber("Without C", distance);
         distance += Calibration.VISION_DISTANCE_C;
+        SmartDashboard.putNumber("Distance:", distance);
+
+        // Eshion's Way 
+        ty = table.getEntry("ty").getDouble(0);
+        degreesTargetOffGround = CameraAngle + ty;
+        distance = (TargetHeight - CameraHeight) / Math.tan(degreesTargetOffGround);
         SmartDashboard.putNumber("Distance:", distance);
         return distance;
     }
