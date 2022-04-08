@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.http.HttpResponse.PushPromiseHandler;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,17 +31,34 @@ public class Calibration {
 	// private final static double DT_C_ABS_ZERO_INITIAL = .518; //Practice Robot Calibration
 	// private final static double DT_D_ABS_ZERO_INITIAL = .292; //Practice Robot Calibration
 	
-    // COMPETIION
-
-    private final static double DT_A_ABS_ZERO_INITIAL = .376; // OLD BOT (ZUNI)
-    private final static double DT_B_ABS_ZERO_INITIAL = .352; 
-    private final static double DT_C_ABS_ZERO_INITIAL = .443; 
-    private final static double DT_D_ABS_ZERO_INITIAL = .098; 
+    // PRACTICE // OLD BOT (ZUNI)
+    private final static double DT_PRACT_A_ABS_ZERO_INITIAL = .376; 
+    private final static double DT_PRACT_B_ABS_ZERO_INITIAL = .352; 
+    private final static double DT_PRACT_C_ABS_ZERO_INITIAL = .443; 
+    private final static double DT_PRACT_D_ABS_ZERO_INITIAL = .098; 
     
-    public final static double DT_NEW_A_ABS_ZERO_INITIAL = .574; // 4/2 10:55 2:25 // NEW BOT
-    public final static double DT_NEW_B_ABS_ZERO_INITIAL = .255; //.983; 
-    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .235; // replaced encoder 3/31
-    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .375; // 276; 
+    // COMPETITION
+    public final static double DT_COMP_A_ABS_ZERO_INITIAL = .574; // 4/2 10:55 2:25 // NEW BOT
+    public final static double DT_COMP_B_ABS_ZERO_INITIAL = .255; //.983; 
+    public final static double DT_COMP_C_ABS_ZERO_INITIAL = .235; // replaced encoder 3/31
+    public final static double DT_COMP_D_ABS_ZERO_INITIAL = .375; // 276; 
+
+    // Physical Module - A
+    public final static int DT_A_DRIVE_ID = 3;
+    public final static int DT_A_TURN_ID = 4;
+    private static double DT_A_ABS_ZERO = getInitialTurnZeroPos('A');
+    // Physical Module - B
+    public final static int DT_B_DRIVE_ID = 6;
+    public final static int DT_B_TURN_ID = 5;
+    private static double DT_B_ABS_ZERO = getInitialTurnZeroPos('B');
+    // Physical Module - C
+    public final static int DT_C_DRIVE_ID = 2;
+    public final static int DT_C_TURN_ID = 1;
+    private static double DT_C_ABS_ZERO = getInitialTurnZeroPos('C');
+    // Physical Module - D
+    public final static int DT_D_DRIVE_ID = 7;
+    public final static int DT_D_TURN_ID = 8;
+    private static double DT_D_ABS_ZERO = getInitialTurnZeroPos('D');
 
     public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
     
@@ -72,6 +90,62 @@ public class Calibration {
 	public static final double CLIMBER_MOTOR_D = 0;
 	public static final double CLIMBER_MOTOR_IZONE = 40;
 	
+    public static double getInitialTurnZeroPos(char moduleLetter) {
+        double zeroPos = 0;
+        if (isPracticeBot()) {
+            switch (moduleLetter) {
+                case 'A':
+                    zeroPos = DT_PRACT_A_ABS_ZERO_INITIAL;
+                    break;
+                case 'B':
+                    zeroPos = DT_PRACT_B_ABS_ZERO_INITIAL;
+                    break;
+                case 'C':
+                    zeroPos = DT_PRACT_C_ABS_ZERO_INITIAL;
+                    break;
+                case 'D':
+                    zeroPos = DT_PRACT_D_ABS_ZERO_INITIAL;
+                    break;
+            }
+        } else {
+            switch (moduleLetter) {
+                case 'A':
+                    zeroPos = DT_COMP_A_ABS_ZERO_INITIAL;
+                    break;
+                case 'B':
+                    zeroPos = DT_COMP_B_ABS_ZERO_INITIAL;
+                    break;
+                case 'C':
+                    zeroPos = DT_COMP_C_ABS_ZERO_INITIAL;
+                    break;
+                case 'D':
+                    zeroPos = DT_COMP_D_ABS_ZERO_INITIAL;
+                    break;
+            }
+        }
+        return zeroPos;
+    }
+
+    public static double getTurnZeroPos(char moduleLetter) {
+        // note that the Practice bot selection has already
+        // occurred at startup.
+        double zeroPos = 0;
+        switch (moduleLetter) {
+            case 'A':
+                zeroPos = DT_A_ABS_ZERO;
+                break;
+            case 'B':
+                zeroPos = DT_B_ABS_ZERO;
+                break;
+            case 'C':
+                zeroPos = DT_C_ABS_ZERO;
+                break;
+            case 'D':
+                zeroPos = DT_D_ABS_ZERO;
+                break;
+        }
+        return zeroPos;
+    }
 
     public static double getTurnP() { 
         if (isPracticeBot())
@@ -136,42 +210,6 @@ public class Calibration {
         else    
             return 0;  // competition
     }   
-
-    // Physical Module - A
-    public final static int DT_A_DRIVE_ID = 3;
-    public final static int DT_A_TURN_ID = 4;
-    private static double DT_A_ABS_ZERO = DT_A_ABS_ZERO_INITIAL;
-
-    public static double GET_DT_A_ABS_ZERO() {
-        return DT_A_ABS_ZERO;
-    }
-
-    // Physical Module - B
-    public final static int DT_B_DRIVE_ID = 6;
-    public final static int DT_B_TURN_ID = 5;
-    private static double DT_B_ABS_ZERO = DT_B_ABS_ZERO_INITIAL;
-
-    public static double GET_DT_B_ABS_ZERO() {
-        return DT_B_ABS_ZERO;
-    }
-
-    // Physical Module - C
-    public final static int DT_C_DRIVE_ID = 2;
-    public final static int DT_C_TURN_ID = 1;
-    private static double DT_C_ABS_ZERO = DT_C_ABS_ZERO_INITIAL;
-
-    public static double GET_DT_C_ABS_ZERO() {
-        return DT_C_ABS_ZERO;
-    }
-
-    // Physical Module - D
-    public final static int DT_D_DRIVE_ID = 7;
-    public final static int DT_D_TURN_ID = 8;
-    private static double DT_D_ABS_ZERO = DT_D_ABS_ZERO_INITIAL;
-
-    public static double GET_DT_D_ABS_ZERO() {
-        return DT_D_ABS_ZERO;
-    }
 
     // Rot PID - this is for turning the robot, not turning a module
     public final static double DT_ROT_PID_P = .007;
@@ -273,10 +311,10 @@ public class Calibration {
     }
 
     public static void deleteSwerveDriveCalibration() {
-        DT_A_ABS_ZERO = DT_A_ABS_ZERO_INITIAL;
-        DT_B_ABS_ZERO = DT_B_ABS_ZERO_INITIAL;
-        DT_C_ABS_ZERO = DT_C_ABS_ZERO_INITIAL;
-        DT_D_ABS_ZERO = DT_D_ABS_ZERO_INITIAL;
+        DT_A_ABS_ZERO = getInitialTurnZeroPos('A');;
+        DT_B_ABS_ZERO = getInitialTurnZeroPos('B');;
+        DT_C_ABS_ZERO = getInitialTurnZeroPos('C');;
+        DT_D_ABS_ZERO = getInitialTurnZeroPos('D');;
 
         File calibrationFile = new File("/home/lvuser/swerve.calibration");
         calibrationFile.delete();
