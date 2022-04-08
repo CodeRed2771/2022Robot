@@ -3,8 +3,6 @@ package frc.robot;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 
 public class DriveTrain {
 
@@ -13,15 +11,15 @@ public class DriveTrain {
     public static void init(String driveMotorType) {
         
         if (driveMotorType.equals("NEO")) {
-            moduleA = new SwerveModuleNEO(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Calibration.GET_DT_A_ABS_ZERO(), 'A'); // Front right
-            moduleB = new SwerveModuleNEO(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Calibration.GET_DT_B_ABS_ZERO(), 'B'); // Back left
-            moduleC = new SwerveModuleNEO(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.GET_DT_C_ABS_ZERO(), 'C'); // Back right
-            moduleD = new SwerveModuleNEO(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.GET_DT_D_ABS_ZERO(), 'D'); // Front left
+            moduleA = new SwerveModuleNEO(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Calibration.getTurnZeroPos('A'), 'A'); // Front right
+            moduleB = new SwerveModuleNEO(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Calibration.getTurnZeroPos('B'), 'B'); // Back left
+            moduleC = new SwerveModuleNEO(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Calibration.getTurnZeroPos('C'), 'C'); // Back right
+            moduleD = new SwerveModuleNEO(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Calibration.getTurnZeroPos('D'), 'D'); // Front left
         } else {
-            moduleA = new SwerveModuleFalcon(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Wiring.TURN_ABS_ENC_A, Calibration.DT_NEW_A_ABS_ZERO_INITIAL, 'A'); // Front right
-            moduleB = new SwerveModuleFalcon(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Wiring.TURN_ABS_ENC_B, Calibration.DT_NEW_B_ABS_ZERO_INITIAL, 'B'); // Back left
-            moduleC = new SwerveModuleFalcon(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Wiring.TURN_ABS_ENC_C, Calibration.DT_NEW_C_ABS_ZERO_INITIAL, 'C'); // Back right
-            moduleD = new SwerveModuleFalcon(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Wiring.TURN_ABS_ENC_D, Calibration.DT_NEW_D_ABS_ZERO_INITIAL, 'D'); // Front left
+            moduleA = new SwerveModuleFalcon(Calibration.DT_A_DRIVE_ID, Calibration.DT_A_TURN_ID, Wiring.TURN_ABS_ENC_A, Calibration.getTurnZeroPos('A'), 'A'); // Front right
+            moduleB = new SwerveModuleFalcon(Calibration.DT_B_DRIVE_ID, Calibration.DT_B_TURN_ID, Wiring.TURN_ABS_ENC_B, Calibration.getTurnZeroPos('B'), 'B'); // Back left
+            moduleC = new SwerveModuleFalcon(Calibration.DT_C_DRIVE_ID, Calibration.DT_C_TURN_ID, Wiring.TURN_ABS_ENC_C, Calibration.getTurnZeroPos('C'), 'C'); // Back right
+            moduleD = new SwerveModuleFalcon(Calibration.DT_D_DRIVE_ID, Calibration.DT_D_TURN_ID, Wiring.TURN_ABS_ENC_D, Calibration.getTurnZeroPos('D'), 'D'); // Front left
         } 
 
         SmartDashboard.putNumber("TURN P", Calibration.getTurnP());
@@ -30,9 +28,6 @@ public class DriveTrain {
 
         allowTurnEncoderReset();
         resetTurnEncoders();
-        
-     //   SmartDashboard.putNumber("TURN I ZONE", Calibration.TURN_I_ZONE);
-     //   SmartDashboard.putNumber("TURN F", Calibration.TURN_F);
     }
 
     // define robot dimensions. L=wheel base W=track width
