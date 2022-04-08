@@ -7,12 +7,7 @@
 
 package frc.robot;
 
-import javax.lang.model.util.ElementScanner6;
-
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;

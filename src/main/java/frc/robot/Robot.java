@@ -72,11 +72,11 @@ public class Robot extends TimedRobot {
         Intake.init();
         Shooter.init();
         RobotGyro.init();
-        Calibration.loadSwerveCalibration();
         Climber.init();
 
         // swtest = new SwerveTurnTest();
 
+        Calibration.loadSwerveCalibration();
         if (Calibration.isPracticeBot()) 
             DriveTrain.init("NEO");
         else
