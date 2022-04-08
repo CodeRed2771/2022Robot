@@ -39,8 +39,8 @@ public class Calibration {
     
     public final static double DT_NEW_A_ABS_ZERO_INITIAL = .574; // 4/2 10:55 2:25 // NEW BOT
     public final static double DT_NEW_B_ABS_ZERO_INITIAL = .255; //.983; 
-    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .162; // replaced encoder 3/31
-    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .421; // 276; 
+    public final static double DT_NEW_C_ABS_ZERO_INITIAL = .235; // replaced encoder 3/31
+    public final static double DT_NEW_D_ABS_ZERO_INITIAL = .375; // 276; 
 
     public final static int INTAKE_DEPLOY_ZERO_INITIAL = 200;
     
@@ -180,7 +180,7 @@ public class Calibration {
     public final static double DT_ROT_PID_IZONE = 18;
 
 	public final static int DT_MM_ACCEL = 8000;
-	public final static int DT_MM_VELOCITY = 20000;
+	public final static int DT_MM_VELOCITY = 24000;
 	
 	// COMPETIION AND PRACTICE
     public final static double getDriveTicksPerInch() {

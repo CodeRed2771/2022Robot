@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
     Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
     boolean reverseShooter = false;
     boolean ballTrackingTurnedOn = false;  
+    boolean rampCodeActive = true;
 
     AutoBaseClass mAutoProgram;
 
@@ -117,10 +118,6 @@ public class Robot extends TimedRobot {
         // SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
         // SmartDashboard.putNumber("Score", VisionBall.getBallScore());
        
-        if (gamepad1.getAButton()) {
-            Shooter.StartShooter();
-            
-        }
 
         if (gamepad1.getRightTriggerAxis() > 0 || gamepad2.getRightTriggerAxis() > 0) {
             Intake.startIntake();
@@ -251,10 +248,18 @@ public class Robot extends TimedRobot {
         // swtest.tick();
 
         // SmartDashboard.putNumber("SWERVE ROT AXIS", driveRotAmount);
-        driveRotAmount = rotationalAdjust(driveRotAmount);
-        // SmartDashboard.putNumber("ADJUSTED SWERVE ROT AMOUNT", driveRotAmount);
-        driveFWDAmount = forwardAdjust(driveFWDAmount, true);
-        driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
+        if (gamepad1.getAButton()) {
+            // Shooter.StartShooter();
+            rampCodeActive = true;
+        } else if (gamepad1.getBButton()) {
+            rampCodeActive = false;
+        }
+        if (rampCodeActive) {
+            driveRotAmount = rotationalAdjust(driveRotAmount);
+            // SmartDashboard.putNumber("ADJUSTED SWERVE ROT AMOUNT", driveRotAmount);
+            driveFWDAmount = forwardAdjust(driveFWDAmount, true);
+            driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
+        }
 
         if (gamepad1.getRightBumper()) {  // slow mode
             driveFWDAmount = driveFWDAmount * .3;

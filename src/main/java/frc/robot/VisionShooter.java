@@ -39,20 +39,20 @@ public class VisionShooter {
         double finalAdjustedFactor = 1;
                                    
         distance = Math.floor(distance/12);                                 // THIS IS THE CODE WE ARE GOING TO USE TO GET
-        upperVal = distance + 1;                                            // THE DISTANCE ADJUSTED FACTOR - IS
+        upperVal = 48;                                            // THE DISTANCE ADJUSTED FACTOR - IS
 
-        if (distance > VisionCalibration.turnAdjustmentArray.length - 1) {
-            upperVal = VisionCalibration.turnAdjustmentArray.length - 1;
+        if (distance > upperVal) {
             distance = upperVal;
         }
 
-        if (distance <= upperVal) {
+        if (distance > 0 && distance <= upperVal) {
             adjustFactorOne = VisionCalibration.turnAdjustmentArray[(int) distance];
             adjustFactorTwo = VisionCalibration.turnAdjustmentArray[(int) upperVal];
             averageAdjustFactorPerInch = (adjustFactorTwo - adjustFactorOne) / 12;
             finalAdjustedFactor = (averageAdjustFactorPerInch * (originalDistance - (distance * 12))) + adjustFactorOne;
         } else {
-            finalAdjustedFactor = VisionCalibration.turnAdjustmentArray[(int)distance];
+            finalAdjustedFactor = 1;
+            // finalAdjustedFactor = VisionCalibration.turnAdjustmentArray[(int)distance];
         }
 
         SmartDashboard.putNumber("FINAL ADJUSTED FACTOR", finalAdjustedFactor);

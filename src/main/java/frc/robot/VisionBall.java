@@ -140,7 +140,8 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
         if (centerY/centerX > 0) {
             degrees = Math.atan(centerY/centerX);
         } else {
-            degrees = Math.abs(Math.atan(centerY/centerX)) + 180;
+            //degrees = Math.abs(Math.atan(centerY/centerX)) + 180;
+            degrees = Math.atan(centerY/centerX);
         }
         return degrees;
     }
