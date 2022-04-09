@@ -360,7 +360,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 		if (optimize) {
 			// if the difference between the current position and the requested position is less than 
 			// a half rotation, then use that position, otherwise use the reverse position
-			if (Math.abs(currentPosInRotation - reqPosition) <= .25 || Math.abs(currentPosInRotation - (1 + reqPosition)) <= .25) {
+			if (Math.abs(currentPosInRotation - reqPosition) <= .25 || Math.abs(currentPosInRotation - (1 + reqPosition)) <= .25|| Math.abs((currentPosInRotation+1)-reqPosition) <=0.25) {
 				nearestPosInRotation = reqPosition;
 				invertDrive = false;
 			} else {
@@ -420,7 +420,7 @@ public class SwerveModuleFalcon implements SwerveModule {
 
 		// look for error
 		if (Math.abs(currentPosition - newTargetPosition) > .250) {
-			SmartDashboard.putString("MOD " + mModuleID + " CALC ERROR", "Cur: " + String.format("%.3f", currentPosition) + " New: " + String.format("%.3f", newTargetPosition));
+			SmartDashboard.putString("MOD " + mModuleID + " CALC ERROR", "Cur: " + String.format("%.3f", currentPosition) + " New: " + String.format("%.3f", newTargetPosition) + "Called:  " + String.format("%.3f", reqPosition));
 		}
 
         // System.out.println("");
