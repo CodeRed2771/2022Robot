@@ -16,7 +16,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-
 public class Shooter {
 
     private static TalonFX shooterMotor = new TalonFX(Wiring.SHOOTER_MOTOR_ID);
