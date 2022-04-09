@@ -41,7 +41,7 @@ public class Calibration {
     public final static double DT_COMP_A_ABS_ZERO_INITIAL = .580; // COMPETITION BOT
     public final static double DT_COMP_B_ABS_ZERO_INITIAL = .294; 
     public final static double DT_COMP_C_ABS_ZERO_INITIAL = .243; 
-    public final static double DT_COMP_D_ABS_ZERO_INITIAL = .052; 
+    public final static double DT_COMP_D_ABS_ZERO_INITIAL = .140; 
 
     public static final double AUTO_ROT_P = 0.08; 
     public static final double AUTO_ROT_I = 0.001;
@@ -226,8 +226,8 @@ public class Calibration {
     public final static double DT_ROT_PID_D = .000;
     public final static double DT_ROT_PID_IZONE = 18;
 
-	public final static int DT_MM_ACCEL = 8000;
-	public final static int DT_MM_VELOCITY = 24000;
+	public final static int DT_MM_ACCEL = 10000;
+	public final static int DT_MM_VELOCITY = 35000;
 	
 	// COMPETIION AND PRACTICE
     public final static double getDriveTicksPerInch() {
