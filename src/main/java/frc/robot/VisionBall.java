@@ -31,6 +31,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     private static int ballAmount = 0;
     private static double bestScore = 0;
     private static double currentScore = 0;
+    private static AtomicBoolean working = new AtomicBoolean(false);
 
     
     // Distance Formula 
@@ -82,7 +83,6 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     public static void init() {
         camera = CameraServer.startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-
         if (DriverStation.getAlliance() == Alliance.Red) {
             visionThread = new VisionThread(camera, new VisionBallPipelineRed(), pipeline -> {
                 if (!pipeline.filterContoursOutput().isEmpty()) {
@@ -92,6 +92,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                         centerX = r.x + (r.width / 2);
                         centerY = r.y + (r.height/2);
                         foundBall.set(true);
+                        working.set(true);
                     }
                 } else {
                     synchronized (imgLock) {
@@ -99,7 +100,8 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                         centerY = IMG_HEIGHT / 2;
                         ballAmount = 0;
                         foundBall.set(false);
-                        bestScore = 0;                    
+                        bestScore = 0;
+                        working.set(true);                
                     }
             }
         }
@@ -111,6 +113,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                     synchronized (imgLock) {
                         centerX = r.x + (r.width / 2);
                         centerY = r.y + (r.height/2);
+                        working.set(true);
                     }
                     foundBall.set(true);
                 } else {
@@ -119,7 +122,8 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                         centerY = IMG_HEIGHT / 2;
                         ballAmount = 0;
                         foundBall.set(false);
-                        bestScore = 0;                    
+                        bestScore = 0;    
+                        working.set(true);                
                     }
                 }
             });
@@ -137,12 +141,13 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     // Return Values for Finding Balls
     public static double degreesToBall() {
         double degrees;
-        if (centerY/centerX > 0) {
-            degrees = Math.atan(centerY/centerX);
-        } else {
-            //degrees = Math.abs(Math.atan(centerY/centerX)) + 180;
-            degrees = Math.atan(centerY/centerX);
-        }
+        // if (centerY/centerX > 0) {
+        //     degrees = Math.atan(centerY/centerX);
+        // } else {
+        //     //degrees = Math.abs(Math.atan(centerY/centerX)) + 180;
+        //     degrees = Math.atan(centerY/centerX);
+        // }
+        degrees = Math.atan(getBallYOffset()/getBallXOffset());
         return degrees;
     }
 
@@ -178,5 +183,8 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     public void copyPipelineOutputs(VisionBallPipelineRed pipeline) {
         // TODO Auto-generated method stub
         
+    }
+    public static boolean working() {
+        return working.compareAndSet(true, true);
     }
 }

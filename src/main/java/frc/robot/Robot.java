@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         gamepad1 = new Gamepad(0);
         gamepad2 = new Gamepad(1);
-
+        SmartDashboard.putString("Alliance Decided", DriverStation.getAlliance().toString());
         compressor.enableAnalog(100, 120);
 
         Intake.init();
@@ -223,6 +223,11 @@ public class Robot extends TimedRobot {
             Climber.climberPosition(ClimberPosition.Straight);
         }
 
+        if (gamepad1.getRightBumper() && gamepad1.getYButton()) {
+            mAutoProgram = new AutoBallAlign();
+            mAutoProgram.start(true);
+        }
+
         // DRIVER CONTROL MODE
         // Issue the drive command using the parameters from
         // above that have been tweaked as needed
@@ -269,7 +274,7 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putNumber("Best Position", TurnPosition.getBestPosition());
 
-        if (ballTrackingTurnedOn && VisionBall.ballInView()) {
+        // if (ballTrackingTurnedOn && VisionBall.ballInView()) {
             // if (Intake.isRunning()) {
             //     if (ballLaneAssist > 0.05) 
             //         driveStrafeAmount += .2;
@@ -278,31 +283,31 @@ public class Robot extends TimedRobot {
             // }
 
 
-            if (Intake.isRunning()) {
-                if (RobotGyro.getAngle() == 0 || RobotGyro.getAngle() == 180) {
-                    if(ballLaneAssist > 0.05) {
-                        driveStrafeAmount += .2;
-                    } else if (ballLaneAssist < -0.05) {
-                        driveStrafeAmount += -.2;
-                    }
-                } else if (RobotGyro.getAngle() == 90 || RobotGyro.getAngle() == 270) {
-                    if(ballLaneAssist > 0.05) {
-                        driveFWDAmount += .2;
-                    } else if (ballLaneAssist < -0.05) {
-                        driveFWDAmount += -.2;
-                    }
-                }
-                else {
-                    if(ballLaneAssist > 0.05) {
-                        driveFWDAmount += Math.cos(VisionBall.degreesToBall()) * 0.2;
-                        driveStrafeAmount += Math.sin(VisionBall.degreesToBall()) * 0.2;
-                    }else if (ballLaneAssist < -0.05) {
-                        driveFWDAmount += Math.cos(VisionBall.degreesToBall()) * -0.2;
-                        driveStrafeAmount += Math.sin(VisionBall.degreesToBall()) * -0.2;
-                    }
-                }
-            }
-        }
+        //     if (Intake.isRunning()) {
+        //         if (RobotGyro.getAngle() == 0 || RobotGyro.getAngle() == 180) {
+        //             if(ballLaneAssist > 0.05) {
+        //                 driveStrafeAmount += .2;
+        //             } else if (ballLaneAssist < -0.05) {
+        //                 driveStrafeAmount += -.2;
+        //             }
+        //         } else if (RobotGyro.getAngle() == 90 || RobotGyro.getAngle() == 270) {
+        //             if(ballLaneAssist > 0.05) {
+        //                 driveFWDAmount += .2;
+        //             } else if (ballLaneAssist < -0.05) {
+        //                 driveFWDAmount += -.2;
+        //             }
+        //         }
+        //         else {
+        //             if(ballLaneAssist > 0.05) {
+        //                 driveFWDAmount += Math.cos(VisionBall.degreesToBall()) * 0.2;
+        //                 driveStrafeAmount += Math.sin(VisionBall.degreesToBall()) * 0.2;
+        //             }else if (ballLaneAssist < -0.05) {
+        //                 driveFWDAmount += Math.cos(VisionBall.degreesToBall()) * -0.2;
+        //                 driveStrafeAmount += Math.sin(VisionBall.degreesToBall()) * -0.2;
+        //             }
+        //         }
+        //     }
+        // }
 
         SmartDashboard.putNumber("Outputs FWD", driveFWDAmount);
         SmartDashboard.putNumber("Outputs Strafe", driveStrafeAmount);
@@ -329,13 +334,15 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         SmartDashboard.updateValues();
         SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
-
+        SmartDashboard.putBoolean("Working", VisionBall.working());
         Shooter.tick();
         Intake.tick();
         DriveAuto.tick();
         Climber.tick();
 
-        // SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
+        SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
+        SmartDashboard.putNumber("Ball Y Offset", VisionBall.getBallYOffset());
+        SmartDashboard.putNumber("Degrees Output", VisionBall.degreesToBall());
         SmartDashboard.putNumber("Distance to Target", VisionShooter.getDistanceFromTarget());
 
          // Sets the PID values based on input from the SmartDashboard
@@ -559,7 +566,7 @@ public class Robot extends TimedRobot {
 
     private double forwardAdjust(double fwd, boolean normalDrive) {
         final double maxACCELchange = .02;
-        final double maxSTOPPINGchange = .04;
+        final double maxSTOPPINGchange = .03;
         double lastSetSpeed; 
         double adjustedSpeed = 0;
 
