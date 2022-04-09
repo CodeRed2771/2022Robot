@@ -32,16 +32,25 @@ public class Calibration {
 	// private final static double DT_D_ABS_ZERO_INITIAL = .292; //Practice Robot Calibration
 	
     // PRACTICE // OLD BOT (ZUNI)
-    private final static double DT_PRACT_A_ABS_ZERO_INITIAL = .376; 
+    private final static double DT_PRACT_A_ABS_ZERO_INITIAL = .376; // PRACTICE BOT
     private final static double DT_PRACT_B_ABS_ZERO_INITIAL = .352; 
     private final static double DT_PRACT_C_ABS_ZERO_INITIAL = .443; 
     private final static double DT_PRACT_D_ABS_ZERO_INITIAL = .098; 
     
     // COMPETITION
-    public final static double DT_COMP_A_ABS_ZERO_INITIAL = .574; // 4/2 10:55 2:25 // NEW BOT
-    public final static double DT_COMP_B_ABS_ZERO_INITIAL = .255; //.983; 
-    public final static double DT_COMP_C_ABS_ZERO_INITIAL = .235; // replaced encoder 3/31
-    public final static double DT_COMP_D_ABS_ZERO_INITIAL = .375; // 276; 
+    public final static double DT_COMP_A_ABS_ZERO_INITIAL = .580; // COMPETITION BOT
+    public final static double DT_COMP_B_ABS_ZERO_INITIAL = .294; 
+    public final static double DT_COMP_C_ABS_ZERO_INITIAL = .243; 
+    public final static double DT_COMP_D_ABS_ZERO_INITIAL = .052; 
+
+    public static final double AUTO_ROT_P = 0.08; 
+    public static final double AUTO_ROT_I = 0.001;
+    public static final double AUTO_ROT_D = 0.1; 
+    public static final double AUTO_ROT_F = 0.0;
+
+    public static final double INTAKE_MAX_CURRENT = 14;
+
+    public static final DigitalInput botIndicator = new DigitalInput(Wiring.PRACTICE_BOT_INDICATOR);
 
     // Physical Module - A
     public final static int DT_A_DRIVE_ID = 3;
@@ -227,18 +236,6 @@ public class Calibration {
         else
             return(1230);
     }
-
-    // TEST BOT2
-    // public static final double DRIVE_DISTANCE_TICKS_PER_INCH = 32.900;
-
-    public static final double AUTO_ROT_P = 0.08; // increased from .03 on 2/9/2019 by CS
-    public static final double AUTO_ROT_I = 0.001;
-    public static final double AUTO_ROT_D = 0.1; // was 067
-    public static final double AUTO_ROT_F = 0.0;
-
-    public static final double INTAKE_MAX_CURRENT = 14;
-
-    public static final DigitalInput botIndicator = new DigitalInput(Wiring.PRACTICE_BOT_INDICATOR);
 
     // Loads the calibration numbers from the stored file which overrides the programmed values
     // This is read during robotInit, so if you make changes to the stored calibration, either
