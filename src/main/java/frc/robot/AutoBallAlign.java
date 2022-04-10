@@ -23,12 +23,12 @@ public class AutoBallAlign extends AutoBaseClass {
     public void tick() {
         if (isRunning()) {
             DriveAuto.tick();
-            SmartDashboard.putNumber("AutoAlighn Auto Step", getCurrentStep());
+            SmartDashboard.putNumber("AutoAlign Auto Step", getCurrentStep());
             switch (getCurrentStep()) {
             case 0:
                 angleOffset = RobotGyro.getRelativeAngle() - VisionBall.degreesToBall();
-                turnDegrees(angleOffset, 0.8);
-                setTimerAndAdvanceStep(100);
+                turnDegrees(VisionBall.degreesToBall(), 0.8);
+                setTimerAndAdvanceStep(2000);
                 break;
             case 1:
                 if (turnCompleted()) {
@@ -36,7 +36,7 @@ public class AutoBallAlign extends AutoBaseClass {
                 }
                 break;
             case 2:
-                stop();
+                //stop();
                 break;
             }
         }
