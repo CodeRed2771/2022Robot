@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
         mAutoProgram = new AutoDoNothing();
 
         VisionBall.init(); // Ball vision tracking setup
+        VisionBall.start();
     }
 
     @Override
@@ -117,7 +118,9 @@ public class Robot extends TimedRobot {
         // SmartDashboard.putNumber("Y Offset", VisionBall.getBallYOffset());
         // SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
         // SmartDashboard.putNumber("Score", VisionBall.getBallScore());
-       
+        SmartDashboard.putNumber("Center X", VisionBall.centerX());
+        SmartDashboard.putNumber("Center Y", VisionBall.centerY());
+        SmartDashboard.putNumber("Distance to Ball", VisionBall.distanceToBall());
 
         if (gamepad1.getRightTriggerAxis() > 0 || gamepad2.getRightTriggerAxis() > 0) {
             Intake.startIntake();

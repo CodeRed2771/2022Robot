@@ -9,11 +9,14 @@ import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.vision.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.opencv.core.Scalar;
+import org.opencv.core.Point;
 
 public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
 {
@@ -32,6 +35,8 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     private static double bestScore = 0;
     private static double currentScore = 0;
     private static AtomicBoolean working = new AtomicBoolean(false);
+    //private static CvSource mProcessedStream;
+    //private static Mat mProcessedFrame;
 
     
     // Distance Formula 
@@ -83,11 +88,18 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     public static void init() {
         camera = CameraServer.startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+        //mProcessedFrame = new Mat();
+        //mProcessedStream.putFrame(mProcessedFrame);
+        //mProcessedStream = CameraServer.putVideo("Processed Image", IMG_WIDTH, IMG_HEIGHT);
         if (DriverStation.getAlliance() == Alliance.Red) {
             visionThread = new VisionThread(camera, new VisionBallPipelineRed(), pipeline -> {
                 if (!pipeline.filterContoursOutput().isEmpty()) {
 
                     Rect r = Imgproc.boundingRect(VisionBall.findClosestBall(pipeline.filterContoursOutput()));
+                    //Imgproc.rectangle(mProcessedFrame, new Point(r.x, r.y), 
+                    //new Point(r.x + r.width, r.y + r.height),
+                    //new Scalar(0,255,0), 10);
+                    //mProcessedStream.putFrame(mProcessedFrame);
                     synchronized (imgLock) {
                         centerX = r.x + (r.width / 2);
                         centerY = r.y + (r.height/2);
@@ -141,13 +153,14 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     // Return Values for Finding Balls
     public static double degreesToBall() {
         double degrees;
-        // if (centerY/centerX > 0) {
-        //     degrees = Math.atan(centerY/centerX);
-        // } else {
-        //     //degrees = Math.abs(Math.atan(centerY/centerX)) + 180;
-        //     degrees = Math.atan(centerY/centerX);
-        // }
-        degrees = Math.atan(getBallYOffset()/getBallXOffset());
+        double slope;
+        double distance =  distanceToBall();
+        slope = getBallYOffset()/getBallXOffset();
+        slope = getBallXOffset()/getBallYOffset();
+        slope = getBallXOffset()/distance;
+        //slope = centerX/centerY;
+        //degrees = Math.toDegrees(Math.atan(slope));
+        degrees = Math.toDegrees(Math.asin(slope));
         return degrees;
     }
 
@@ -161,7 +174,11 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     }
 
     public static double getBallXOffset() {
-        return centerX - (IMG_WIDTH / 2);
+        if (centerX == 0) {
+            return 0;
+        } else {
+            return centerX - (IMG_WIDTH / 2);
+        }
     }
     public static double getBallYOffset() {
         return centerY - (IMG_HEIGHT / 2);
@@ -187,4 +204,10 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     public static boolean working() {
         return working.compareAndSet(true, true);
     }
+    public static double centerX() {
+        return centerX;
+    } 
+    public static double centerY() {
+        return centerY;
+    } 
 }
