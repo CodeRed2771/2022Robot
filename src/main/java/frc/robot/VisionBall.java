@@ -147,7 +147,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
     }
 
     public static void stop() {
-        visionThread.interrupt();  // not sure this really does any good
+        visionThread.interrupt();  // probably NOT the right call
     }
 
     // Return Values for Finding Balls
