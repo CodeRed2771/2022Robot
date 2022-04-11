@@ -160,4 +160,8 @@ public abstract class AutoBaseClass {
     public boolean timeExpired() {
         return mAutoTimer.timeExpired();
     }
+
+    public boolean shooterCompleted() {
+        return Shooter.shooterCompleted();
+    }
 }

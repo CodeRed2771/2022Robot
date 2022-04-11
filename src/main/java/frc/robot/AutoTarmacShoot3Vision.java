@@ -45,7 +45,7 @@ public class AutoTarmacShoot3Vision extends AutoBaseClass {
                 //     break;
                 case 2:
                     // Shooter.alignAndShoot(true);
-                    turnDegrees(146-RobotGyro.getRelativeAngle(), 1);
+                    turnDegrees(-146+RobotGyro.getRelativeAngle(), 1);
                     setTimerAndAdvanceStep(1500);
                     break;
                 case 3:
@@ -67,8 +67,8 @@ public class AutoTarmacShoot3Vision extends AutoBaseClass {
                     break;
                 case 8:
                     if (true) {
-                       double angle = 167 - RobotGyro.getRelativeAngle();  // 162
-                       turnDegrees(angle, 0.9);
+                       //double angle =RobotGyro.getRelativeAngle() - 167;  // 162
+                       turnDegrees(VisionShooter.getStoredAngleOffset(), 0.9);
                        setTimerAndAdvanceStep(1000);
                     } else {
                         setStep(10);
