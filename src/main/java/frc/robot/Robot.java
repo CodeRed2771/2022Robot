@@ -567,6 +567,65 @@ public class Robot extends TimedRobot {
         return adjustedAmt;
     }
 
+    private double forwardAdjustV2(double fwd, boolean normalDrive) {
+        final double maxACCELchange = .02;
+        final double maxSTOPPINGchange = .03;
+        double lastSetSpeed; 
+        double adjustedSpeed = 0;
+
+        if (normalDrive) {
+            adjustedSpeed = fwd * 1;
+        } else {
+            adjustedSpeed = fwd * .45;
+        }
+
+        lastSetSpeed = lastFWDvalue;
+
+        if (Math.abs(adjustedSpeed) < .05) { // then we're stopping so handle that as
+                                             // a special case
+            if (lastSetSpeed > 0) {
+                if (lastSetSpeed > maxSTOPPINGchange) {
+                    adjustedSpeed = lastSetSpeed - maxSTOPPINGchange;
+                } 
+            } else {
+                if (lastSetSpeed < maxSTOPPINGchange) {
+                    adjustedSpeed = lastSetSpeed + maxSTOPPINGchange;
+                }
+            }
+
+        } else {
+            
+            // This next section is identical in forwardAdjust and strafeAdjust
+            if (adjustedSpeed >= 0) {
+                if (adjustedSpeed > lastSetSpeed && adjustedSpeed > .2) { // speeding up so control it
+                    if (adjustedSpeed >  lastSetSpeed + maxACCELchange) {
+                        adjustedSpeed = lastSetSpeed + maxACCELchange;
+                    } 
+                } else if (adjustedSpeed <= lastSetSpeed) { 
+                    // see if we're slowing down too fast
+                    if (adjustedSpeed < lastSetSpeed - maxSTOPPINGchange) {
+                        adjustedSpeed = lastSetSpeed - maxSTOPPINGchange;
+                    }
+                }
+            } else {
+                if (adjustedSpeed < lastSetSpeed && adjustedSpeed < -.2) { // speeding up in reverse
+                    if (adjustedSpeed < lastSetSpeed - maxACCELchange) {
+                        adjustedSpeed = lastSetSpeed - maxACCELchange;       
+                    }
+                } else if (adjustedSpeed >= lastSetSpeed) {
+                    // see if we're slowing down too fast
+                    if (adjustedSpeed > lastSetSpeed + maxSTOPPINGchange) {
+                        adjustedSpeed = lastSetSpeed + maxSTOPPINGchange;
+                    }
+                }
+            }
+
+        }
+
+        lastFWDvalue = adjustedSpeed;
+        return lastFWDvalue;
+    }
+
     private double forwardAdjust(double fwd, boolean normalDrive) {
         final double maxACCELchange = .02;
         final double maxSTOPPINGchange = .03;
