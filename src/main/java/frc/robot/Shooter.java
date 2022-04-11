@@ -38,6 +38,7 @@ public class Shooter {
     private static boolean reverse = false;
     private static boolean alignOnly = true;
     private static AutoBaseClass mAlignProgram;
+    private static boolean shooterCompleted;
     public static enum ShooterPosition {
         Low,
         Medium,
@@ -216,12 +217,12 @@ public class Shooter {
                         }
                         if (timer == 25) {
                             setBallLiftDown();
-                        } else if (timer >=50) {
                             setShooterPosition(ShooterPosition.Low);
                             oneShot = false;
                             resetTimer();
                             // manualVisionOverride = false;
                             AutoAlign.setAllignment(false);
+                            shooterCompleted = true;
                         }
                }
  
@@ -295,12 +296,14 @@ public class Shooter {
         isEnabled = true;
         oneShot = true;
         continuousShooting = false;
+        shooterCompleted = false;
     }
 
     public static void alignAndShoot (boolean pAlignOnly) {
         alignOnly = pAlignOnly;
         // isEnabled = true;
         // oneShot = true;
+        shooterCompleted = false;
         continuousShooting = false;
         if (calibrationMode) {
             manualVisionOverride = true;
@@ -336,11 +339,15 @@ public class Shooter {
         switch (position) {
             case Low:
                 shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kReverse);
-                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
+                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kForward);
+                // shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kReverse);
+                // shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
                 break;
             case Medium:
                 shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kReverse);
-                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kForward);
+                shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kReverse);
+                // shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kReverse);
+                // shooterPositionSolenoid_Stage2.set(DoubleSolenoid.Value.kForward);
                 break;
             case  Backwards:
                 shooterPositionSolenoid_Stage1.set(DoubleSolenoid.Value.kForward);
@@ -449,5 +456,9 @@ public class Shooter {
             shooterMotorVelocityTarget = shooterArray[dis].speed;
         }
         SmartDashboard.putNumber("Distance Feet ", dis);
+    } 
+
+    public static boolean shooterCompleted() {
+        return shooterCompleted;
     }
 }

@@ -16,6 +16,7 @@ public class VisionShooter {
     private static double ty = 0;
     private static double degreesTargetOffGround = 0;
     private static double distance = 0;
+    private static double angleOffset;
 
     public static void init() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -145,5 +146,13 @@ public class VisionShooter {
         } else {
             return false;
         }
+    }
+    
+    public static void setAngleOffset() {
+        angleOffset = VisionShooter.getDistanceAdjustedAngle();
+    }
+
+    public static double getStoredAngleOffset() {
+        return angleOffset;
     }
 }

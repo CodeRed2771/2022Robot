@@ -151,7 +151,7 @@ public class Robot extends TimedRobot {
         } else if (gamepad2.getBButton()) {
             Shooter.setManualPresets(ManualShotPreset.TarmacLine);
         } else if (gamepad2.getYButton()) {
-            // Shooter.setManualPresets(ManualShotPreset.Backwards);
+            //Shooter.setManualPresets(ManualShotPreset.Backwards);
             Shooter.setManualPresets(ManualShotPreset.SafeZone);
         } else if (gamepad2.getXButton()) {
             Shooter.setManualPresets(ManualShotPreset.HumanPlayerStation);
@@ -265,7 +265,7 @@ public class Robot extends TimedRobot {
         if (rampCodeActive) {
             driveRotAmount = rotationalAdjust(driveRotAmount);
             // SmartDashboard.putNumber("ADJUSTED SWERVE ROT AMOUNT", driveRotAmount);
-            driveFWDAmount = forwardAdjust(driveFWDAmount, true);
+            driveFWDAmount = forwardAdjustV2(driveFWDAmount, true);
             driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
         }
 
@@ -475,7 +475,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Position", positionChooser);
 
         autoChooser = new SendableChooser<String>();
-        //autoChooser.addOption(autoCalibrator, autoCalibrator);
+        autoChooser.addOption(autoCalibrator, autoCalibrator);
         //autoChooser.addOption(autoWheelAlign, autoWheelAlign);
         autoChooser.addOption(autoAlign, autoAlign);
         //autoChooser.addOption(ballPickUp, ballPickUp);
