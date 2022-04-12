@@ -266,7 +266,7 @@ public class Robot extends TimedRobot {
             driveRotAmount = rotationalAdjust(driveRotAmount);
             // SmartDashboard.putNumber("ADJUSTED SWERVE ROT AMOUNT", driveRotAmount);
             driveFWDAmount = forwardAdjustV2(driveFWDAmount, true);
-            driveStrafeAmount = strafeAdjust(driveStrafeAmount, true);
+            driveStrafeAmount = strafeAdjustV2(driveStrafeAmount, true);
         }
 
         if (gamepad1.getRightBumper()) {  // slow mode
@@ -568,8 +568,8 @@ public class Robot extends TimedRobot {
     }
 
     private double forwardAdjustV2(double fwd, boolean normalDrive) {
-        final double maxACCELchange = .02;
-        final double maxSTOPPINGchange = .03;
+        final double maxACCELchange = .03;
+        final double maxSTOPPINGchange = .05;
         double lastSetSpeed; 
         double adjustedSpeed = 0;
 
@@ -597,7 +597,7 @@ public class Robot extends TimedRobot {
             
             // This next section is identical in forwardAdjust and strafeAdjust
             if (adjustedSpeed >= 0) {
-                if (adjustedSpeed > lastSetSpeed && adjustedSpeed > .2) { // speeding up so control it
+                if (adjustedSpeed > lastSetSpeed && adjustedSpeed > .25) { // speeding up so control it
                     if (adjustedSpeed >  lastSetSpeed + maxACCELchange) {
                         adjustedSpeed = lastSetSpeed + maxACCELchange;
                     } 
@@ -668,7 +668,63 @@ public class Robot extends TimedRobot {
         lastFWDvalue = adjustedSpeed;
         return lastFWDvalue;
     }
+    private double strafeAdjustV2(double strafeAmt, boolean normalDrive) {
+        final double maxACCELchange = .03;
+        final double maxSTOPPINGchange = .05;
+        double lastSetSpeed; 
+        double adjustedSpeed = 0;
+ 
+        if (normalDrive) {
+            adjustedSpeed = strafeAmt * 1;
+        } else {
+            adjustedSpeed = strafeAmt * .45;
+        }
 
+        lastSetSpeed = lastSTRvalue;
+
+        if (Math.abs(adjustedSpeed) < .05) { // then we're stopping so handle that as
+                    // a special case
+            if (lastSetSpeed > 0) {
+                if (lastSetSpeed > maxSTOPPINGchange) {
+                adjustedSpeed = lastSetSpeed - maxSTOPPINGchange;
+                } 
+            } else {
+            if (lastSetSpeed < maxSTOPPINGchange) {
+            adjustedSpeed = lastSetSpeed + maxSTOPPINGchange;
+            }
+            }
+
+            } else {
+    // This next section is identical in forwardAdjust and strafeAdjust
+        if (adjustedSpeed >= 0) {
+                if (adjustedSpeed > lastSetSpeed && adjustedSpeed > .25) { // speeding up so control it
+                    if (adjustedSpeed >  lastSetSpeed + maxACCELchange) {
+                        adjustedSpeed = lastSetSpeed + maxACCELchange;
+                    } 
+                } else if (adjustedSpeed < lastSetSpeed) { 
+                    // see if we're slowing down too fast
+                    if (adjustedSpeed < lastSetSpeed - maxSTOPPINGchange) {
+                        adjustedSpeed = lastSetSpeed - maxSTOPPINGchange;
+                    }
+                }
+            } else {
+                if (adjustedSpeed < lastSetSpeed && adjustedSpeed < -.2) { // speeding up in reverse
+                    if (adjustedSpeed < lastSetSpeed - maxACCELchange) {
+                        adjustedSpeed = lastSetSpeed - maxACCELchange;       
+                    }
+                } else if (adjustedSpeed > lastSetSpeed) {
+                    // see if we're slowing down too fast
+                    if (adjustedSpeed > lastSetSpeed + maxSTOPPINGchange) {
+                        adjustedSpeed = lastSetSpeed + maxSTOPPINGchange;
+                    }
+                }
+            }
+        }
+
+        lastSTRvalue = adjustedSpeed;
+        
+        return lastSTRvalue;
+    }
     private double strafeAdjust(double strafeAmt, boolean normalDrive) {
         final double maxACCELchange = .02;
         final double maxSTOPPINGchange = .04;

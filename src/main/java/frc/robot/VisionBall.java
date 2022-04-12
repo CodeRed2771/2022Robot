@@ -22,8 +22,8 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
 {
     // Varriables 
     private static UsbCamera  camera;
-    private static int IMG_WIDTH = 640;
-    private static int IMG_HEIGHT = 480;
+    private static int IMG_WIDTH = 320;
+    private static int IMG_HEIGHT = 240;
     private static VisionThread visionThread;
     private static final Object imgLock = new Object();
     private static double centerX = 0.0;
@@ -103,6 +103,7 @@ public class VisionBall implements VisionRunner.Listener<VisionBallPipelineRed>
                     synchronized (imgLock) {
                         centerX = r.x + (r.width / 2);
                         centerY = r.y + (r.height/2);
+                        SmartDashboard.putString("Center X Components: X and Width", r.x + " " + r.width);
                         foundBall.set(true);
                         working.set(true);
                     }
