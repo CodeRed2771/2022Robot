@@ -29,7 +29,7 @@ public class Climber {
 	private static final double MAX_EXTENSION_BACK_BEFORE_BAR = 78;
 	private final static double MAX_RETRACTED = -2;
 	private final static double RETRACTED = 0;
-	private static final double EXTENSION_OFFSET = 1.037; 
+	private static final double EXTENSION_OFFSET = 1; // 1.037; 
 	private static ClimberPosition currentClimberPosition;
 	public static enum ClimberPosition {
 		Straight, 
@@ -138,7 +138,7 @@ public class Climber {
 			}
 		} else {
 			// direction is between -1 and 1 indicating the direction to manually move
-			double movementFactor = 1.3;
+			double movementFactor = 1.5; // was 1.3
 
 			double newPosition = lastPositionRequested + (movementFactor * -direction);
 			
