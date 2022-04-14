@@ -39,8 +39,8 @@ public class Calibration {
     
     // COMPETITION
     public final static double DT_COMP_A_ABS_ZERO_INITIAL = .548; // COMPETITION BOT
-    public final static double DT_COMP_B_ABS_ZERO_INITIAL = .258; 
-    public final static double DT_COMP_C_ABS_ZERO_INITIAL = .204; 
+    public final static double DT_COMP_B_ABS_ZERO_INITIAL = .230; 
+    public final static double DT_COMP_C_ABS_ZERO_INITIAL = .187; 
     public final static double DT_COMP_D_ABS_ZERO_INITIAL = .332; 
 
     public static final double AUTO_ROT_P = 0.08; 
