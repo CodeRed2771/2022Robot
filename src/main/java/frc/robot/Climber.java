@@ -132,14 +132,18 @@ public class Climber {
 	}
 
 	public static void moveV2(double direction) {
+		double movementFactor = 1; // was 1.3
 		if (Math.abs(direction) < 0.1) {
 			if (lastPositionRequested < 0) {
 				lastPositionRequested = RETRACTED;
 			}
 		} else {
 			// direction is between -1 and 1 indicating the direction to manually move
-			double movementFactor = 1.5; // was 1.3
-
+			if (lastPositionRequested < 20 && direction < 0) { // slowing speed until static hooks engage
+				movementFactor = .6;
+			} else {
+				movementFactor = 1.5;
+			}
 			double newPosition = lastPositionRequested + (movementFactor * -direction);
 			
 			if (newPosition < MAX_RETRACTED) {
