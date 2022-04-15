@@ -25,11 +25,13 @@ public class Climber {
 	private static SparkMaxPIDController climber2PID;
 	private static DoubleSolenoid climberSolenoid;
 	private final static double MAX_EXTENSION_VERTICAL = 76.5;
-	private final static double MAX_EXTENSION_BACK = 96; // was 106 on 4/7/22
+	private final static double MAX_EXTENSION_BACK = 97; // was 106 on 4/7/22
 	private static final double MAX_EXTENSION_BACK_BEFORE_BAR = 78;
 	private final static double MAX_RETRACTED = -2;
 	private final static double RETRACTED = 0;
 	private static final double EXTENSION_OFFSET = 1; // 1.037; 
+	private static final int MAX_CLIMBER_CURRENT = 50;
+	private static double endMaxRetractTime;
 	private static ClimberPosition currentClimberPosition;
 	public static enum ClimberPosition {
 		Straight, 
@@ -59,14 +61,14 @@ public class Climber {
         climberMotorLeft = new CANSparkMax(Wiring.CLIMBER_MOTOR_1, MotorType.kBrushless);
         climberMotorLeft.restoreFactoryDefaults(); 
         climberMotorLeft.setClosedLoopRampRate(0.5);
-        climberMotorLeft.setSmartCurrentLimit(65);
+        climberMotorLeft.setSmartCurrentLimit(MAX_CLIMBER_CURRENT);
         climberMotorLeft.setIdleMode(IdleMode.kBrake);
 		climberMotorLeft.setInverted(true);
 
 		climberMotorRight = new CANSparkMax(Wiring.CLIMBER_MOTOR_2, MotorType.kBrushless);
 		climberMotorRight.restoreFactoryDefaults();
 		climberMotorRight.setClosedLoopRampRate(0.5);
-        climberMotorRight.setSmartCurrentLimit(65);
+        climberMotorRight.setSmartCurrentLimit(MAX_CLIMBER_CURRENT);
 		climberMotorRight.setIdleMode(IdleMode.kBrake);
 		climberMotorRight.setInverted(false);
 
@@ -102,9 +104,20 @@ public class Climber {
 		climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Wiring.CLIMBER_SOLENOID_FORWARD, Wiring.CLIMBER_SOLENOID_REVERSE);
 
 		currentClimberPosition = ClimberPosition.Straight;
+
+		endMaxRetractTime = System.currentTimeMillis() + 999999;
 	}
 
 	public static void tick() {
+		if (System.currentTimeMillis() > endMaxRetractTime && lastPositionRequested < RETRACTED) {
+			lastPositionRequested = RETRACTED;
+
+			climberMotorLeft.getPIDController().setReference(lastPositionRequested * EXTENSION_OFFSET, ControlType.kPosition);
+			climberMotorRight.getPIDController().setReference(lastPositionRequested , ControlType.kPosition);
+
+			endMaxRetractTime  = System.currentTimeMillis() + 99999;
+		} 
+
 		SmartDashboard.putNumber("Climber1 Position Actual", climberMotorLeft.getEncoder().getPosition());
 		SmartDashboard.putNumber("Climber2 Position Actual", climberMotorRight.getEncoder().getPosition());
 	}
@@ -150,6 +163,11 @@ public class Climber {
 				newPosition = MAX_RETRACTED;
 			} else if (newPosition > getMaxExtension()) {
 				newPosition = getMaxExtension();
+			}
+			if (newPosition < RETRACTED) {
+				if (endMaxRetractTime > System.currentTimeMillis() + 1000) {
+					endMaxRetractTime = System.currentTimeMillis()  + 1000;
+				}
 			}
 
 			lastPositionRequested = newPosition;
