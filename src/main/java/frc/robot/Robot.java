@@ -93,8 +93,8 @@ public class Robot extends TimedRobot {
         setupAutoChoices();
         mAutoProgram = new AutoDoNothing();
 
-        VisionBall.init(); // Ball vision tracking setup
-        VisionBall.start();
+        // VisionBall.init(); // Ball vision tracking setup
+        // VisionBall.start();
     }
 
     @Override
@@ -118,9 +118,9 @@ public class Robot extends TimedRobot {
         // SmartDashboard.putNumber("Y Offset", VisionBall.getBallYOffset());
         // SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
         // SmartDashboard.putNumber("Score", VisionBall.getBallScore());
-        SmartDashboard.putNumber("Center X", VisionBall.centerX());
-        SmartDashboard.putNumber("Center Y", VisionBall.centerY());
-        SmartDashboard.putNumber("Distance to Ball", VisionBall.distanceToBall());
+        // SmartDashboard.putNumber("Center X", VisionBall.centerX());
+        // SmartDashboard.putNumber("Center Y", VisionBall.centerY());
+        // SmartDashboard.putNumber("Distance to Ball", VisionBall.distanceToBall());
 
         if (gamepad1.getRightTriggerAxis() > 0 || gamepad2.getRightTriggerAxis() > 0) {
             Intake.startIntake();
@@ -238,7 +238,7 @@ public class Robot extends TimedRobot {
         double driveFWDAmount = -gamepad1.getLeftY();
         double driveStrafeAmount = -gamepad1.getLeftX();
 
-        double ballLaneAssist = VisionBall.getBallXOffset();
+       // double ballLaneAssist = VisionBall.getBallXOffset();
 
         // if (Math.abs(driveRotAmount)>.1) {
         //     swtest.move(driveRotAmount);
@@ -336,17 +336,17 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         SmartDashboard.updateValues();
-        SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
-        SmartDashboard.putBoolean("Working", VisionBall.working());
+        // SmartDashboard.putNumber("Number of Balls", VisionBall.getBallNumber());
+        // SmartDashboard.putBoolean("Working", VisionBall.working());
         Shooter.tick();
         Intake.tick();
         DriveAuto.tick();
         Climber.tick();
 
-        SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
-        SmartDashboard.putNumber("Ball Y Offset", VisionBall.getBallYOffset());
-        SmartDashboard.putNumber("Degrees Output", VisionBall.degreesToBall());
-        SmartDashboard.putNumber("Distance to Target", VisionShooter.getDistanceFromTarget());
+        // SmartDashboard.putNumber("Ball X Offset", VisionBall.getBallXOffset());
+        // SmartDashboard.putNumber("Ball Y Offset", VisionBall.getBallYOffset());
+        // SmartDashboard.putNumber("Degrees Output", VisionBall.degreesToBall());
+        // SmartDashboard.putNumber("Distance to Target", VisionShooter.getDistanceFromTarget());
 
          // Sets the PID values based on input from the SmartDashboard
         // This is only needed during tuning
