@@ -425,8 +425,8 @@ public class Shooter {
                 shooterMotorVelocityTarget = 8000;
                 break;
             case HumanPlayerStation:
-                setShooterPosition(ShooterPosition.Low);
-                shooterMotorVelocityTarget = 9000;
+                setShooterPosition(ShooterPosition.Low); // changed 4/25/22 for super high shot - was Low
+                shooterMotorVelocityTarget = 20000;  // was 9000
                 break;  
         }
         
