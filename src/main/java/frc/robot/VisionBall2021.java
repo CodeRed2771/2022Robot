@@ -77,7 +77,7 @@ public class VisionBall2021
         mBallTrackingCamera.setFPS(30);
 
         //Setup Publishing Streams
-        // mRawImageStream = CameraServer.getInstance().putVideo("Raw Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
+        // mRawImageStream = CameraServer.putVideo("Raw Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
         mBinaryStream = CameraServer.putVideo("Binary Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
         mProcessedStream = CameraServer.putVideo("Processed Image", CAMERA_HORIZONTAL_RESOLUTION, CAMERA_VERTICAL_RESOLUTION);
 
