@@ -106,8 +106,8 @@ public class Robot extends TimedRobot {
         DriveTrain.resetTurnEncoders();
         DriveTrain.setAllTurnOrientation(0, false); // sets them back to calibrated zero position
         // VisionBall.start(); // (3/26/22 - this crashes the program when run a second time)
-        Shooter.StartShooter();
-        Shooter.setSpeed(6000);
+        // Shooter.StartShooter();
+        // Shooter.setSpeed(6000);
         Climber.reset();
     }
 
